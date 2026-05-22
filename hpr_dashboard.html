@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>HPR — Hourly Production Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       margin: 0; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+header {
+    background: linear-gradient(135deg, #134e4a 0%, #0f766e 50%, #0d9488 100%);
+    padding: 18px 40px; box-shadow: 0 4px 20px rgba(0,0,0,.4);
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+.header-left h1 { margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
+.header-left .sub { opacity: 0.8; font-size: 13px; margin-top: 3px; }
+.header-right { display: flex; gap: 12px; align-items: center; }
+.clock-box { background: rgba(15,23,42,0.45); border: 1px solid rgba(255,255,255,0.1);
+             border-radius: 10px; padding: 8px 16px; text-align: center; }
+.clock { font-family: "SF Mono", Menlo, monospace; font-size: 22px; font-weight: 700;
+         color: #f8fafc; letter-spacing: 2px; }
+.clock-date { font-size: 10px; color: #cbd5e1; margin-top: 2px; }
+.shift-box { background: rgba(15,23,42,0.45); border: 1px solid rgba(255,255,255,0.1);
+             border-radius: 10px; padding: 8px 16px; text-align: center; min-width: 120px; }
+.shift-label { font-size: 9px; color: #5eead4; letter-spacing: 1.5px; font-weight: 700; margin-bottom: 2px; }
+.shift-value { font-size: 20px; font-weight: 800; color: #fbbf24; }
+.shift-box.shift-a .shift-value { color: #fbbf24; }
+.shift-box.shift-b .shift-value { color: #60a5fa; }
+.shift-box.shift-c .shift-value { color: #a78bfa; }
+
+.container { max-width: 1500px; margin: 0 auto; padding: 24px 40px; }
+
+/* Landing */
+.landing { padding: 32px 0 48px; }
+.landing h2 { text-align: center; font-size: 22px; margin: 0 0 4px; color: #f1f5f9; }
+.landing .sub-h { text-align: center; color: #64748b; font-size: 13px; margin: 0 0 28px; }
+
+/* Day selector */
+.day-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 24px;
+           background: #1e293b; border-radius: 10px; padding: 14px 20px; }
+.day-bar label { font-size: 13px; font-weight: 600; color: #94a3b8; }
+.day-bar select { background: #0f172a; color: #e2e8f0; border: 1px solid #475569;
+                  padding: 6px 12px; border-radius: 8px; font-size: 14px; cursor: pointer; }
+.prod-day-badge { background: rgba(13,148,136,0.2); border: 1px solid #0d9488;
+                  color: #5eead4; padding: 4px 12px; border-radius: 20px;
+                  font-size: 12px; font-weight: 700; margin-left: auto; }
+
+/* Product cards grid */
+.product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1500px; margin: 0 auto; }
+@media (max-width: 900px) { .product-grid { grid-template-columns: 1fr; } }
+
+.product-card { background: linear-gradient(135deg, #1e293b, #0f172a);
+                border: 2px solid #334155; border-radius: 14px; overflow: hidden;
+                transition: all 0.2s ease; box-shadow: 0 4px 20px rgba(0,0,0,.35); }
+.product-card.r4-card:hover  { border-color: #10b981; box-shadow: 0 8px 32px rgba(16,185,129,.2); }
+.product-card.r3-card:hover  { border-color: #f59e0b; box-shadow: 0 8px 32px rgba(245,158,11,.2); }
+.product-card.inv-card:hover { border-color: #60a5fa; box-shadow: 0 8px 32px rgba(96,165,250,.2); }
+.product-card.iq9-card:hover { border-color: #a78bfa; box-shadow: 0 8px 32px rgba(167,139,250,.2); }
+
+.product-header { padding: 18px 22px; cursor: pointer; display: flex;
+                  align-items: center; justify-content: space-between;
+                  background: rgba(15,23,42,0.4); border-bottom: 1px solid #334155;
+                  transition: background 0.15s; }
+.product-header:hover { background: rgba(15,23,42,0.7); }
+.pname { font-size: 32px; font-weight: 800; letter-spacing: -1px; line-height: 1; }
+.pdesc { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+.r4-name { color: #10b981; } .r3-name { color: #f59e0b; }
+.inv-name { color: #60a5fa; } .iq9-name { color: #a78bfa; }
+
+/* Quick KPI on card */
+.card-kpis { padding: 14px 22px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.ckpi { text-align: center; }
+.ckpi .cv { font-size: 20px; font-weight: 800; }
+.ckpi .cl { font-size: 9px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+.cv-green { color: #10b981; } .cv-amber { color: #f59e0b; }
+.cv-red { color: #ef4444; } .cv-blue { color: #60a5fa; }
+.no-data { text-align: center; padding: 20px; color: #64748b; font-size: 12px; font-style: italic; }
+
+/* Hour selector bar */
+.hour-bar { background: #1e293b; border-radius: 12px; padding: 14px 20px;
+            margin-bottom: 20px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+            border-left: 4px solid #0d9488; }
+.hour-bar-lbl { font-size: 11px; color: #5eead4; font-weight: 700; letter-spacing: 1px; }
+.hour-btn { background: #0f172a; color: #cbd5e1; border: 1px solid #334155;
+            padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
+            cursor: pointer; transition: all 0.12s; font-family: "SF Mono", monospace; }
+.hour-btn:hover { border-color: #0d9488; color: #5eead4; }
+.hour-btn.active { background: #0d9488; color: #fff; border-color: transparent;
+                   box-shadow: 0 2px 8px rgba(13,148,136,0.4); }
+.hour-btn.cumulative { border-color: #f59e0b; color: #fbbf24; }
+.hour-btn.cumulative.active { background: linear-gradient(135deg, #b45309, #f59e0b);
+                               color: #fff; border-color: transparent; }
+
+/* Detail view */
+.date-bar { background: #1e293b; border-radius: 12px; padding: 14px 20px;
+            display: flex; align-items: center; gap: 14px; margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,.3); }
+.date-bar select, .date-bar button { background: #0f172a; color: #e2e8f0;
+    border: 1px solid #475569; padding: 7px 14px; border-radius: 8px;
+    font-size: 14px; cursor: pointer; }
+.date-bar button:hover { background: #0f766e; border-color: #0d9488; }
+.back-btn { margin-left: auto; }
+
+/* Hero KPI strip */
+.hero-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 24px; }
+@media (max-width: 1200px) { .hero-row { grid-template-columns: repeat(3, 1fr); } }
+.hero-card { background: linear-gradient(135deg, #1e293b, #0f172a);
+             border: 1px solid #334155; border-radius: 12px; padding: 16px 14px;
+             box-shadow: 0 2px 12px rgba(0,0,0,.3); transition: transform 0.15s; }
+.hero-card:hover { transform: translateY(-2px); }
+.hero-card .hero-num { font-size: 26px; font-weight: 800; line-height: 1.1; }
+.hero-card .hero-lbl { font-size: 10px; color: #94a3b8; text-transform: uppercase;
+                        letter-spacing: 0.8px; font-weight: 700; margin-top: 6px; }
+.hero-card .hero-sub { font-size: 10px; color: #64748b; margin-top: 3px; }
+.hero-units { border-left: 4px solid #94a3b8; } .hero-units .hero-num { color: #f1f5f9; }
+.hero-green { border-left: 4px solid #10b981; } .hero-green .hero-num { color: #10b981; }
+.hero-amber { border-left: 4px solid #f59e0b; } .hero-amber .hero-num { color: #f59e0b; }
+.hero-red   { border-left: 4px solid #ef4444; } .hero-red   .hero-num { color: #ef4444; }
+.hero-blue  { border-left: 4px solid #3b82f6; } .hero-blue  .hero-num { color: #60a5fa; }
+
+/* Charts / panels */
+.row { display: grid; gap: 18px; margin-bottom: 20px; }
+.row.two { grid-template-columns: 1fr 1fr; }
+@media (max-width: 1100px) { .row.two { grid-template-columns: 1fr; } }
+.panel { background: #1e293b; border-radius: 12px; padding: 18px;
+         box-shadow: 0 2px 12px rgba(0,0,0,.3); }
+.panel h3 { margin: 0 0 12px; font-size: 13px; color: #cbd5e1; text-transform: uppercase;
+            letter-spacing: 0.5px; border-bottom: 1px solid #334155; padding-bottom: 8px; }
+.panel canvas { max-height: 280px; }
+table.data { width: 100%; border-collapse: collapse; font-size: 12px; }
+table.data th, table.data td { padding: 7px 10px; text-align: left; border-bottom: 1px solid #334155; }
+table.data th { background: #0f172a; color: #94a3b8; font-weight: 600;
+                text-transform: uppercase; font-size: 11px; }
+table.data tr:hover td { background: #0f172a; }
+.scroll-tbl { max-height: 320px; overflow-y: auto; }
+.empty { text-align: center; padding: 20px; color: #64748b; font-style: italic; }
+.section-title { font-size: 16px; color: #f1f5f9; margin: 28px 0 14px;
+                 padding-left: 12px; border-left: 4px solid #0d9488; }
+.hidden { display: none !important; }
+
+/* Shift pills (used in tables) */
+.shift-pill {
+    display: inline-block; width: 22px; height: 22px; border-radius: 50%;
+    text-align: center; font-weight: 800; font-size: 11px; line-height: 22px;
+    color: #fff; font-family: "SF Mono", monospace;
+}
+.shift-pill-a { background: linear-gradient(135deg,#d97706,#fbbf24); }
+.shift-pill-b { background: linear-gradient(135deg,#1d4ed8,#60a5fa); }
+.shift-pill-c { background: linear-gradient(135deg,#6d28d9,#a78bfa); }
+
+/* Shift report sections */
+.shift-block {
+    background: rgba(0,0,0,0.2); border-radius: 8px;
+    padding: 10px 12px; margin-bottom: 10px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.shift-block-head {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 8px; padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.shift-block-name { font-size: 13px; font-weight: 700; color: #cbd5e1; }
+.shift-block-total { margin-left: auto; font-size: 11px; color: #94a3b8;
+                     background: rgba(255,255,255,0.06); padding: 2px 10px; border-radius: 10px; }
+.shift-fail-list { display: flex; flex-direction: column; gap: 4px; }
+.shift-fail-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 5px 8px; background: rgba(255,255,255,0.02); border-radius: 4px;
+    font-size: 11.5px; color: #cbd5e1;
+}
+.shift-fail-row span:first-child { flex: 1; padding-right: 8px; }
+.shift-fail-cnt {
+    font-weight: 700; font-family: "SF Mono", monospace;
+    background: rgba(239,68,68,0.15); color: #fca5a5;
+    padding: 2px 8px; border-radius: 10px; font-size: 11px;
+}
+
+/* Public/shared view badge */
+.public-badge {
+    display: inline-block; margin-left: 12px;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #1e293b; font-size: 11px; font-weight: 800;
+    padding: 4px 10px; border-radius: 10px;
+    letter-spacing: 1.2px; vertical-align: middle;
+    box-shadow: 0 2px 8px rgba(245,158,11,0.4);
+}
+
+/* ===== PRODUCTION FLOW DIAGRAM (R3/R4) ===== */
+.flow-diagram {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    border: 1px solid #334155; border-radius: 16px; padding: 24px;
+    margin-bottom: 20px; box-shadow: 0 4px 24px rgba(0,0,0,.4);
+    border-left: 4px solid #06b6d4;
+    overflow: hidden;
+}
+.flow-title {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 16px; font-weight: 800; color: #f1f5f9;
+    margin-bottom: 20px; padding-bottom: 12px;
+    border-bottom: 1px solid #334155;
+}
+.flow-icon { font-size: 22px; }
+.flow-track {
+    display: flex; align-items: stretch; gap: 0;
+    margin-bottom: 20px;
+}
+.flow-station {
+    flex: 1; min-width: 140px;
+    background: rgba(0,0,0,0.4); border-radius: 12px;
+    padding: 16px; border: 2px solid; position: relative;
+    transition: transform 0.2s;
+}
+.flow-station:hover { transform: translateY(-2px); }
+.flow-ht   { border-color: #3b82f6; box-shadow: 0 0 24px rgba(59,130,246,0.2); }
+.flow-bst  { border-color: #10b981; box-shadow: 0 0 24px rgba(16,185,129,0.2); }
+.flow-pack { border-color: #f59e0b; box-shadow: 0 0 24px rgba(245,158,11,0.2); }
+.flow-station-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px;
+}
+.flow-badge {
+    font-size: 14px; font-weight: 800; color: #f1f5f9;
+    background: rgba(255,255,255,0.05); padding: 4px 12px;
+    border-radius: 6px;
+}
+.flow-ht  .flow-badge { color: #93c5fd; }
+.flow-bst .flow-badge { color: #6ee7b7; }
+.flow-pack .flow-badge { color: #fcd34d; }
+.flow-step-num {
+    font-size: 9px; color: #64748b; text-transform: uppercase;
+    letter-spacing: 1.5px; font-weight: 700;
+}
+.flow-station-body { text-align: center; padding: 12px 0; }
+.flow-big-num {
+    font-size: 42px; font-weight: 900; color: #f1f5f9;
+    font-family: "SF Mono", monospace; line-height: 1;
+    letter-spacing: -1px;
+}
+.flow-ht  .flow-big-num { color: #60a5fa; }
+.flow-bst .flow-big-num { color: #34d399; }
+.flow-pack .flow-big-num { color: #fbbf24; }
+.flow-big-label {
+    font-size: 10px; color: #94a3b8; text-transform: uppercase;
+    letter-spacing: 1.5px; font-weight: 700; margin-top: 4px;
+}
+.flow-station-foot {
+    display: flex; flex-direction: column; gap: 4px;
+    padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05);
+}
+.flow-stat {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; color: #cbd5e1;
+}
+.flow-stat-dot {
+    width: 6px; height: 6px; border-radius: 50%; display: inline-block;
+}
+.flow-stat-dot.pass { background: #10b981; box-shadow: 0 0 8px #10b981; }
+.flow-stat-dot.fix  { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; }
+
+/* Arrow + WIP queue */
+.flow-arrow {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; min-width: 100px; padding: 0 8px;
+    position: relative;
+}
+.flow-pipe {
+    width: 100%; height: 6px;
+    background: linear-gradient(90deg, #334155, #475569, #334155);
+    border-radius: 3px; overflow: hidden;
+    position: relative;
+}
+.flow-pipe-track {
+    position: absolute; inset: 0; display: flex; align-items: center;
+}
+.flow-pipe-particle {
+    position: absolute; width: 8px; height: 4px; border-radius: 2px;
+    background: #60a5fa; box-shadow: 0 0 8px #60a5fa;
+    animation: flowMove 2s linear infinite;
+}
+.flow-pipe-particle.p2 { animation-delay: 0.6s; }
+.flow-pipe-particle.p3 { animation-delay: 1.2s; }
+.flow-pipe-particle.pack { background: #fbbf24; box-shadow: 0 0 8px #fbbf24; }
+@keyframes flowMove {
+    0%   { left: -10%; opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { left: 110%; opacity: 0; }
+}
+.flow-arrow.flow-idle .flow-pipe { opacity: 0.3; }
+.flow-arrow.flow-warn .flow-pipe {
+    background: linear-gradient(90deg, #7c2d12, #ea580c, #7c2d12);
+}
+.flow-wip-bubble {
+    margin-top: 12px; background: linear-gradient(135deg, #1e293b, #0f172a);
+    border: 2px solid #fbbf24; border-radius: 50%;
+    width: 80px; height: 80px;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(251,191,36,0.3);
+}
+.flow-warn .flow-wip-bubble {
+    border-color: #ef4444; box-shadow: 0 0 24px rgba(239,68,68,0.4);
+    animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.05); }
+}
+.flow-wip-num {
+    font-size: 22px; font-weight: 900; color: #fbbf24;
+    font-family: "SF Mono", monospace; line-height: 1;
+}
+.flow-warn .flow-wip-num { color: #fca5a5; }
+.flow-wip-lbl {
+    font-size: 9px; color: #94a3b8; text-transform: uppercase;
+    letter-spacing: 1.5px; font-weight: 800; margin-top: 4px;
+}
+.flow-wip-sub {
+    font-size: 8px; color: #64748b; margin-top: 2px;
+}
+
+/* Shift breakdown bar */
+.flow-shift-bar {
+    display: flex; gap: 12px; padding-top: 16px;
+    border-top: 1px dashed #334155;
+}
+.flow-shift-block {
+    flex: 1; display: flex; align-items: center; gap: 12px;
+    background: rgba(0,0,0,0.3); padding: 10px 14px; border-radius: 8px;
+    border-left: 3px solid;
+}
+.flow-shift-block.sh-a { border-color: #fbbf24; }
+.flow-shift-block.sh-b { border-color: #60a5fa; }
+.flow-shift-block.sh-c { border-color: #a78bfa; }
+.fs-stats {
+    display: flex; gap: 16px; font-size: 12px; color: #94a3b8;
+    flex: 1;
+}
+.fs-stats strong {
+    color: #f1f5f9; font-family: "SF Mono", monospace;
+}
+
+@media (max-width: 1100px) {
+    .flow-track { flex-direction: column; }
+    .flow-arrow { min-height: 80px; padding: 8px 0; }
+    .flow-pipe { width: 6px; height: 80px; }
+}
+
+/* Enphase Production Grid (R3/R4) */
+.enphase-grid-wrap {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    border: 1px solid #334155; border-radius: 12px; padding: 18px;
+    margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,.3);
+    border-left: 4px solid #fbbf24;
+}
+.eg-title {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+    padding-bottom: 10px; border-bottom: 1px solid #334155;
+}
+.eg-tag { font-size: 14px; font-weight: 700; color: #fbbf24; }
+.eg-sub { font-size: 12px; color: #94a3b8; font-style: italic; }
+table.enphase-grid {
+    width: 100%; border-collapse: collapse; font-size: 13px;
+    background: rgba(0,0,0,0.2); border-radius: 8px; overflow: hidden;
+}
+table.enphase-grid thead th {
+    background: rgba(251,191,36,0.1); color: #fcd34d; font-weight: 700;
+    padding: 10px 12px; text-align: center; letter-spacing: 0.5px;
+    text-transform: uppercase; font-size: 11px;
+    border-bottom: 2px solid #fbbf24;
+}
+table.enphase-grid thead th.station-col { text-align: left; padding-left: 16px; }
+table.enphase-grid thead th.shift-a-col { background: rgba(251,191,36,0.18); }
+table.enphase-grid thead th.shift-b-col { background: rgba(96,165,250,0.18); color: #93c5fd; }
+table.enphase-grid thead th.shift-c-col { background: rgba(167,139,250,0.18); color: #c4b5fd; }
+table.enphase-grid tbody td {
+    padding: 12px; text-align: center; border-bottom: 1px solid #1e293b;
+    font-size: 14px; color: #e2e8f0;
+}
+table.enphase-grid tbody td.station-name {
+    font-weight: 800; color: #f1f5f9; text-align: left; padding-left: 16px;
+    font-size: 15px; background: rgba(15,23,42,0.5);
+}
+table.enphase-grid tbody td.metric-wip {
+    color: #fbbf24; font-weight: 700;
+}
+table.enphase-grid tbody td.metric-pass {
+    color: #10b981; font-weight: 700; font-size: 16px;
+}
+table.enphase-grid tbody td.metric-total {
+    color: #f1f5f9; font-weight: 800; font-size: 16px;
+    background: rgba(255,255,255,0.04);
+}
+table.enphase-grid tbody td.metric-fix {
+    color: #ef4444; font-weight: 700;
+}
+table.enphase-grid tbody tr:hover td {
+    background: rgba(251,191,36,0.05);
+}
+.eg-legend {
+    display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px;
+    font-size: 11px; color: #64748b;
+}
+.eg-legend span strong { color: #cbd5e1; }
+
+/* Debug */
+.debug-panel { border-left: 4px solid #ef4444; }
+.debug-note { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25);
+              border-radius: 8px; padding: 8px 12px; margin-bottom: 12px;
+              font-size: 12px; color: #fca5a5; }
+.debug-btn { background: linear-gradient(135deg,#ef4444,#dc2626); color: white; border: none;
+             padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 700;
+             cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+             box-shadow: 0 2px 8px rgba(239,68,68,.3); }
+.debug-btn:hover { background: linear-gradient(135deg,#dc2626,#b91c1c); }
+#debug-table-wrap { margin-top: 14px; }
+
+/* IQ9 tabs */
+.iq9-tab-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+               background: #1e293b; border-radius: 10px; padding: 10px 16px;
+               margin-bottom: 18px; border-left: 4px solid #a78bfa; }
+.iq9-tab-lbl { font-size: 10px; color: #94a3b8; font-weight: 700; letter-spacing: 1px; margin-right: 6px; }
+.iq9-tab { background: #0f172a; color: #cbd5e1; border: 1px solid #334155;
+           padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600;
+           cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+           font-family: "SF Mono", monospace; transition: all 0.15s; }
+.iq9-tab:hover { border-color: #a78bfa; color: #fff; }
+.iq9-tab.active { background: linear-gradient(135deg,#7c3aed,#a78bfa); color: #fff;
+                  border-color: transparent; box-shadow: 0 2px 10px rgba(167,139,250,.4); }
+.iq9-tab-count { background: rgba(255,255,255,.12); padding: 1px 6px; border-radius: 10px; font-size: 10px; }
+.iq9-tab.active .iq9-tab-count { background: rgba(255,255,255,.25); }
+
+footer { text-align: center; color: #475569; font-size: 11px; padding: 20px; }
+
+/* Status panel */
+.status-panel {
+    background: #1e293b; border-radius: 12px; padding: 16px 20px;
+    margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 20px;
+    align-items: center; border-left: 4px solid #0d9488;
+    box-shadow: 0 2px 12px rgba(0,0,0,.3);
+}
+.status-item { display: flex; flex-direction: column; }
+.status-label { font-size: 10px; color: #5eead4; font-weight: 700;
+                letter-spacing: 1px; text-transform: uppercase; margin-bottom: 3px; }
+.status-value { font-size: 16px; font-weight: 700; color: #f1f5f9; }
+.status-value.good { color: #10b981; }
+.status-value.warn { color: #f59e0b; }
+.status-value.bad  { color: #ef4444; }
+.status-missing { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.missing-hour { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3);
+                color: #fca5a5; padding: 2px 8px; border-radius: 6px;
+                font-size: 11px; font-family: "SF Mono", monospace; font-weight: 600; }
+.status-divider { width: 1px; background: #334155; align-self: stretch; margin: 0 4px; }
+.refresh-hint { margin-left: auto; background: rgba(13,148,136,0.15);
+                border: 1px solid rgba(13,148,136,0.3); border-radius: 8px;
+                padding: 8px 16px; font-size: 12px; color: #5eead4; font-weight: 600; }
+
+/* Refresh instructions */
+.refresh-instructions {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    border: 1px solid #334155; border-radius: 12px;
+    padding: 16px 20px; margin-bottom: 24px;
+    border-left: 4px solid #f59e0b;
+}
+.ri-title { font-size: 13px; font-weight: 700; color: #fbbf24;
+            letter-spacing: 0.5px; margin-bottom: 12px; }
+.ri-steps { display: flex; gap: 16px; flex-wrap: wrap; }
+.ri-step { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 200px; }
+.ri-num { background: #f59e0b; color: #0f172a; width: 22px; height: 22px;
+          border-radius: 50%; display: flex; align-items: center; justify-content: center;
+          font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 1px; }
+.ri-text { font-size: 12px; color: #94a3b8; line-height: 1.5; }
+.ri-text strong { color: #e2e8f0; }
+</style>
+</head>
+<body>
+<header>
+    <div class="header-left">
+        <h1>⏱ Hourly Production Dashboard <span id="publicBadge" class="public-badge" style="display:none">🌐 SHARED VIEW</span></h1>
+        <div class="sub">HPR — R3 · R4 · BL/BN · IQ9 · Generated Friday, May 22, 2026 · 05:36 AM</div>
+    </div>
+    <div class="header-right">
+        <div class="clock-box">
+            <div id="liveClock" class="clock">--:--:--</div>
+            <div id="liveDate" class="clock-date">—</div>
+        </div>
+        <div class="shift-box" id="shiftBox">
+            <div class="shift-label">SHIFT</div>
+            <div class="shift-value" id="shiftValue">—</div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <!-- LANDING -->
+    <div id="landing" class="landing">
+        <h2>Hourly Production Dashboard</h2>
+        <p class="sub-h">Click a product to view hourly analysis · select Cumulative or individual hours</p>
+
+        <div class="day-bar">
+            <label>Production Day:</label>
+            <select id="daySelect" onchange="onDayChange()"></select>
+            <div class="prod-day-badge" id="dayBadge">—</div>
+        </div>
+
+        <!-- STATUS PANEL -->
+        <div id="statusPanel" class="status-panel"></div>
+
+        <!-- REFRESH INSTRUCTIONS -->
+        <div class="refresh-instructions">
+            <div class="ri-title">📥 How to Refresh HPR Data</div>
+            <div class="ri-steps">
+                <div class="ri-step">
+                    <div class="ri-num">1</div>
+                    <div class="ri-text">Go to <strong>OneDrive online</strong> → <strong>Daily_HPR</strong> folder → Select All → <strong>Download</strong></div>
+                </div>
+                <div class="ri-step">
+                    <div class="ri-num">2</div>
+                    <div class="ri-text">The <strong>OneDrive_1_xxx.zip</strong> lands in your Downloads folder automatically</div>
+                </div>
+                <div class="ri-step">
+                    <div class="ri-num">3</div>
+                    <div class="ri-text">Double-click <strong>"Refresh HPR"</strong> shortcut on your Desktop → dashboard updates</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card r4-card">
+                <div class="product-header" onclick="selectProduct('R4')">
+                    <div><div class="pname r4-name">R4</div><div class="pdesc">IQ Battery R4</div></div>
+                </div>
+                <div class="card-kpis" id="ckpi-R4"></div>
+            </div>
+            <div class="product-card r3-card">
+                <div class="product-header" onclick="selectProduct('R3')">
+                    <div><div class="pname r3-name">R3</div><div class="pdesc">Encharge R3</div></div>
+                </div>
+                <div class="card-kpis" id="ckpi-R3"></div>
+            </div>
+            <div class="product-card inv-card">
+                <div class="product-header" onclick="selectProduct('INV')">
+                    <div><div class="pname inv-name">BL / BN</div><div class="pdesc">IQ8 Inverters</div></div>
+                </div>
+                <div class="card-kpis" id="ckpi-INV"></div>
+            </div>
+            <div class="product-card iq9-card" style="grid-column: span 3">
+                <div class="product-header" onclick="selectProduct('IQ9')">
+                    <div><div class="pname iq9-name">IQ9</div><div class="pdesc">IQ9 PCU · Model-wise</div></div>
+                </div>
+                <div class="card-kpis" id="ckpi-IQ9"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DETAIL VIEW -->
+    <div id="detail" class="hidden">
+        <div class="date-bar">
+            <label style="font-weight:600;font-size:13px">Product:</label>
+            <strong id="curProduct" style="color:#5eead4;font-size:15px"></strong>
+            <label style="margin-left:20px;font-weight:600;font-size:13px">Prod. Day:</label>
+            <select id="detailDaySelect" onchange="onDetailDayChange()"></select>
+            <button class="back-btn" onclick="goBack()">← Back</button>
+        </div>
+        <div id="hourBar"></div>
+        <div id="content"></div>
+    </div>
+</div>
+
+<footer>HPR cache in ./hpr_cache/ · Refresh with refresh_hpr.bat</footer>
+
+<script>
+const DATA   = {"20260514": {"02:00": {"R3": {"product": "R3", "second_label": "BST", "total_units": 6, "ht_pass": 4, "bst_pass": 2, "good_pack": 0, "good_pack_rate": 0.0, "backlog_count": 6, "backlog_rate": 100.0, "ht_yield": 66.7, "bst_yield": 33.3, "ftr_rate": 0.0, "ftr_count": 0, "rework_rate": 0.0, "rework_count": 0, "fpy_ht": [{"Station ID": "HT-D006", "first_attempts": 4, "first_pass": 4, "fpy": 100.0, "final": 100.0, "missing": false}], "fpy_bst": [{"Station ID": "BST-21", "first_attempts": 2, "first_pass": 2, "fpy": 100.0, "final": 100.0, "missing": false}], "fpy_ht_avg": 100.0, "fpy_bst_avg": 100.0, "top_ht": [], "top_bst": [], "top_overall": [], "shift_fails": {"A (06-14)": 0, "B (14-22)": 0, "C (22-06)": 0}, "hourly_fails": {}, "unit_fails_ht": [], "unit_fails_bst": [], "debug_units": [], "debug_rule": {"stage": "BST", "label": "Failed BST, never passed"}, "backlog_pareto": [], "shift_report_ht": {}, "shift_report_bst": {}, "true_fail_units": [], "true_fail_count": 0, "enphase_grid": {"product": "R3", "rows": [{"station": "HT", "Pass": 4, "A": 0, "B": 0, "C": 4, "Total": 4, "FailFix": 0, "WIP": 0}, {"station": "BST", "Pass": 2, "A": 0, "B": 0, "C": 2, "Total": 2, "FailFix": 0, "WIP": 4}]}}, "R4": {"product": "R4", "second_label": "BST", "total_units": 26, "ht_pass": 13, "bst_pass": 11, "good_pack": 0, "good_pack_rate": 0.0, "backlog_count": 26, "backlog_rate": 100.0, "ht_yield": 50.0, "bst_yield": 42.3, "ftr_rate": 0.0, "ftr_count": 0, "rework_rate": 0.0, "rework_count": 0, "fpy_ht": [{"Station ID": "HT-33", "first_attempts": 9, "first_pass": 9, "fpy": 100.0, "final": 100.0, "missing": false}, {"Station ID": "HT-83", "first_attempts": 4, "first_pass": 4, "fpy": 100.0, "final": 100.0, "missing": false}], "fpy_bst": [{"Station ID": "BST-01", "first_attempts": 6, "first_pass": 5, "fpy": 83.33, "final": 83.33, "missing": false}, {"Station ID": "BST-16", "first_attempts": 4, "first_pass": 3, "fpy": 75.0, "final": 75.0, "missing": false}, {"Station ID": "BST-20", "first_attempts": 2, "first_pass": 2, "fpy": 100.0, "final": 100.0, "missing": false}, {"Station ID": "BST-26", "first_attempts": 1, "first_pass": 1, "fpy": 100.0, "final": 100.0, "missing": false}], "fpy_ht_avg": 100.0, "fpy_bst_avg": 89.58, "top_ht": [], "top_bst": [["encharge_sn_flash, finish_test", 1], ["finish_test, post_power_up_check", 1]], "top_overall": [["encharge_sn_flash, finish_test", 1], ["finish_test, post_power_up_check", 1]], "shift_fails": {"A (06-14)": 0, "B (14-22)": 0, "C (22-06)": 2}, "hourly_fails": {"2": 2}, "unit_fails_ht": [], "unit_fails_bst": [{"sn": "542620052251", "station": "BST01", "state": "RETEST", "reason": "encharge_sn_flash, finish_test", "shift": "C (22-06)", "fail_time": "02:34"}, {"sn": "542620052328", "station": "BST16", "state": "RETEST", "reason": "finish_test, post_power_up_check", "shift": "C (22-06)", "fail_time": "02:00"}], "debug_units": [{"sn": "542620052328", "state": "RETEST", "stations": "BST16", "reason": "finish_test, post_power_up_check", "fail_count": 1, "first_fail": "02:00", "hours_in_debug": 166.3}, {"sn": "542620052251", "state": "RETEST", "stations": "BST01", "reason": "encharge_sn_flash, finish_test", "fail_count": 1, "first_fail": "02:34", "hours_in_debug": 165.8}], "debug_rule": {"stage": "BST", "label": "Failed BST, never passed"}, "backlog_pareto": [["finish_test, post_power_up_check", 1], ["encharge_sn_flash, finish_test", 1]], "shift_report_ht": {}, "shift_report_bst": {"C (22-06)": {"count": 2, "top_reasons": [["encharge_sn_flash, finish_test", 1], ["finish_test, post_power_up_check", 1]], "units": [{"sn": "542620052251", "station": "BST01", "state": "RETEST", "reason": "encharge_sn_flash, finish_test", "shift": "C (22-06)", "fail_time": "02:34"}, {"sn": "542620052328", "station": "BST16", "state": "RETEST", "reason": "finish_test, post_power_up_check", "shift": "C (22-06)", "fail_time": "02:00"}]}}, "true_fail_units": [{"sn": "542620052328", "state": "RETEST", "stations": "BST16", "reason": "finish_test, post_power_up_check", "fail_count": 1, "first_fail": "02:00", "hours_in_debug": 166.3}, {"sn": "542620052251", "state": "RETEST", "stations": "BST01", "reason": "encharge_sn_flash, finish_test", "fail_count": 1, "first_fail": "02:34", "hours_in_debug": 165.8}], "true_fail_count": 2, "enphase_grid": {"product": "R4", "rows": [{"station": "HT", "Pass": 13, "A": 0, "B": 0, "C": 13, "Total": 13, "FailFix": 0, "WIP": 0}, {"station": "BST", "Pass": 11, "A": 0, "B": 0, "C": 11, "Total": 11, "FailFix": 0, "WIP": 13}]}}, "BL": {"product": "BL", "second_label": "GT", "total_units": 48, "ht_pass": 30, "bst_pass": 20, "good_pack": 2, "good_pack_rate": 4.2, "backlog_count": 46, "backlog_rate": 95.8, "ht_yield": 62.5, "bst_yield": 41.7, "ftr_rate": 4.17, "ftr_count": 2, "rework_rate": 0.0, "rework_count": 0, "fpy_ht": [{"Station ID": "HT-61", "first_attempts": 11, "first_pass": 11, "fpy": 100.0, "final": 100.0, "missing": false}, {"Station ID": "HT-86", "first_attempts": 19, "first_pass": 19, "fpy": 100.0, "final": 100.0, "missing": false}], "fpy_bst": [{"Station ID": "GT-C018", "first_attempts": 5, "first_pass": 5, "fpy": 100.0, "final": 100.0, "missing": false}, {"Station ID": "GT-C023", "first_attempts": 5, "first_pass": 5, "fpy": 100.0, "final": 100.0, "missing": false}, {"Station ID": "GT-C036", "first_attempts": 4, "first_pass": 4, "fpy": 100.0, "final": 100.0, "missing": false}, {"Station ID": "GT-C038", "first_attempts": 6, "first_pass": 6, "fpy": 100.0, "final": 100.0, "missing": false}], "fpy_ht_avg": 100.0, "fpy_bst_avg": 100.0, "top_ht": [], "top_bst": [], "top_overall": [], "shift_fails": {"A (06-14)": 0, "B (14-22)": 0, "C (22-06)": 0}, "hourly_fails": {}, "unit_fails_ht": [], "unit_fails_bst": [], "debug_units": [], "debug_rule": {"stage": "GT", "label": "Failed GT, never passed"}, "backlog_pareto": [], "shift_report_ht": {}, "shift_report_bst": {}, "true_fail_units": [], "true_fail_count": 0}, "IQ9": {"ALL": {"product": "IQ9", "second_label": "GT", "total_units": 372, "ht_pass": 202, "bst_pass": 239, "good_pack": 75, "good_pack_rate": 20.2, "backlog_count": 297, "backlog_rate": 79.8, "ht_yield": 54.3, "bst_yield": 64.2, "ftr_rate": 19.09, "ftr_count": 71, "rework_rate": 1.08, "rework_count": 4, "fpy_ht": [{"Station ID": "HT-72", "first_attempts": 81, "first_pass": 81, "fpy": 100.0, "final": 100.0, "missing": false}, {"Station ID": "HT-74", "first_attempts": 44, "first_pass": 44, "fpy": 100.0, "final": 100.0, "missing": false}, {"Station ID": "HT-95", "first_attempts": 77, "first_pass": 77, "fpy": 100.0, "final": 100.0, "missing": false}], "fpy_bst": [{"Station ID": "GT-C005", "first_attempts": 10, "first_pass": 10, "fpy": 100.0, "final": 100.0, "missing": false}, {"Station ID": "GT-C011", "first_attempts": 13, "first_pass": 13, "fpy": 100.0, "final": 100.0, "missing": false}, {"Station ID": "GT-C017", "first_attempts": 6, "first_pass": 6, "fpy": 100.0, "final": 100.0, "missing": false}, {"Station ID": "GT-C022", "first_attempts": 50, "first_pass": 50, "fpy": 100.0, "final": 100.0, "missing": false}, {"Station ID": "GT-C037", "first_attempts": 60, "first_pass": 60, "fpy": 100.0, "final": 100.0, "missing": false}, {"Station ID": "GT-C047", "first_attempts": 44, "first_pass": 33, "fpy": 75.0, "final": 75.0, "missing": false}, {"Station ID": "GT-C063", "first_attempts": 2, "first_pass": 2, "fpy": 100.0, "final": 100.0, "missing": false}, {"Station ID": "GT-C080", "first_attempts": 11, "first_pass": 11, "fpy": 100.0, "final": 100.0, "missing": false}, {"Station ID": "GT-C083", "first_attempts": 54, "first_pass": 54, "fpy": 100.0, "final": 100.0, "missing": false}], "fpy_ht_avg": 100.0, "fpy_bst_avg": 97.22, "top_ht": [], "top_bst": [["finish_test", 7], ["finish_test, pcu_presence_report", 4]], "top_overall": [["finish_test", 7], ["finish_test, pcu_presence_report", 4]], "shift_fails": {"A (06-14)": 0, "B (14-22)": 0, "C (22-06)": 11}, "hourly_fails": {"2": 11}, "unit_fails_ht": [], "unit_fails_bst": [{"sn": "542620027339", "station": "GT-C011", "state": "RTS", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}, {"sn": "542620054798", "station": "GT-C011", "state": "RTS", "reason": "finish_test, pcu_presence_report", "shift": "C (22-06)", "fail_time": "02:43"}, {"sn": "542620099218", "station": "GT-C011", "state": "RTS", "reason": "finish_test, pcu_presence_report", "shift": "C (22-06)", "fail_time": "02:43"}, {"sn": "542620099659", "station": "GT-C011", "state": "RTS", "reason": "finish_test, pcu_presence_report", "shift": "C (22-06)", "fail_time": "02:43"}, {"sn": "542620100317", "station": "GT-C047", "state": "RETEST", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}, {"sn": "542620100323", "station": "GT-C047", "state": "RETEST", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}, {"sn": "542620100646", "station": "GT-C047", "state": "RETEST", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}, {"sn": "542620100838", "station": "GT-C047", "state": "RETEST", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}, {"sn": "542620100844", "station": "GT-C047", "state": "RETEST", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}, {"sn": "542620100845", "station": "GT-C011", "state": "RTS", "reason": "finish_test, pcu_presence_report", "shift": "C (22-06)", "fail_time": "02:43"}, {"sn": "542620100846", "station": "GT-C047", "state": "RETEST", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}], "debug_units": [{"sn": "542620100317", "state": "RETEST", "stations": "GT-C047", "reason": "finish_test", "fail_count": 1, "first_fail": "02:54", "hours_in_debug": 165.4}, {"sn": "542620100323", "state": "RETEST", "stations": "GT-C047", "reason": "finish_test", "fail_count": 1, "first_fail": "02:54", "hours_in_debug": 165.4}, {"sn": "542620100646", "state": "RETEST", "stations": "GT-C047", "reason": "finish_test", "fail_count": 1, "first_fail": "02:54", "hours_in_debug": 165.4}, {"sn": "542620100838", "state": "RETEST", "stations": "GT-C047", "reason": "finish_test", "fail_count": 1, "first_fail": "02:54", "hours_in_debug": 165.4}, {"sn": "542620100844", "state": "RETEST", "stations": "GT-C047", "reason": "finish_test", "fail_count": 1, "first_fail": "02:54", "hours_in_debug": 165.4}, {"sn": "542620100846", "state": "RETEST", "stations": "GT-C047", "reason": "finish_test", "fail_count": 1, "first_fail": "02:54", "hours_in_debug": 165.4}], "debug_rule": {"stage": "GT", "label": "Failed GT, never passed"}, "backlog_pareto": [["finish_test", 6]], "shift_report_ht": {}, "shift_report_bst": {"C (22-06)": {"count": 11, "top_reasons": [["finish_test", 7], ["finish_test, pcu_presence_report", 4]], "units": [{"sn": "542620027339", "station": "GT-C011", "state": "RTS", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}, {"sn": "542620054798", "station": "GT-C011", "state": "RTS", "reason": "finish_test, pcu_presence_report", "shift": "C (22-06)", "fail_time": "02:43"}, {"sn": "542620099218", "station": "GT-C011", "state": "RTS", "reason": "finish_test, pcu_presence_report", "shift": "C (22-06)", "fail_time": "02:43"}, {"sn": "542620099659", "station": "GT-C011", "state": "RTS", "reason": "finish_test, pcu_presence_report", "shift": "C (22-06)", "fail_time": "02:43"}, {"sn": "542620100317", "station": "GT-C047", "state": "RETEST", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}, {"sn": "542620100323", "station": "GT-C047", "state": "RETEST", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}, {"sn": "542620100646", "station": "GT-C047", "state": "RETEST", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}, {"sn": "542620100838", "station": "GT-C047", "state": "RETEST", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}, {"sn": "542620100844", "station": "GT-C047", "state": "RETEST", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}, {"sn": "542620100845", "station": "GT-C011", "state": "RTS", "reason": "finish_test, pcu_presence_report", "shift": "C (22-06)", "fail_time": "02:43"}, {"sn": "542620100846", "station": "GT-C047", "state": "RETEST", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}]}}, "true_fail_units": [{"sn": "542620100317", "state": "RETEST", "stations": "GT-C047", "reason": "finish_test", "fail_count": 1, "first_fail": "02:54", "hours_in_debug": 165.4}, {"sn": "542620100323", "state": "RETEST", "stations": "GT-C047", "reason": "finish_test", "fail_count": 1, "first_fail": "02:54", "hours_in_debug": 165.4}, {"sn": "542620100646", "state": "RETEST", "stations": "GT-C047", "reason": "finish_test", "fail_count": 1, "first_fail": "02:54", "hours_in_debug": 165.4}, {"sn": "542620100838", "state": "RETEST", "stations": "GT-C047", "reason": "finish_test", "fail_count": 1, "first_fail": "02:54", "hours_in_debug": 165.4}, {"sn": "542620100844", "state": "RETEST", "stations": "GT-C047", "reason": "finish_test", "fail_count": 1, "first_fail": "02:54", "hours_in_debug": 165.4}, {"sn": "542620100846", "state": "RETEST", "stations": "GT-C047", "reason": "finish_test", "fail_count": 1, "first_fail": "02:54", "hours_in_debug": 165.4}], "true_fail_count": 6}, "IQ9N-3P-277-A-DOM-US": {"product": "IQ9", "second_label": "GT", "total_units": 47, "ht_pass": 44, "bst_pass": 29, "good_pack": 26, "good_pack_rate": 55.3, "backlog_count": 21, "backlog_rate": 44.7, "ht_yield": 93.6, "bst_yield": 61.7, "ftr_rate": 55.32, "ftr_count": 26, "rework_rate": 0.0, "rework_count": 0, "fpy_ht": [{"Station ID": "HT-74", "first_attempts": 44, "first_pass": 44, "fpy": 100.0, "final": 100.0, "missing": false}], "fpy_bst": [{"Station ID": "GT-C005", "first_attempts": 10, "first_pass": 10, "fpy": 100.0, "final": 100.0, "missing": false}, {"Station ID": "GT-C017", "first_attempts": 6, "first_pass": 6, "fpy": 100.0, "final": 100.0, "missing": false}, {"Station ID": "GT-C063", "first_attempts": 2, "first_pass": 2, "fpy": 100.0, "final": 100.0, "missing": false}, {"Station ID": "GT-C080", "first_attempts": 11, "first_pass": 11, "fpy": 100.0, "final": 100.0, "missing": false}], "fpy_ht_avg": 100.0, "fpy_bst_avg": 100.0, "top_ht": [], "top_bst": [], "top_overall": [], "shift_fails": {"A (06-14)": 0, "B (14-22)": 0, "C (22-06)": 0}, "hourly_fails": {}, "unit_fails_ht": [], "unit_fails_bst": [], "debug_units": [], "debug_rule": {"stage": "GT", "label": "Failed GT, never passed"}, "backlog_pareto": [], "shift_report_ht": {}, "shift_report_bst": {}, "true_fail_units": [], "true_fail_count": 0}, "IQ9N-A-DOM-US": {"product": "IQ9", "second_label": "GT", "total_units": 325, "ht_pass": 158, "bst_pass": 210, "good_pack": 49, "good_pack_rate": 15.1, "backlog_count": 276, "backlog_rate": 84.9, "ht_yield": 48.6, "bst_yield": 64.6, "ftr_rate": 13.85, "ftr_count": 45, "rework_rate": 1.23, "rework_count": 4, "fpy_ht": [{"Station ID": "HT-72", "first_attempts": 81, "first_pass": 81, "fpy": 100.0, "final": 100.0, "missing": false}, {"Station ID": "HT-95", "first_attempts": 77, "first_pass": 77, "fpy": 100.0, "final": 100.0, "missing": false}], "fpy_bst": [{"Station ID": "GT-C011", "first_attempts": 13, "first_pass": 13, "fpy": 100.0, "final": 100.0, "missing": false}, {"Station ID": "GT-C022", "first_attempts": 50, "first_pass": 50, "fpy": 100.0, "final": 100.0, "missing": false}, {"Station ID": "GT-C037", "first_attempts": 60, "first_pass": 60, "fpy": 100.0, "final": 100.0, "missing": false}, {"Station ID": "GT-C047", "first_attempts": 44, "first_pass": 33, "fpy": 75.0, "final": 75.0, "missing": false}, {"Station ID": "GT-C083", "first_attempts": 54, "first_pass": 54, "fpy": 100.0, "final": 100.0, "missing": false}], "fpy_ht_avg": 100.0, "fpy_bst_avg": 95.0, "top_ht": [], "top_bst": [["finish_test", 7], ["finish_test, pcu_presence_report", 4]], "top_overall": [["finish_test", 7], ["finish_test, pcu_presence_report", 4]], "shift_fails": {"A (06-14)": 0, "B (14-22)": 0, "C (22-06)": 11}, "hourly_fails": {"2": 11}, "unit_fails_ht": [], "unit_fails_bst": [{"sn": "542620027339", "station": "GT-C011", "state": "RTS", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}, {"sn": "542620054798", "station": "GT-C011", "state": "RTS", "reason": "finish_test, pcu_presence_report", "shift": "C (22-06)", "fail_time": "02:43"}, {"sn": "542620099218", "station": "GT-C011", "state": "RTS", "reason": "finish_test, pcu_presence_report", "shift": "C (22-06)", "fail_time": "02:43"}, {"sn": "542620099659", "station": "GT-C011", "state": "RTS", "reason": "finish_test, pcu_presence_report", "shift": "C (22-06)", "fail_time": "02:43"}, {"sn": "542620100317", "station": "GT-C047", "state": "RETEST", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}, {"sn": "542620100323", "station": "GT-C047", "state": "RETEST", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}, {"sn": "542620100646", "station": "GT-C047", "state": "RETEST", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}, {"sn": "542620100838", "station": "GT-C047", "state": "RETEST", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}, {"sn": "542620100844", "station": "GT-C047", "state": "RETEST", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}, {"sn": "542620100845", "station": "GT-C011", "state": "RTS", "reason": "finish_test, pcu_presence_report", "shift": "C (22-06)", "fail_time": "02:43"}, {"sn": "542620100846", "station": "GT-C047", "state": "RETEST", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}], "debug_units": [{"sn": "542620100317", "state": "RETEST", "stations": "GT-C047", "reason": "finish_test", "fail_count": 1, "first_fail": "02:54", "hours_in_debug": 165.4}, {"sn": "542620100323", "state": "RETEST", "stations": "GT-C047", "reason": "finish_test", "fail_count": 1, "first_fail": "02:54", "hours_in_debug": 165.4}, {"sn": "542620100646", "state": "RETEST", "stations": "GT-C047", "reason": "finish_test", "fail_count": 1, "first_fail": "02:54", "hours_in_debug": 165.4}, {"sn": "542620100838", "state": "RETEST", "stations": "GT-C047", "reason": "finish_test", "fail_count": 1, "first_fail": "02:54", "hours_in_debug": 165.4}, {"sn": "542620100844", "state": "RETEST", "stations": "GT-C047", "reason": "finish_test", "fail_count": 1, "first_fail": "02:54", "hours_in_debug": 165.4}, {"sn": "542620100846", "state": "RETEST", "stations": "GT-C047", "reason": "finish_test", "fail_count": 1, "first_fail": "02:54", "hours_in_debug": 165.4}], "debug_rule": {"stage": "GT", "label": "Failed GT, never passed"}, "backlog_pareto": [["finish_test", 6]], "shift_report_ht": {}, "shift_report_bst": {"C (22-06)": {"count": 11, "top_reasons": [["finish_test", 7], ["finish_test, pcu_presence_report", 4]], "units": [{"sn": "542620027339", "station": "GT-C011", "state": "RTS", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}, {"sn": "542620054798", "station": "GT-C011", "state": "RTS", "reason": "finish_test, pcu_presence_report", "shift": "C (22-06)", "fail_time": "02:43"}, {"sn": "542620099218", "station": "GT-C011", "state": "RTS", "reason": "finish_test, pcu_presence_report", "shift": "C (22-06)", "fail_time": "02:43"}, {"sn": "542620099659", "station": "GT-C011", "state": "RTS", "reason": "finish_test, pcu_presence_report", "shift": "C (22-06)", "fail_time": "02:43"}, {"sn": "542620100317", "station": "GT-C047", "state": "RETEST", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}, {"sn": "542620100323", "station": "GT-C047", "state": "RETEST", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}, {"sn": "542620100646", "station": "GT-C047", "state": "RETEST", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}, {"sn": "542620100838", "station": "GT-C047", "state": "RETEST", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}, {"sn": "542620100844", "station": "GT-C047", "state": "RETEST", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}, {"sn": "542620100845", "station": "GT-C011", "state": "RTS", "reason": "finish_test, pcu_presence_report", "shift": "C (22-06)", "fail_time": "02:43"}, {"sn": "542620100846", "station": "GT-C047", "state": "RETEST", "reason": "finish_test", "shift": "C (22-06)", "fail_time": "02:54"}]}}, "true_fail_units": [{"sn": "542620100317", "state": "RETEST", "stations": "GT-C047", "reason": "finish_test", "fail_count": 1, "first_fail": "02:54", "hours_in_debug": 165.4}, {"sn": "542620100323", "state": "RETEST", "stations": "GT-C047", "reason": "finish_test", "fail_count": 1, "first_fail": "02:54", "hours_in_debug": 165.4}, {"sn": "542620100646", "state": "RETEST", "stations": "GT-C047", "reason": "finish_test", "fail_count": 1, "first_fail": "02:54", "hours_in_debug": 165.4}, {"sn": "542620100838", "state": "RETEST", "stations": "GT-C047", "reason": "finish_test", "fail_count": 1, "first_fail": "02:54", "hours_in_debug": 165.4}, {"sn": "542620100844", "state": "RETEST", "stations": "GT-C047", "reason": "finish_test", "fail_count": 1, "first_fail": "02:54", "hours_in_debug": 165.4}, {"sn": "542620100846", "state": "RETEST", "stations": "GT-C047", "reason": "finish_test", "fail_count": 1, "first_fail": "02:54", "hours_in_debug": 165.4}], "true_fail_count": 6}}}}};
+const STATUS = {"prod_day": "20260521", "cached_today": [], "cached_today_count": 0, "expected_count": 23, "missing_hours": ["00:00", "01:00", "02:00", "03:00", "04:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"], "last_updated": "20260514 02:00", "generated_at": "2026-05-22 05:36:55", "total_days": 1, "total_hours": 1};
+const PUBLIC_MODE = true;
+const IQ9_MODELS_JS = ['ALL','IQ9N-3P-277-A-DOM-US','IQ9N-A-DOM-US','IQ9N-3P-277-B-DOM-US'];
+
+function maskSN(sn) {
+    if (!PUBLIC_MODE) return sn;
+    if (!sn) return sn;
+    const s = String(sn);
+    if (s.length <= 4) return '•••' + s;
+    return '••••' + s.slice(-4);
+}
+if (PUBLIC_MODE) {
+    document.addEventListener('DOMContentLoaded', () => {
+        const b = document.getElementById('publicBadge');
+        if (b) b.style.display = 'inline-block';
+    });
+}
+
+let currentProduct = null;
+let currentDay     = null;
+let currentHour    = 'CUMULATIVE';
+let currentIq9Model = 'ALL';
+let activeCharts   = [];
+
+// ========== CLOCK ==========
+function currentShift(h) {
+    if (h >= 6 && h < 14)  return {label:'A', window:'06-14', cls:'shift-a'};
+    if (h >= 14 && h < 22) return {label:'B', window:'14-22', cls:'shift-b'};
+    return                        {label:'C', window:'22-06', cls:'shift-c'};
+}
+function tick() {
+    const now = new Date(), pad = n => String(n).padStart(2,'0');
+    const cl = document.getElementById('liveClock');
+    const dt = document.getElementById('liveDate');
+    if (cl) cl.textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+    if (dt) dt.textContent = now.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    const sh = currentShift(now.getHours());
+    const sv = document.getElementById('shiftValue');
+    const sb = document.getElementById('shiftBox');
+    if (sv) sv.innerHTML = `${sh.label} <span style="font-size:9px;opacity:0.7;display:block">${sh.window}</span>`;
+    if (sb) { sb.classList.remove('shift-a','shift-b','shift-c'); sb.classList.add(sh.cls); }
+}
+tick(); setInterval(tick, 1000);
+
+// ========== STATUS PANEL ==========
+function renderStatusPanel() {
+    const el = document.getElementById('statusPanel');
+    if (!el || !STATUS) return;
+
+    const cachedCount = STATUS.cached_today_count || 0;
+    const expectedCount = STATUS.expected_count || 0;
+    const missing = STATUS.missing_hours || [];
+    const coverage = expectedCount > 0
+        ? Math.round(cachedCount / expectedCount * 100)
+        : 100;
+    const coverageTone = coverage === 100 ? 'good' : coverage >= 75 ? 'warn' : 'bad';
+
+    const missingHtml = missing.length > 0
+        ? `<div style="margin-top:8px">
+             <div class="status-label">Missing Hours</div>
+             <div class="status-missing">
+               ${missing.map(h => `<span class="missing-hour">${h}</span>`).join('')}
+             </div>
+           </div>`
+        : '';
+
+    el.innerHTML = `
+        <div class="status-item">
+            <div class="status-label">Today's Coverage</div>
+            <div class="status-value ${coverageTone}">${cachedCount} / ${expectedCount} hours</div>
+            ${missingHtml}
+        </div>
+        <div class="status-divider"></div>
+        <div class="status-item">
+            <div class="status-label">Last Updated</div>
+            <div class="status-value">${STATUS.last_updated || '—'}</div>
+        </div>
+        <div class="status-divider"></div>
+        <div class="status-item">
+            <div class="status-label">Total History</div>
+            <div class="status-value">${STATUS.total_days} day(s) · ${STATUS.total_hours} hours</div>
+        </div>
+        <div class="refresh-hint">
+            ${missing.length > 0
+                ? `⚠ ${missing.length} hour(s) missing — download from OneDrive & run Refresh HPR`
+                : '✅ All hours up to date'}
+        </div>
+    `;
+}
+
+// ========== DAY MANAGEMENT ==========
+function allDays() {
+    return Object.keys(DATA).sort().reverse();
+}
+function formatDay(d) {
+    if (!d || d.length !== 8) return d;
+    const y=parseInt(d.slice(0,4)),m=parseInt(d.slice(4,6)),dd=parseInt(d.slice(6,8));
+    return new Date(y,m-1,dd).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+}
+function hoursForDay(day) {
+    return Object.keys(DATA[day] || {}).sort();
+}
+
+function initDaySelectors() {
+    const days = allDays();
+    ['daySelect','detailDaySelect'].forEach(id => {
+        const sel = document.getElementById(id);
+        if (!sel) return;
+        sel.innerHTML = '';
+        days.forEach(d => {
+            const o = document.createElement('option');
+            o.value = d; o.textContent = formatDay(d);
+            sel.appendChild(o);
+        });
+    });
+    currentDay = days[0] || null;
+    if (currentDay) {
+        document.getElementById('daySelect').value = currentDay;
+        updateDayBadge();
+        renderLandingCards();
+    }
+}
+
+function updateDayBadge() {
+    const b = document.getElementById('dayBadge');
+    if (b && currentDay) b.textContent = `Production Day: ${formatDay(currentDay)}`;
+}
+
+function onDayChange() {
+    currentDay = document.getElementById('daySelect').value;
+    updateDayBadge();
+    renderLandingCards();
+}
+
+function onDetailDayChange() {
+    currentDay = document.getElementById('detailDaySelect').value;
+    currentHour = 'CUMULATIVE';
+    renderHourBar();
+    renderSelected();
+}
+
+// ========== CUMULATIVE DATA ==========
+function getCumulativeData(day, product) {
+    const hours = hoursForDay(day);
+    if (!hours.length) return null;
+    if (product === 'INV') {
+        // Combine BL + BN cumulative
+        const bl = getCumulativeData(day, 'BL');
+        const bn = getCumulativeData(day, 'BN');
+        return {BL: bl, BN: bn};
+    }
+    if (product === 'IQ9') {
+        // Return full IQ9 model dict cumulative
+        const result = {};
+        for (const mkey of IQ9_MODELS_JS) {
+            const slices = hours.map(h => {
+                const hr = (DATA[day] || {})[h];
+                if (!hr) return null;
+                const iq9 = hr['IQ9'];
+                if (!iq9) return null;
+                return typeof iq9 === 'object' && !iq9.product ? iq9[mkey] : null;
+            }).filter(Boolean);
+            if (slices.length) result[mkey] = aggregateJS(slices);
+        }
+        return result;
+    }
+    const slices = hours.map(h => ((DATA[day] || {})[h] || {})[product]).filter(Boolean);
+    return slices.length ? aggregateJS(slices) : null;
+}
+
+function getHourData(day, hour, product) {
+    const hr = (DATA[day] || {})[hour];
+    if (!hr) return null;
+    if (product === 'INV') return {BL: hr['BL'], BN: hr['BN']};
+    if (product === 'IQ9') {
+        const iq9 = hr['IQ9'];
+        if (!iq9) return null;
+        return typeof iq9 === 'object' && !iq9.product ? iq9 : {'ALL': iq9};
+    }
+    return hr[product] || null;
+}
+
+function aggregateJS(slices) {
+    if (!slices.length) return null;
+    if (slices.length === 1) return slices[0];
+    const total = slices.reduce((s,r) => s + (r.total_units||0), 0);
+    const ht_pass = slices.reduce((s,r) => s + (r.ht_pass||0), 0);
+    const bst_pass = slices.reduce((s,r) => s + (r.bst_pass||0), 0);
+    const gp = slices.reduce((s,r) => s + (r.good_pack||0), 0);
+    const bl = slices.reduce((s,r) => s + (r.backlog_count||0), 0);
+    const ftr = slices.reduce((s,r) => s + (r.ftr_count||0), 0);
+    const rework = slices.reduce((s,r) => s + (r.rework_count||0), 0);
+
+    // Merge top failures
+    const merge = key => {
+        const ctr = {};
+        slices.forEach(s => (s[key]||[]).forEach(([r,c]) => { ctr[r]=(ctr[r]||0)+c; }));
+        return Object.entries(ctr).sort((a,b)=>b[1]-a[1]).slice(0,10);
+    };
+    // Merge hourly
+    const hourly = {};
+    slices.forEach(s => { Object.entries(s.hourly_fails||{}).forEach(([h,c]) => { hourly[h]=(hourly[h]||0)+c; }); });
+    // Merge shift
+    const shift = {};
+    slices.forEach(s => { Object.entries(s.shift_fails||{}).forEach(([sh,c]) => { shift[sh]=(shift[sh]||0)+c; }); });
+    // Merge FPY
+    const mergeFpy = key => {
+        const st = {};
+        slices.forEach(s => { (s[key]||[]).forEach(r => {
+            const k = r['Station ID'];
+            if (!st[k]) st[k] = {first_attempts:0, first_pass:0, missing: r.missing||false};
+            st[k].first_attempts += r.first_attempts||0;
+            st[k].first_pass += r.first_pass||0;
+        }); });
+        return Object.entries(st).sort((a,b)=>a[0].localeCompare(b[0])).map(([k,v]) => ({
+            'Station ID': k,
+            first_attempts: v.first_attempts, first_pass: v.first_pass,
+            fpy: v.first_attempts ? +(v.first_pass/v.first_attempts*100).toFixed(2) : 0,
+            final: v.first_attempts ? +(v.first_pass/v.first_attempts*100).toFixed(2) : 0,
+            missing: v.missing
+        }));
+    };
+    // Merge debug
+    const dbgSeen = new Set();
+    const debug_units = [];
+    slices.forEach(s => { (s.debug_units||[]).forEach(u => {
+        if (!dbgSeen.has(u.sn)) { dbgSeen.add(u.sn); debug_units.push(u); }
+    }); });
+    // Merge unit fail tables
+    const mergeUFT = key => {
+        const seen = new Set(); const out = [];
+        slices.forEach(s => { (s[key]||[]).forEach(u => {
+            if (!seen.has(u.sn)) { seen.add(u.sn); out.push(u); }
+        }); });
+        return out;
+    };
+
+    const fpy_ht = mergeFpy('fpy_ht');
+    const fpy_bst = mergeFpy('fpy_bst');
+
+    // Merge Enphase grids (R3/R4 only)
+    let mergedGrid = null;
+    const grids = slices.map(s => s.enphase_grid).filter(Boolean);
+    if (grids.length) {
+        const stationData = {};
+        grids.forEach(g => {
+            (g.rows || []).forEach(r => {
+                if (!stationData[r.station]) {
+                    stationData[r.station] = {station: r.station, WIP: 0, Pass: 0,
+                                              A: 0, B: 0, C: 0, Total: 0, FailFix: 0};
+                }
+                ['Pass','A','B','C','Total','FailFix'].forEach(k => {
+                    stationData[r.station][k] += (r[k] || 0);
+                });
+                stationData[r.station].WIP = Math.max(stationData[r.station].WIP, r.WIP || 0);
+            });
+        });
+        mergedGrid = {product: grids[0].product, rows: Object.values(stationData)};
+    }
+
+    return {
+        product: slices[0].product, second_label: slices[0].second_label,
+        total_units: total, ht_pass, bst_pass,
+        good_pack: gp, good_pack_rate: total ? +((gp/total)*100).toFixed(1) : 0,
+        backlog_count: bl, backlog_rate: total ? +((bl/total)*100).toFixed(1) : 0,
+        ht_yield: total ? +((ht_pass/total)*100).toFixed(1) : 0,
+        bst_yield: total ? +((bst_pass/total)*100).toFixed(1) : 0,
+        ftr_count: ftr, ftr_rate: total ? +((ftr/total)*100).toFixed(2) : 0,
+        rework_count: rework, rework_rate: total ? +((rework/total)*100).toFixed(2) : 0,
+        fpy_ht, fpy_bst,
+        fpy_ht_avg: fpy_ht.length ? +(fpy_ht.reduce((s,r)=>s+r.fpy,0)/fpy_ht.length).toFixed(2) : 0,
+        fpy_bst_avg: fpy_bst.length ? +(fpy_bst.reduce((s,r)=>s+r.fpy,0)/fpy_bst.length).toFixed(2) : 0,
+        top_ht: merge('top_ht'), top_bst: merge('top_bst'), top_overall: merge('top_overall'),
+        backlog_pareto: merge('backlog_pareto'),
+        hourly_fails: hourly, shift_fails: shift,
+        debug_units, debug_rule: slices[0].debug_rule,
+        unit_fails_ht: mergeUFT('unit_fails_ht'), unit_fails_bst: mergeUFT('unit_fails_bst'),
+        enphase_grid: mergedGrid,
+    };
+}
+
+// ========== LANDING CARDS ==========
+function kpiClass(v) { return v >= 95 ? 'cv-green' : v >= 85 ? 'cv-amber' : 'cv-red'; }
+
+function renderLandingCards() {
+    if (!currentDay) return;
+    const cum = {
+        R4: getCumulativeData(currentDay, 'R4'),
+        R3: getCumulativeData(currentDay, 'R3'),
+        BL: getCumulativeData(currentDay, 'BL'),
+        BN: getCumulativeData(currentDay, 'BN'),
+        IQ9: getCumulativeData(currentDay, 'IQ9'),
+    };
+    const hours = hoursForDay(currentDay);
+    const hoursLabel = hours.length === 0 ? 'No data yet' : `${hours.length} hour${hours.length > 1 ? 's' : ''} loaded`;
+
+    // R4 / R3 / INV quick KPIs
+    for (const [prod, d] of [['R4', cum.R4], ['R3', cum.R3]]) {
+        const el = document.getElementById(`ckpi-${prod}`);
+        if (!el) continue;
+        if (!d) { el.innerHTML = `<div class="no-data" style="grid-column:span 3">${hoursLabel}</div>`; continue; }
+        el.innerHTML = `
+            <div class="ckpi"><div class="cv cv-blue">${d.total_units}</div><div class="cl">Units</div></div>
+            <div class="ckpi"><div class="cv ${kpiClass(d.good_pack_rate)}">${d.good_pack_rate}%</div><div class="cl">Good Pack</div></div>
+            <div class="ckpi"><div class="cv ${d.backlog_count > 0 ? 'cv-red' : 'cv-green'}">${d.backlog_count}</div><div class="cl">Backlog</div></div>
+        `;
+    }
+    // INV = BL + BN combined
+    const invEl = document.getElementById('ckpi-INV');
+    if (invEl) {
+        const bl = cum.BL, bn = cum.BN;
+        if (!bl && !bn) { invEl.innerHTML = `<div class="no-data" style="grid-column:span 3">${hoursLabel}</div>`; }
+        else {
+            const tu = (bl?.total_units||0) + (bn?.total_units||0);
+            const gp = (bl?.good_pack||0) + (bn?.good_pack||0);
+            const bk = (bl?.backlog_count||0) + (bn?.backlog_count||0);
+            const gpr = tu ? +((gp/tu)*100).toFixed(1) : 0;
+            invEl.innerHTML = `
+                <div class="ckpi"><div class="cv cv-blue">${tu}</div><div class="cl">Units</div></div>
+                <div class="ckpi"><div class="cv ${kpiClass(gpr)}">${gpr}%</div><div class="cl">Good Pack</div></div>
+                <div class="ckpi"><div class="cv ${bk > 0 ? 'cv-red' : 'cv-green'}">${bk}</div><div class="cl">Backlog</div></div>
+            `;
+        }
+    }
+    // IQ9 ALL
+    const iq9El = document.getElementById('ckpi-IQ9');
+    if (iq9El) {
+        const iq9all = typeof cum.IQ9 === 'object' ? cum.IQ9['ALL'] : cum.IQ9;
+        if (!iq9all) { iq9El.innerHTML = `<div class="no-data" style="grid-column:span 3">${hoursLabel}</div>`; }
+        else {
+            iq9El.innerHTML = `
+                <div class="ckpi"><div class="cv cv-blue">${iq9all.total_units}</div><div class="cl">Units</div></div>
+                <div class="ckpi"><div class="cv ${kpiClass(iq9all.good_pack_rate)}">${iq9all.good_pack_rate}%</div><div class="cl">Good Pack</div></div>
+                <div class="ckpi"><div class="cv ${iq9all.backlog_count > 0 ? 'cv-red' : 'cv-green'}">${iq9all.backlog_count}</div><div class="cl">Backlog</div></div>
+                <div class="ckpi"><div class="cv ${kpiClass(iq9all.ht_yield)}">${iq9all.ht_yield}%</div><div class="cl">HT Yield</div></div>
+                <div class="ckpi"><div class="cv ${kpiClass(iq9all.bst_yield)}">${iq9all.bst_yield}%</div><div class="cl">GT Yield</div></div>
+                <div class="ckpi"><div class="cv cv-amber">${hoursLabel}</div><div class="cl">Coverage</div></div>
+            `;
+        }
+    }
+}
+
+// ========== PRODUCT SELECTION ==========
+function selectProduct(p) {
+    currentProduct = p;
+    currentHour = 'CUMULATIVE';
+    currentIq9Model = 'ALL';
+    document.getElementById('landing').classList.add('hidden');
+    document.getElementById('detail').classList.remove('hidden');
+    let name = p === 'INV' ? 'BL / BN (Inverters)' : p === 'IQ9' ? 'IQ9 (PCU)' : p;
+    document.getElementById('curProduct').textContent = name;
+    // Sync detail day selector
+    const ds = document.getElementById('detailDaySelect');
+    if (ds) ds.value = currentDay;
+    renderHourBar();
+    renderSelected();
+}
+
+function goBack() {
+    destroyCharts();
+    document.getElementById('detail').classList.add('hidden');
+    document.getElementById('landing').classList.remove('hidden');
+}
+
+function destroyCharts() {
+    activeCharts.forEach(c => { try { c.destroy(); } catch(e){} });
+    activeCharts = [];
+}
+
+// ========== HOUR BAR ==========
+function renderHourBar() {
+    const hours = hoursForDay(currentDay);
+    const bar = document.getElementById('hourBar');
+    if (!bar) return;
+    let html = `<div class="hour-bar"><span class="hour-bar-lbl">VIEW:</span>
+        <button class="hour-btn cumulative ${currentHour==='CUMULATIVE'?'active':''}"
+            onclick="switchHour('CUMULATIVE')">📊 Cumulative (${hours.length}h)</button>`;
+    hours.forEach(h => {
+        const active = currentHour === h ? 'active' : '';
+        html += `<button class="hour-btn ${active}" onclick="switchHour('${h}')">${h}</button>`;
+    });
+    html += '</div>';
+    bar.innerHTML = html;
+}
+
+function switchHour(hour) {
+    currentHour = hour;
+    renderHourBar();
+    destroyCharts();
+    renderSelected();
+}
+
+// ========== RENDER SELECTED ==========
+function renderSelected() {
+    let d;
+    if (currentHour === 'CUMULATIVE') {
+        d = getCumulativeData(currentDay, currentProduct);
+    } else {
+        d = getHourData(currentDay, currentHour, currentProduct);
+    }
+
+    destroyCharts();
+
+    if (currentProduct === 'INV') {
+        const bl = d?.BL || null;
+        const bn = d?.BN || null;
+        renderSideBySide(bl, bn);
+        return;
+    }
+    if (currentProduct === 'IQ9') {
+        renderIq9View(d);
+        return;
+    }
+    if (!d) {
+        document.getElementById('content').innerHTML =
+            `<div class="empty">No ${currentProduct} data for this ${currentHour === 'CUMULATIVE' ? 'day' : 'hour'}</div>`;
+        return;
+    }
+    renderDetailView(d, 'main');
+}
+
+// ========== DETAIL VIEW ==========
+function renderDetailView(d, prefix) {
+    const L2 = d.second_label || 'BST';
+    const gp = d.good_pack ?? 0;
+    const gpRate = d.good_pack_rate ?? 0;
+    const bl = d.backlog_count ?? 0;
+    const debugCount = (d.debug_units || []).length;
+    const gpTone = gpRate >= 95 ? 'green' : gpRate >= 85 ? 'amber' : 'red';
+    const blTone = bl === 0 ? 'green' : bl > 10 ? 'red' : 'amber';
+    const dbTone = debugCount === 0 ? 'green' : debugCount > 5 ? 'red' : 'amber';
+
+    const viewLabel = currentHour === 'CUMULATIVE'
+        ? `Today so far (${hoursForDay(currentDay).length} hours)`
+        : `Hour: ${currentHour} – ${String(parseInt(currentHour)+1).padStart(2,'0')}:00`;
+
+    const html = `
+    <div style="font-size:12px;color:#5eead4;margin-bottom:12px;font-weight:600">📍 ${viewLabel}</div>
+    <div class="hero-row">
+        <div class="hero-card hero-units"><div class="hero-num">${d.total_units}</div><div class="hero-lbl">Units</div></div>
+        <div class="hero-card hero-${gpTone}"><div class="hero-num">${gp}</div><div class="hero-lbl">✅ Good Pack</div><div class="hero-sub">${gpRate}%</div></div>
+        <div class="hero-card hero-${blTone}" ${bl ? 'onclick="scrollToDebug()" style="cursor:pointer"' : ''}>
+            <div class="hero-num">${bl}</div><div class="hero-lbl">📦 Backlog</div><div class="hero-sub">${d.backlog_rate}%</div></div>
+        <div class="hero-card hero-${kpiClass(d.ht_yield)}"><div class="hero-num">${d.ht_yield}%</div><div class="hero-lbl">HT Yield</div><div class="hero-sub">${d.ht_pass} passed</div></div>
+        <div class="hero-card hero-${kpiClass(d.bst_yield)}"><div class="hero-num">${d.bst_yield}%</div><div class="hero-lbl">${L2} Yield</div><div class="hero-sub">${d.bst_pass} passed</div></div>
+        <div class="hero-card hero-${dbTone}" ${debugCount ? 'onclick="scrollToDebug()" style="cursor:pointer"' : ''}>
+            <div class="hero-num">${debugCount}</div><div class="hero-lbl">🐛 Debug</div></div>
+    </div>
+
+    ${d.enphase_grid ? renderEnphaseGrid(d.enphase_grid, viewLabel) : ''}
+
+    <div class="row two">
+        <div class="panel"><h3>Per-Tester FPY — HT</h3><canvas id="${prefix}FpyHt"></canvas></div>
+        <div class="panel"><h3>Per-Tester FPY — ${L2}</h3><canvas id="${prefix}FpyBst"></canvas></div>
+    </div>
+    <div class="row two">
+        <div class="panel"><h3>Top Failures — HT</h3><canvas id="${prefix}HtPareto"></canvas></div>
+        <div class="panel"><h3>Top Failures — ${L2}</h3><canvas id="${prefix}BstPareto"></canvas></div>
+    </div>
+    <div class="row two">
+        <div class="panel"><h3>Shift Breakdown</h3><canvas id="${prefix}Shift"></canvas></div>
+        <div class="panel"><h3>Hourly Failure Trend</h3><canvas id="${prefix}Hourly"></canvas></div>
+    </div>
+
+    ${debugSectionHtml(d, prefix)}
+
+    ${trueFailSectionHtml(d, prefix)}
+
+    ${shiftReportHtml(d, prefix, L2)}
+
+    ${d.backlog_pareto && d.backlog_pareto.length ? `
+    <div class="row"><div class="panel"><h3>📦 Backlog Pareto</h3><canvas id="${prefix}BacklogPareto"></canvas></div></div>` : ''}
+
+    <h3 class="section-title">Failure Detail</h3>
+    <div class="row two">
+        <div class="panel"><h3>HT Failed Units</h3>${unitFailTable(d.unit_fails_ht)}</div>
+        <div class="panel"><h3>${L2} Failed Units</h3>${unitFailTable(d.unit_fails_bst)}</div>
+    </div>
+    `;
+    document.getElementById('content').innerHTML = html;
+    drawFpyChart(`${prefix}FpyHt`, d.fpy_ht, '#3b82f6');
+    drawFpyChart(`${prefix}FpyBst`, d.fpy_bst, '#10b981');
+    drawPareto(`${prefix}HtPareto`, d.top_ht, '#f59e0b');
+    drawPareto(`${prefix}BstPareto`, d.top_bst, '#ef4444');
+    drawShift(`${prefix}Shift`, d.shift_fails);
+    drawHourly(`${prefix}Hourly`, d.hourly_fails);
+    if (d.backlog_pareto?.length) drawPareto(`${prefix}BacklogPareto`, d.backlog_pareto, '#ef4444');
+}
+
+// ========== INV SIDE BY SIDE ==========
+function renderSideBySide(bl, bn) {
+    const mkCol = (d, pid, head, headClass) => {
+        if (!d) return `<div class="inv-col"><div class="inv-col-head ${headClass}">${head}</div><div class="empty">No data</div></div>`;
+        const L2 = d.second_label || 'GT';
+        const gp = d.good_pack ?? 0; const gpR = d.good_pack_rate ?? 0;
+        const bk = d.backlog_count ?? 0; const dbg = (d.debug_units||[]).length;
+        return `<div class="inv-col">
+            <div class="inv-col-head ${headClass}">${head}</div>
+            <div class="hero-row" style="grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px">
+                <div class="hero-card hero-units" style="padding:10px"><div class="hero-num" style="font-size:20px">${d.total_units}</div><div class="hero-lbl">Units</div></div>
+                <div class="hero-card hero-${gpR>=95?'green':gpR>=85?'amber':'red'}" style="padding:10px"><div class="hero-num" style="font-size:20px">${gp}</div><div class="hero-lbl">Good Pack</div><div class="hero-sub">${gpR}%</div></div>
+                <div class="hero-card hero-${bk===0?'green':bk>10?'red':'amber'}" style="padding:10px"><div class="hero-num" style="font-size:20px">${bk}</div><div class="hero-lbl">Backlog</div></div>
+            </div>
+            <div class="panel"><h3>FPY — HT</h3><canvas id="${pid}FpyHt"></canvas></div>
+            <div class="panel"><h3>FPY — ${L2}</h3><canvas id="${pid}FpyBst"></canvas></div>
+            <div class="panel"><h3>HT Pareto</h3><canvas id="${pid}HtP"></canvas></div>
+            <div class="panel"><h3>${L2} Pareto</h3><canvas id="${pid}BstP"></canvas></div>
+            <div class="panel"><h3>HT Failed</h3>${unitFailTable(d.unit_fails_ht)}</div>
+            <div class="panel"><h3>${L2} Failed</h3>${unitFailTable(d.unit_fails_bst)}</div>
+        </div>`;
+    };
+    const BL_HEAD_STYLE = 'background:linear-gradient(135deg,rgba(59,130,246,.2),transparent);color:#93c5fd;border:1px solid rgba(59,130,246,.3);border-radius:8px;padding:12px;font-size:16px;font-weight:800;text-align:center;margin-bottom:12px';
+    const BN_HEAD_STYLE = 'background:linear-gradient(135deg,rgba(167,139,250,.2),transparent);color:#c4b5fd;border:1px solid rgba(167,139,250,.3);border-radius:8px;padding:12px;font-size:16px;font-weight:800;text-align:center;margin-bottom:12px';
+    document.getElementById('content').innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+            <div class="inv-col"><div style="${BL_HEAD_STYLE}">BL · IQ8BL</div>${bl ? blCol(bl,'bl') : '<div class="empty">No BL data</div>'}</div>
+            <div class="inv-col"><div style="${BN_HEAD_STYLE}">BN · IQ8BN</div>${bn ? bnCol(bn,'bn') : '<div class="empty">No BN data</div>'}</div>
+        </div>`;
+
+    function blCol(d, pid) {
+        const L2 = d.second_label || 'GT';
+        const gp = d.good_pack??0; const gpR = d.good_pack_rate??0; const bk = d.backlog_count??0;
+        return `
+            <div class="hero-row" style="grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px">
+                <div class="hero-card hero-units" style="padding:10px"><div class="hero-num" style="font-size:20px">${d.total_units}</div><div class="hero-lbl">Units</div></div>
+                <div class="hero-card hero-${gpR>=95?'green':gpR>=85?'amber':'red'}" style="padding:10px"><div class="hero-num" style="font-size:20px">${gp}</div><div class="hero-lbl">Good Pack</div><div class="hero-sub">${gpR}%</div></div>
+                <div class="hero-card hero-${bk===0?'green':bk>10?'red':'amber'}" style="padding:10px"><div class="hero-num" style="font-size:20px">${bk}</div><div class="hero-lbl">Backlog</div></div>
+            </div>
+            <div class="panel"><h3>FPY — HT</h3><canvas id="${pid}FpyHt"></canvas></div>
+            <div class="panel"><h3>FPY — ${L2}</h3><canvas id="${pid}FpyBst"></canvas></div>
+            <div class="panel"><h3>HT Pareto</h3><canvas id="${pid}HtP"></canvas></div>
+            <div class="panel"><h3>${L2} Pareto</h3><canvas id="${pid}BstP"></canvas></div>
+            <div class="panel"><h3>HT Failed</h3>${unitFailTable(d.unit_fails_ht)}</div>
+            <div class="panel"><h3>${L2} Failed</h3>${unitFailTable(d.unit_fails_bst)}</div>`;
+    }
+    function bnCol(d, pid) { return blCol(d, pid); }
+
+    if (bl) {
+        drawFpyChart('blFpyHt', bl.fpy_ht, '#3b82f6');
+        drawFpyChart('blFpyBst', bl.fpy_bst, '#10b981');
+        drawPareto('blHtP', bl.top_ht, '#f59e0b');
+        drawPareto('blBstP', bl.top_bst, '#ef4444');
+    }
+    if (bn) {
+        drawFpyChart('bnFpyHt', bn.fpy_ht, '#3b82f6');
+        drawFpyChart('bnFpyBst', bn.fpy_bst, '#10b981');
+        drawPareto('bnHtP', bn.top_ht, '#f59e0b');
+        drawPareto('bnBstP', bn.top_bst, '#ef4444');
+    }
+}
+
+// ========== IQ9 ==========
+function renderIq9View(iq9data) {
+    if (!iq9data) {
+        document.getElementById('content').innerHTML = '<div class="empty">No IQ9 data</div>';
+        return;
+    }
+    const avail = IQ9_MODELS_JS.filter(m => iq9data[m]);
+    if (!avail.includes(currentIq9Model)) currentIq9Model = avail[0] || 'ALL';
+    const tabsHtml = avail.map(m => {
+        const units = iq9data[m]?.total_units || 0;
+        const label = m === 'ALL' ? 'ALL' : m.replace('IQ9N-','').replace('-DOM-US','');
+        return `<button class="iq9-tab ${m===currentIq9Model?'active':''}" onclick="switchIq9('${m}')">
+            ${label}<span class="iq9-tab-count">${units}</span></button>`;
+    }).join('');
+
+    const d = iq9data[currentIq9Model];
+    const banner = `<div class="iq9-tab-bar"><span class="iq9-tab-lbl">MODEL:</span>${tabsHtml}</div>`;
+
+    if (!d) {
+        document.getElementById('content').innerHTML = banner + '<div class="empty">No data for this model</div>';
+        return;
+    }
+    // Render using the same detail view, inject banner
+    const L2 = d.second_label || 'GT';
+    const gp = d.good_pack??0; const gpR = d.good_pack_rate??0;
+    const bl = d.backlog_count??0; const dbg = (d.debug_units||[]).length;
+    const gpTone = gpR>=95?'green':gpR>=85?'amber':'red';
+    const blTone = bl===0?'green':bl>10?'red':'amber';
+    const dbTone = dbg===0?'green':dbg>5?'red':'amber';
+    const viewLabel = currentHour === 'CUMULATIVE'
+        ? `Today so far (${hoursForDay(currentDay).length} hours)`
+        : `Hour: ${currentHour}`;
+
+    const html = banner + `
+    <div style="font-size:12px;color:#a78bfa;margin-bottom:12px;font-weight:600">📍 ${viewLabel}</div>
+    <div class="hero-row">
+        <div class="hero-card hero-units"><div class="hero-num">${d.total_units}</div><div class="hero-lbl">Units</div></div>
+        <div class="hero-card hero-${gpTone}"><div class="hero-num">${gp}</div><div class="hero-lbl">✅ Good Pack</div><div class="hero-sub">${gpR}%</div></div>
+        <div class="hero-card hero-${blTone}"><div class="hero-num">${bl}</div><div class="hero-lbl">📦 Backlog</div><div class="hero-sub">${d.backlog_rate}%</div></div>
+        <div class="hero-card hero-${kpiClass(d.ht_yield)}"><div class="hero-num">${d.ht_yield}%</div><div class="hero-lbl">HT Yield</div></div>
+        <div class="hero-card hero-${kpiClass(d.bst_yield)}"><div class="hero-num">${d.bst_yield}%</div><div class="hero-lbl">GT Yield</div></div>
+        <div class="hero-card hero-${dbTone}" ${dbg?'onclick="scrollToDebug()" style="cursor:pointer"':''}>
+            <div class="hero-num">${dbg}</div><div class="hero-lbl">🐛 Debug</div></div>
+    </div>
+    <div class="row two">
+        <div class="panel"><h3>FPY — HT</h3><canvas id="iq9FpyHt"></canvas></div>
+        <div class="panel"><h3>FPY — GT</h3><canvas id="iq9FpyBst"></canvas></div>
+    </div>
+    <div class="row two">
+        <div class="panel"><h3>HT Pareto</h3><canvas id="iq9HtP"></canvas></div>
+        <div class="panel"><h3>GT Pareto</h3><canvas id="iq9BstP"></canvas></div>
+    </div>
+    <div class="row two">
+        <div class="panel"><h3>Shift</h3><canvas id="iq9Shift"></canvas></div>
+        <div class="panel"><h3>Hourly</h3><canvas id="iq9Hourly"></canvas></div>
+    </div>
+    ${debugSectionHtml(d, 'iq9')}
+    <h3 class="section-title">Failure Detail</h3>
+    <div class="row two">
+        <div class="panel"><h3>HT Failed</h3>${unitFailTable(d.unit_fails_ht)}</div>
+        <div class="panel"><h3>GT Failed</h3>${unitFailTable(d.unit_fails_bst)}</div>
+    </div>`;
+
+    document.getElementById('content').innerHTML = html;
+    drawFpyChart('iq9FpyHt', d.fpy_ht, '#3b82f6');
+    drawFpyChart('iq9FpyBst', d.fpy_bst, '#10b981');
+    drawPareto('iq9HtP', d.top_ht, '#f59e0b');
+    drawPareto('iq9BstP', d.top_bst, '#ef4444');
+    drawShift('iq9Shift', d.shift_fails);
+    drawHourly('iq9Hourly', d.hourly_fails);
+}
+
+function switchIq9(model) { currentIq9Model = model; destroyCharts(); renderSelected(); }
+
+// ========== ENPHASE GRID (R3/R4 only) ==========
+function renderProductionFlow(grid, viewLabel, productName) {
+    if (!grid || !grid.rows || grid.rows.length < 2) return '';
+    const ht  = grid.rows.find(r => r.station === 'HT')  || {Pass:0, FailFix:0};
+    const bst = grid.rows.find(r => r.station === 'BST') || {Pass:0, FailFix:0, WIP:0};
+    const htTotal  = ht.Total  || ht.Pass  || 0;
+    const bstTotal = bst.Total || bst.Pass || 0;
+    const wip = bst.WIP || 0;
+    const packed = bst.Pass || 0;
+    const htFix = ht.FailFix || 0;
+    const bstFix = bst.FailFix || 0;
+
+    // Status indicator
+    const wipStatus = wip > 20 ? 'flow-warn' : wip > 0 ? 'flow-active' : 'flow-idle';
+
+    return `
+    <div class="flow-diagram">
+        <div class="flow-title">
+            <span class="flow-icon">🏭</span>
+            <span>${productName} Production Flow — ${viewLabel}</span>
+        </div>
+
+        <div class="flow-track">
+            <!-- HT STATION -->
+            <div class="flow-station flow-ht">
+                <div class="flow-station-head">
+                    <span class="flow-badge">⚡ HT</span>
+                    <span class="flow-step-num">Step 1</span>
+                </div>
+                <div class="flow-station-body">
+                    <div class="flow-big-num">${htTotal}</div>
+                    <div class="flow-big-label">Units Tested</div>
+                </div>
+                <div class="flow-station-foot">
+                    <div class="flow-stat">
+                        <span class="flow-stat-dot pass"></span>
+                        <span>${ht.Pass || 0} Pass</span>
+                    </div>
+                    ${htFix ? `<div class="flow-stat">
+                        <span class="flow-stat-dot fix"></span>
+                        <span>${htFix} FailFix</span>
+                    </div>` : ''}
+                </div>
+            </div>
+
+            <!-- ARROW + WIP -->
+            <div class="flow-arrow ${wipStatus}">
+                <div class="flow-pipe">
+                    <div class="flow-pipe-track">
+                        ${wip > 0 ? '<div class="flow-pipe-particle"></div><div class="flow-pipe-particle p2"></div><div class="flow-pipe-particle p3"></div>' : ''}
+                    </div>
+                </div>
+                <div class="flow-wip-bubble">
+                    <div class="flow-wip-num">${wip}</div>
+                    <div class="flow-wip-lbl">WIP</div>
+                    <div class="flow-wip-sub">in queue</div>
+                </div>
+            </div>
+
+            <!-- BST STATION -->
+            <div class="flow-station flow-bst">
+                <div class="flow-station-head">
+                    <span class="flow-badge">🔋 BST</span>
+                    <span class="flow-step-num">Step 2</span>
+                </div>
+                <div class="flow-station-body">
+                    <div class="flow-big-num">${bstTotal}</div>
+                    <div class="flow-big-label">Units Tested</div>
+                </div>
+                <div class="flow-station-foot">
+                    <div class="flow-stat">
+                        <span class="flow-stat-dot pass"></span>
+                        <span>${bst.Pass || 0} Pass</span>
+                    </div>
+                    ${bstFix ? `<div class="flow-stat">
+                        <span class="flow-stat-dot fix"></span>
+                        <span>${bstFix} FailFix</span>
+                    </div>` : ''}
+                </div>
+            </div>
+
+            <!-- ARROW TO PACKING -->
+            <div class="flow-arrow flow-active">
+                <div class="flow-pipe">
+                    <div class="flow-pipe-track">
+                        ${packed > 0 ? '<div class="flow-pipe-particle pack"></div><div class="flow-pipe-particle pack p2"></div>' : ''}
+                    </div>
+                </div>
+            </div>
+
+            <!-- PACKING -->
+            <div class="flow-station flow-pack">
+                <div class="flow-station-head">
+                    <span class="flow-badge">📦 Pack</span>
+                    <span class="flow-step-num">Step 3</span>
+                </div>
+                <div class="flow-station-body">
+                    <div class="flow-big-num">${packed}</div>
+                    <div class="flow-big-label">Ready to Ship</div>
+                </div>
+                <div class="flow-station-foot">
+                    <div class="flow-stat">
+                        <span class="flow-stat-dot pass"></span>
+                        <span>Good Units</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shift breakdown bar at bottom -->
+        <div class="flow-shift-bar">
+            <div class="flow-shift-block sh-a">
+                <span class="shift-pill shift-pill-a">A</span>
+                <div class="fs-stats">
+                    <span>HT: <strong>${ht.A||0}</strong></span>
+                    <span>BST: <strong>${bst.A||0}</strong></span>
+                </div>
+            </div>
+            <div class="flow-shift-block sh-b">
+                <span class="shift-pill shift-pill-b">B</span>
+                <div class="fs-stats">
+                    <span>HT: <strong>${ht.B||0}</strong></span>
+                    <span>BST: <strong>${bst.B||0}</strong></span>
+                </div>
+            </div>
+            <div class="flow-shift-block sh-c">
+                <span class="shift-pill shift-pill-c">C</span>
+                <div class="fs-stats">
+                    <span>HT: <strong>${ht.C||0}</strong></span>
+                    <span>BST: <strong>${bst.C||0}</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>`;
+}
+
+function renderEnphaseGrid(grid, viewLabel) {
+    if (!grid || !grid.rows || !grid.rows.length) return '';
+    // Detect product from grid (for R3/R4 show flow diagram first)
+    const productName = grid.product || 'Production';
+    const flowDiagram = (productName === 'R3' || productName === 'R4') ?
+        renderProductionFlow(grid, viewLabel, productName) : '';
+    const rows = grid.rows;
+    let rowsHtml = '';
+    rows.forEach(r => {
+        rowsHtml += `<tr>
+            <td class="station-name">${r.station}</td>
+            <td class="metric-wip">${r.WIP || 0}</td>
+            <td class="metric-pass">${r.Pass || 0}</td>
+            <td>${r.A || 0}</td>
+            <td>${r.B || 0}</td>
+            <td>${r.C || 0}</td>
+            <td class="metric-total">${r.Total || 0}</td>
+            <td class="metric-fix">${r.FailFix || 0}</td>
+        </tr>`;
+    });
+    return flowDiagram + `
+    <div class="enphase-grid-wrap">
+        <div class="eg-title">
+            <span class="eg-tag">📊 Production Grid</span>
+            <span class="eg-sub">${viewLabel}</span>
+        </div>
+        <table class="enphase-grid">
+            <thead>
+                <tr>
+                    <th class="station-col">Station</th>
+                    <th>WIP</th>
+                    <th>Pass</th>
+                    <th class="shift-a-col">A</th>
+                    <th class="shift-b-col">B</th>
+                    <th class="shift-c-col">C</th>
+                    <th>Total</th>
+                    <th>FailFix</th>
+                </tr>
+            </thead>
+            <tbody>${rowsHtml}</tbody>
+        </table>
+        <div class="eg-legend">
+            <span><strong>WIP</strong>: Units passed HT but waiting for BST</span>
+            <span><strong>A</strong>: 06–14</span>
+            <span><strong>B</strong>: 14–22</span>
+            <span><strong>C</strong>: 22–06</span>
+            <span><strong>FailFix</strong>: Failed then passed (retest success)</span>
+        </div>
+    </div>`;
+}
+
+function debugSectionHtml(d, prefix) {
+    const rule = d.debug_rule;
+    const units = d.debug_units || [];
+    if (!rule) return '';
+    let table;
+    if (!units.length) {
+        table = '<div class="empty">✓ No stuck units</div>';
+    } else {
+        let rows = '';
+        units.forEach(u => {
+            const hrs = u.hours_in_debug != null ? `${u.hours_in_debug}h` : '—';
+            const hc = u.hours_in_debug > 8 ? 'style="color:#ef4444;font-weight:700"' : '';
+            rows += `<tr><td><strong>${maskSN(u.sn)}</strong></td><td>${u.stations}</td><td>${u.fail_count}×</td><td>${u.reason}</td><td>${u.first_fail}</td><td ${hc}>${hrs}</td></tr>`;
+        });
+        table = `<div class="scroll-tbl"><table class="data">
+            <thead><tr><th>SN</th><th>Station</th><th>Fails</th><th>Reason</th><th>First Fail</th><th>Stuck</th></tr></thead>
+            <tbody>${rows}</tbody></table></div>`;
+    }
+    return `
+    <h3 class="section-title" id="debug-anchor-${prefix}" style="border-left-color:#ef4444">
+        🐛 DEBUG — ${rule.label} (${units.length})
+    </h3>
+    <div class="panel debug-panel">
+        <div class="debug-note">Failed ${rule.stage} and never passed. Needs engineering attention.</div>
+        <button class="debug-btn" onclick="toggleDebug('${prefix}')">▶ Show Debug Units (${units.length})</button>
+        <div id="debug-wrap-${prefix}" class="hidden">${table}</div>
+    </div>`;
+}
+function toggleDebug(prefix) {
+    const wrap = document.getElementById(`debug-wrap-${prefix}`);
+    const btn = wrap?.previousElementSibling;
+    if (!wrap) return;
+    const hidden = wrap.classList.contains('hidden');
+    wrap.classList.toggle('hidden', !hidden);
+    if (btn) btn.textContent = (hidden ? '▼ Hide' : '▶ Show') + ` Debug Units`;
+}
+function scrollToDebug() {
+    const a = document.getElementById('debug-anchor-main') || document.getElementById('debug-anchor-iq9');
+    if (a) { a.scrollIntoView({behavior:'smooth',block:'start'}); }
+    ['main','iq9'].forEach(p => {
+        const w = document.getElementById(`debug-wrap-${p}`);
+        if (w && w.classList.contains('hidden')) toggleDebug(p);
+    });
+}
+
+// ========== CHARTS ==========
+function drawFpyChart(id, rows, color) {
+    const ctx = document.getElementById(id);
+    if (!ctx || !rows?.length) { if (ctx) ctx.parentElement.innerHTML += '<div class="empty">No data</div>'; return; }
+    const c = new Chart(ctx, {
+        type: 'bar',
+        data: { labels: rows.map(r => r['Station ID']), datasets: [{ label: 'FPY %', data: rows.map(r => r.fpy), backgroundColor: color, borderRadius: 3 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false },
+            tooltip: { callbacks: { afterBody: items => { const r=rows[items[0].dataIndex]; return r ? `${r.first_pass}/${r.first_attempts}` : ''; }}}},
+            scales: { x: { ticks: { color:'#94a3b8', font:{size:10}, maxRotation:45 }},
+                      y: { beginAtZero:true, max:100, ticks: { color:'#94a3b8', callback:v=>v+'%' }, grid:{color:'#334155'} }}}
+    });
+    activeCharts.push(c);
+}
+
+function drawPareto(id, items, color) {
+    const ctx = document.getElementById(id);
+    if (!ctx || !items?.length) { if (ctx) ctx.parentElement.innerHTML += '<div class="empty">No failures</div>'; return; }
+    const c = new Chart(ctx, {
+        type: 'bar',
+        data: { labels: items.map(x=>x[0]), datasets: [{ data: items.map(x=>x[1]), backgroundColor: color, borderRadius: 3 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend:{display:false} },
+            scales: { x:{ticks:{color:'#94a3b8',font:{size:10},maxRotation:45}}, y:{beginAtZero:true,ticks:{color:'#94a3b8'},grid:{color:'#334155'}} }}
+    });
+    activeCharts.push(c);
+}
+
+function drawShift(id, shifts) {
+    const ctx = document.getElementById(id);
+    if (!ctx) return;
+    const c = new Chart(ctx, {
+        type: 'bar',
+        data: { labels: Object.keys(shifts), datasets: [{ data: Object.values(shifts), backgroundColor: ['#3b82f6','#f59e0b','#8b5cf6'], borderRadius: 3 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins:{legend:{display:false}},
+            scales: { x:{ticks:{color:'#94a3b8'}}, y:{beginAtZero:true,ticks:{color:'#94a3b8'},grid:{color:'#334155'}} }}
+    });
+    activeCharts.push(c);
+}
+
+function drawHourly(id, hourly) {
+    const ctx = document.getElementById(id);
+    if (!ctx) return;
+    const labels = [], data = [];
+    for (let h=0; h<24; h++) { labels.push(String(h).padStart(2,'0')+':00'); data.push(hourly[h]||hourly[String(h)]||0); }
+    const c = new Chart(ctx, {
+        type: 'line',
+        data: { labels, datasets: [{ data, borderColor:'#ef4444', backgroundColor:'rgba(239,68,68,.15)', fill:true, tension:0.3, pointRadius:3 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins:{legend:{display:false}},
+            scales: { x:{ticks:{color:'#94a3b8',font:{size:9}}}, y:{beginAtZero:true,ticks:{color:'#94a3b8'},grid:{color:'#334155'}} }}
+    });
+    activeCharts.push(c);
+}
+
+function unitFailTable(rows) {
+    if (!rows?.length) return '<div class="empty">No failures</div>';
+    const hasShift = rows.some(r => r.shift);
+    let html = '<div class="scroll-tbl"><table class="data"><thead><tr>';
+    html += '<th>SN</th><th>Station</th><th>State</th>';
+    if (hasShift) html += '<th>Shift</th><th>Time</th>';
+    html += '<th>Reason</th></tr></thead><tbody>';
+    rows.forEach(r => {
+        const shiftClass = r.shift?.startsWith('A') ? 'shift-pill-a' :
+                          r.shift?.startsWith('B') ? 'shift-pill-b' :
+                          r.shift?.startsWith('C') ? 'shift-pill-c' : '';
+        html += `<tr>
+            <td>${maskSN(r.sn)}</td>
+            <td>${r.station}</td>
+            <td>${r.state}</td>
+            ${hasShift ? `<td><span class="shift-pill ${shiftClass}">${(r.shift||'').charAt(0)}</span></td><td style="font-family:monospace;font-size:11px">${r.fail_time||''}</td>` : ''}
+            <td>${r.reason}</td>
+        </tr>`;
+    });
+    return html + '</tbody></table></div>';
+}
+
+// ========== SHIFT-WISE FAILURE REPORT ==========
+function shiftReportHtml(d, prefix, L2) {
+    const htReport  = d.shift_report_ht  || {};
+    const bstReport = d.shift_report_bst || {};
+    if (Object.keys(htReport).length === 0 && Object.keys(bstReport).length === 0) return '';
+
+    const renderShiftCol = (report, stationLabel, accent) => {
+        const shifts = ['A (06-14)', 'B (14-22)', 'C (22-06)'];
+        let html = `<div class="panel" style="border-left:4px solid ${accent}">
+            <h3>${stationLabel} Failures by Shift</h3>`;
+        let anyData = false;
+        shifts.forEach(sh => {
+            const r = report[sh];
+            if (!r || !r.count) return;
+            anyData = true;
+            const shiftKey = sh.charAt(0);
+            const shiftCls = shiftKey === 'A' ? 'shift-pill-a' : shiftKey === 'B' ? 'shift-pill-b' : 'shift-pill-c';
+            let reasons = '';
+            r.top_reasons.slice(0, 5).forEach(([reason, cnt]) => {
+                reasons += `<div class="shift-fail-row"><span>${reason}</span><span class="shift-fail-cnt">${cnt}</span></div>`;
+            });
+            html += `<div class="shift-block">
+                <div class="shift-block-head">
+                    <span class="shift-pill ${shiftCls}">${shiftKey}</span>
+                    <span class="shift-block-name">${sh}</span>
+                    <span class="shift-block-total">${r.count} failures</span>
+                </div>
+                <div class="shift-fail-list">${reasons || '<div class="empty" style="padding:8px">—</div>'}</div>
+            </div>`;
+        });
+        if (!anyData) html += '<div class="empty">No failures recorded</div>';
+        html += '</div>';
+        return html;
+    };
+
+    return `
+    <h3 class="section-title" style="border-left-color:#8b5cf6">📊 Shift-wise Failure Report</h3>
+    <div class="row two">
+        ${renderShiftCol(htReport, 'HT', '#3b82f6')}
+        ${renderShiftCol(bstReport, L2, '#10b981')}
+    </div>`;
+}
+
+// ========== TRUE FAIL ==========
+function trueFailSectionHtml(d, prefix) {
+    const units = d.true_fail_units || [];
+    if (!units.length) return '';
+    let rows = '';
+    units.forEach(u => {
+        rows += `<tr>
+            <td><strong>${maskSN(u.sn)}</strong></td>
+            <td>${u.stations || ''}</td>
+            <td>${u.fail_count || 0}×</td>
+            <td>${u.reason || ''}</td>
+            <td>${u.first_fail || ''}</td>
+        </tr>`;
+    });
+    return `
+    <h3 class="section-title" id="truefail-anchor-${prefix}" style="border-left-color:#dc2626">
+        ❌ TRUE FAIL — Units needing engineering (${units.length})
+    </h3>
+    <div class="panel" style="border-left:4px solid #dc2626">
+        <div class="debug-note" style="background:rgba(220,38,38,0.1);border-color:rgba(220,38,38,0.3);color:#fca5a5">
+            <strong>TRUE FAIL</strong> = units that failed at least once and never passed.
+            Confirmed bad units requiring fix/debug.
+        </div>
+        <button class="debug-btn" style="background:linear-gradient(135deg,#dc2626,#991b1b)"
+                onclick="toggleTrueFail('${prefix}')">▶ Show True Fail List (${units.length})</button>
+        <div id="truefail-wrap-${prefix}" class="hidden">
+            <div class="scroll-tbl"><table class="data">
+                <thead><tr><th>SN</th><th>Stations</th><th>Fails</th><th>Reason</th><th>First Fail</th></tr></thead>
+                <tbody>${rows}</tbody>
+            </table></div>
+        </div>
+    </div>`;
+}
+function toggleTrueFail(prefix) {
+    const wrap = document.getElementById(`truefail-wrap-${prefix}`);
+    const btn = wrap?.previousElementSibling;
+    if (!wrap) return;
+    const hidden = wrap.classList.contains('hidden');
+    wrap.classList.toggle('hidden', !hidden);
+    if (btn) btn.textContent = (hidden ? '▼ Hide' : '▶ Show') + ` True Fail List`;
+}
+
+// ========== INIT ==========
+document.addEventListener('DOMContentLoaded', () => {
+    renderStatusPanel();
+    initDaySelectors();
+});
+renderStatusPanel();
+initDaySelectors();
+</script>
+</body>
+</html>

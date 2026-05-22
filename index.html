@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Salcomp Production Dashboards</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: #e2e8f0; min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+}
+.app {
+    width: 100%; max-width: 560px; background: rgba(15,23,42,0.7);
+    border: 1px solid #334155; border-radius: 24px; padding: 40px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+}
+.brand { font-size: 24px; font-weight: 800; color: #f1f5f9; margin-bottom: 8px; }
+.brand .accent { color: #10b981; }
+.sub { color: #64748b; font-size: 13px; margin-bottom: 32px; }
+.card {
+    display: block; padding: 24px; background: rgba(30,41,59,0.6);
+    border-radius: 16px; margin-bottom: 14px; text-decoration: none;
+    color: inherit; border: 1px solid #334155; transition: all 0.2s;
+}
+.card:hover { transform: translateY(-2px); border-color: #10b981; }
+.card-title { font-size: 18px; font-weight: 700; color: #f1f5f9; margin-bottom: 6px; }
+.card-sub { font-size: 13px; color: #94a3b8; }
+.card-icon { font-size: 28px; margin-bottom: 8px; }
+.footer { margin-top: 24px; font-size: 11px; color: #64748b; text-align: center; }
+</style>
+</head>
+<body>
+<div class="app">
+    <div class="brand">⚡ <span class="accent">Salcomp</span> Production</div>
+    <div class="sub">Last updated: Friday, May 22, 2026 · 05:36 AM</div>
+
+    <a class="card" href="battery_dashboard.html">
+        <div class="card-icon">📊</div>
+        <div class="card-title">Daily Production Report (DPR)</div>
+        <div class="card-sub">R3 · R4 · BL/BN · IQ9 — daily yield analysis</div>
+    </a>
+
+    <a class="card" href="hpr_dashboard.html">
+        <div class="card-icon">⏱</div>
+        <div class="card-title">Hourly Production Report (HPR)</div>
+        <div class="card-sub">Hour-by-hour tracking with production flow diagrams</div>
+    </a>
+
+    <div class="footer">Shared view — refresh this page for latest data</div>
+</div>
+</body>
+</html>
