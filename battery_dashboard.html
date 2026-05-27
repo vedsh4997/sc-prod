@@ -61,6 +61,25 @@ header {
     border-radius: 14px; max-width: 480px; width: 100%;
     box-shadow: 0 24px 80px rgba(0,0,0,0.5);
 }
+.td-modal-card-wide { max-width: 640px; }
+.td-grid-2col {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+@media (max-width: 540px) { .td-grid-2col { grid-template-columns: 1fr; } }
+.td-field textarea {
+    background: #0f172a; border: 1px solid #334155;
+    border-radius: 8px; padding: 10px 12px;
+    color: #e2e8f0; font-size: 13px; outline: none;
+    font-family: inherit; resize: vertical;
+}
+.td-field textarea:focus { border-color: #ef4444; }
+.td-field select {
+    background: #0f172a; border: 1px solid #334155;
+    border-radius: 8px; padding: 10px 12px;
+    color: #e2e8f0; font-size: 13px; outline: none;
+    font-family: inherit; cursor: pointer;
+}
+.td-field select:focus { border-color: #ef4444; }
 .td-modal-header {
     display: flex; align-items: center; gap: 12px;
     padding: 18px 20px; border-bottom: 1px solid #1e293b;
@@ -213,6 +232,16 @@ header {
 }
 .tdb-tester {
     font-family: "SF Mono", monospace; font-weight: 800; color: #fca5a5;
+}
+.tdb-sev {
+    padding: 2px 8px; border-radius: 4px;
+    font-size: 10px; font-weight: 900; letter-spacing: 1px;
+    font-family: "SF Mono", monospace;
+}
+.tdb-cat {
+    background: rgba(148,163,184,0.15); color: #cbd5e1;
+    padding: 1px 6px; border-radius: 3px; font-size: 9px;
+    font-weight: 700; letter-spacing: 0.5px;
 }
 .tdb-line {
     background: rgba(239,68,68,0.25); color: #fca5a5;
@@ -813,7 +842,7 @@ footer { text-align: center; color: #475569; font-size: 11px; padding: 24px; }
 <header>
     <div class="header-left">
         <h1>Production Dashboard <span id="publicBadge" class="public-badge" style="display:none">🌐 SHARED VIEW</span></h1>
-        <div class="sub">R3 · R4 · BL/BN · IQ9 · Generated Wednesday, May 27, 2026 · 01:25 PM</div>
+        <div class="sub">R3 · R4 · BL/BN · IQ9 · Generated Wednesday, May 27, 2026 · 01:36 PM</div>
         <div class="header-credit">
             <span class="hc-label">Designed & Built by</span>
             <span class="hc-name">Ved (Vedant Dhirendra)</span>
@@ -954,7 +983,7 @@ footer { text-align: center; color: #475569; font-size: 11px; padding: 24px; }
 
 <!-- TESTER DOWN MODAL -->
 <div id="testerDownModal" class="td-modal" style="display:none">
-    <div class="td-modal-card">
+    <div class="td-modal-card td-modal-card-wide">
         <div class="td-modal-header">
             <span style="font-size:22px">🚨</span>
             <div>
@@ -964,17 +993,54 @@ footer { text-align: center; color: #475569; font-size: 11px; padding: 24px; }
             <button class="td-modal-close" onclick="closeTesterDownModal()">✕</button>
         </div>
         <div class="td-modal-body">
+            <div class="td-grid-2col">
+                <label class="td-field">
+                    <span>Tester / Station ID *</span>
+                    <input type="text" id="tdmTester" placeholder="e.g. HT-33, BST-12, FT-E045"/>
+                </label>
+                <label class="td-field">
+                    <span>Severity *</span>
+                    <select id="tdmSeverity">
+                        <option value="HIGH">🟡 HIGH — degraded</option>
+                        <option value="CRITICAL">🔴 CRITICAL — line stopped</option>
+                        <option value="MEDIUM">🟠 MEDIUM — workaround active</option>
+                        <option value="LOW">⚪ LOW — minor issue</option>
+                    </select>
+                </label>
+            </div>
+            <div class="td-grid-2col">
+                <label class="td-field">
+                    <span>Downtime Category *</span>
+                    <select id="tdmCategory">
+                        <option value="MECHANICAL">⚙ Mechanical (fixture/contact/relay)</option>
+                        <option value="ELECTRICAL">⚡ Electrical (power/signal)</option>
+                        <option value="CALIBRATION">📏 Calibration drift / out of tolerance</option>
+                        <option value="SOFTWARE">💻 Software / firmware</option>
+                        <option value="PARTS">📦 Awaiting parts</option>
+                        <option value="OPERATOR">👤 Operator / setup</option>
+                        <option value="MAINTENANCE">🔧 Scheduled / preventive maintenance</option>
+                        <option value="OTHER">❓ Other</option>
+                    </select>
+                </label>
+                <label class="td-field">
+                    <span>ETA Back Up</span>
+                    <select id="tdmEta">
+                        <option value="UNKNOWN">⏰ Unknown</option>
+                        <option value="<1h">⚡ Within 1 hour</option>
+                        <option value="1-4h">🕐 1–4 hours</option>
+                        <option value="4-24h">📅 Same shift / today</option>
+                        <option value=">24h">📆 Tomorrow or later</option>
+                        <option value="PARTS_ORDERED">🚚 Awaiting parts ETA</option>
+                    </select>
+                </label>
+            </div>
             <label class="td-field">
-                <span>Tester / Station ID</span>
-                <input type="text" id="tdmTester" placeholder="e.g. HT-33, BST-12, FT-E045"/>
-            </label>
-            <label class="td-field">
-                <span>Reason</span>
-                <input type="text" id="tdmReason" placeholder="e.g. relay sticking, awaiting parts, fixture damage"/>
+                <span>Reason / Notes *</span>
+                <textarea id="tdmReason" rows="3" placeholder="What's broken? What have you tried? Any actions taken so far?"></textarea>
             </label>
             <div class="td-modal-actions">
                 <button class="td-modal-btn td-modal-btn-cancel" onclick="closeTesterDownModal()">Cancel</button>
-                <button class="td-modal-btn td-modal-btn-submit" onclick="submitTesterDownDpr()">🚨 Mark Down</button>
+                <button class="td-modal-btn td-modal-btn-submit" onclick="submitTesterDownDpr()">🚨 Mark Down & Broadcast</button>
             </div>
             <div id="tdModalResult" class="td-modal-result"></div>
         </div>
@@ -1005,18 +1071,44 @@ function renderTesterDownBanner() {
         banner.style.display = 'none';
         return;
     }
-    const items = TESTER_DOWN.map(e => `
-        <div class="tdb-item">
+    const sevOrder = {CRITICAL: 0, HIGH: 1, MEDIUM: 2, LOW: 3};
+    const sorted = [...TESTER_DOWN].sort((a,b) =>
+        (sevOrder[a.severity || 'HIGH'] || 1) - (sevOrder[b.severity || 'HIGH'] || 1));
+    const sevColor = (sev) => ({
+        CRITICAL: '#dc2626', HIGH: '#f59e0b',
+        MEDIUM: '#fbbf24',   LOW: '#94a3b8'
+    }[sev] || '#ef4444');
+    const sevIcon = (sev) => ({
+        CRITICAL: '🔴', HIGH: '🟡', MEDIUM: '🟠', LOW: '⚪'
+    }[sev] || '🔴');
+    const catIcon = (cat) => ({
+        MECHANICAL: '⚙', ELECTRICAL: '⚡', CALIBRATION: '📏',
+        SOFTWARE: '💻', PARTS: '📦', OPERATOR: '👤',
+        MAINTENANCE: '🔧', OTHER: '❓'
+    }[cat] || '❓');
+    const etaLabel = (eta) => ({
+        '<1h': '< 1h', '1-4h': '1-4h', '4-24h': 'Today',
+        '>24h': 'Tomorrow+', 'PARTS_ORDERED': 'Parts ETA',
+        'UNKNOWN': '?'
+    }[eta] || '?');
+    const items = sorted.map(e => {
+        const sev = e.severity || 'HIGH';
+        const color = sevColor(sev);
+        const sIcon = sevIcon(sev);
+        return `<div class="tdb-item" style="border-left-color:${color}">
+            <span class="tdb-sev" style="background:${color}33;color:${color}">${sIcon} ${sev}</span>
             <span class="tdb-tester">${e.tester || '—'}</span>
             ${e.product_line ? `<span class="tdb-line">${e.product_line}</span>` : ''}
+            ${e.category ? `<span class="tdb-cat">${catIcon(e.category)} ${e.category}</span>` : ''}
             <span class="tdb-reason">${e.reason || ''}</span>
-            <span class="tdb-meta">since ${(e.reported_at || '').slice(11,16)}</span>
-        </div>
-    `).join('');
+            <span class="tdb-meta">ETA: ${etaLabel(e.eta || 'UNKNOWN')} · since ${(e.reported_at || '').slice(11,16)}</span>
+        </div>`;
+    }).join('');
+    const critCount = sorted.filter(e => e.severity === 'CRITICAL').length;
     banner.innerHTML = `
         <div class="tdb-header">
             <span class="tdb-icon">🚨</span>
-            <span class="tdb-title">TESTER DOWN ALERT · ${TESTER_DOWN.length} ${TESTER_DOWN.length===1?'tester':'testers'} offline</span>
+            <span class="tdb-title">TESTER DOWN ALERT · ${sorted.length} offline${critCount ? ' · <span style="color:#fca5a5">'+critCount+' CRITICAL</span>' : ''}</span>
         </div>
         <div class="tdb-items">${items}</div>
     `;
@@ -1046,6 +1138,9 @@ function closeTesterDownModal() {
 async function submitTesterDownDpr() {
     const tester = document.getElementById('tdmTester').value.trim();
     const reason = document.getElementById('tdmReason').value.trim();
+    const severity = document.getElementById('tdmSeverity').value;
+    const category = document.getElementById('tdmCategory').value;
+    const eta = document.getElementById('tdmEta').value;
     const line = document.getElementById('testerDownModal').dataset.line || 'OTHER';
     const resultEl = document.getElementById('tdModalResult');
 
@@ -1060,14 +1155,19 @@ async function submitTesterDownDpr() {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 tester: tester, product_line: line,
-                reason: reason, reported_by: 'Ved'
+                reason: reason, severity: severity, category: category, eta: eta,
+                reported_by: 'Ved'
             }),
         });
         const data = await r.json();
         if (data.ok) {
             resultEl.className = 'td-modal-result success';
-            resultEl.innerHTML = `✓ ${tester} marked DOWN.<br><span style="font-size:11px;opacity:0.85">Refresh DPR/HPR + Publish to share with the team.</span>`;
-            setTimeout(closeTesterDownModal, 2500);
+            resultEl.innerHTML = `✓ <strong>${tester}</strong> marked DOWN (${severity}).<br><span style="font-size:11px;opacity:0.85">Auto-publishing for the team...</span>`;
+            // Auto-publish to broadcast immediately
+            setTimeout(async () => {
+                try { await fetch('http://localhost:5000/publish', {method: 'POST'}); } catch (e) {}
+            }, 500);
+            setTimeout(closeTesterDownModal, 3500);
         } else {
             resultEl.className = 'td-modal-result error';
             resultEl.textContent = '⚠ ' + (data.message || 'Failed to mark down');
