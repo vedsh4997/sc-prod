@@ -842,7 +842,7 @@ footer { text-align: center; color: #475569; font-size: 11px; padding: 24px; }
 <header>
     <div class="header-left">
         <h1>Production Dashboard <span id="publicBadge" class="public-badge" style="display:none">🌐 SHARED VIEW</span></h1>
-        <div class="sub">R3 · R4 · BL/BN · IQ9 · Generated Friday, May 29, 2026 · 12:02 AM</div>
+        <div class="sub">R3 · R4 · BL/BN · IQ9 · Generated Friday, May 29, 2026 · 12:36 AM</div>
         <div class="header-credit">
             <span class="hc-label">Designed & Built by</span>
             <span class="hc-name">Ved (Vedant Dhirendra)</span>
@@ -2703,6 +2703,15 @@ function buildInverterColumn(d, prefix) {
     const gpTone = gpRate >= 95 ? 'green' : (gpRate >= 85 ? 'amber' : 'red');
     const blTone = backlog === 0 ? 'green' : (backlog > 10 ? 'red' : 'amber');
 
+    // FT (Functional Test) — first stage for inverters/IQ9
+    const ft = d.ft || null;
+    const ftYield = ft && ft.total ? Math.round(ft.pass / ft.total * 1000) / 10 : null;
+    const ftCard = ft ? `
+            <div class="hero-card hero-${ftYield >= 95 ? 'green' : (ftYield >= 85 ? 'amber' : 'red')}">
+                <div class="hero-num">${ftYield}%</div>
+                <div class="hero-lbl">⚡ FT</div>
+            </div>` : '';
+
     return `
         <div class="hero-row hero-row-compact">
             <div class="hero-card hero-units">
@@ -2717,6 +2726,7 @@ function buildInverterColumn(d, prefix) {
                 <div class="hero-num">${backlog}</div>
                 <div class="hero-lbl">📦 Backlog</div>
             </div>
+            ${ftCard}
             <div class="hero-card hero-${kpiClass(d.ht_yield)}">
                 <div class="hero-num">${d.ht_yield}% ${htDelta}</div>
                 <div class="hero-lbl">HT</div>
@@ -2730,6 +2740,12 @@ function buildInverterColumn(d, prefix) {
                 <div class="hero-lbl">🐛 Debug</div>
             </div>
         </div>
+        ${ft ? `
+        <div class="panel ft-panel">
+            <h3><span style="color:#a78bfa">⚡</span> FT — Functional Test (first stage)
+                <span class="overall-tag">${ft.pass}/${ft.total} pass · ${ftYield}% yield</span></h3>
+            <canvas id="${pid}-ftPareto"></canvas>
+        </div>` : ''}
         <div class="panel">
             <h3>Per-Tester FPY — HT <span class="overall-tag">Overall: ${(d.fpy_ht_overall||0).toFixed(2)}% (${d.fpy_ht_total_pass||0}/${d.fpy_ht_total_attempts||0})</span></h3>
             <canvas id="${pid}-fpyHt"></canvas>
@@ -2779,6 +2795,9 @@ function drawInverterCharts(d, prefix) {
     drawShiftChart(`${prefix}-shift`, d.shift_fails);
     drawPareto(`${prefix}-htPareto`, d.top_ht, '#f59e0b');
     drawPareto(`${prefix}-bstPareto`, d.top_bst, '#ef4444');
+    if (d.ft && d.ft.top_ft && d.ft.top_ft.length) {
+        drawPareto(`${prefix}-ftPareto`, d.ft.top_ft, '#a855f7');
+    }
     if (d.backlog_pareto && d.backlog_pareto.length) {
         drawPareto(`${prefix}-backlogPareto`, d.backlog_pareto, '#ef4444');
     }
@@ -3044,6 +3063,15 @@ function renderR4Into(targetId, d, bannerHtml, idPrefix) {
 
     ${overallFpyBanner(d, L2)}
 
+    ${d.ft ? `
+    <div class="row">
+        <div class="panel ft-panel">
+            <h3><span style="color:#a78bfa">⚡</span> FT — Functional Test (first stage)
+                <span class="overall-tag">${d.ft.pass}/${d.ft.total} pass · ${d.ft.total ? (Math.round(d.ft.pass/d.ft.total*1000)/10) : 0}% yield</span></h3>
+            <canvas id="${idPrefix}FtPareto"></canvas>
+        </div>
+    </div>` : ''}
+
     <div class="row two">
         <div class="panel">
             <h3>Per-Tester FPY — HT <span class="overall-tag">Overall: ${(d.fpy_ht_overall||0).toFixed(2)}% (${d.fpy_ht_total_pass||0}/${d.fpy_ht_total_attempts||0})</span></h3>
@@ -3102,6 +3130,9 @@ function renderR4Into(targetId, d, bannerHtml, idPrefix) {
     drawShiftChart(`${idPrefix}Shift`, d.shift_fails);
     drawPareto(`${idPrefix}HtPareto`, d.top_ht, '#f59e0b');
     drawPareto(`${idPrefix}BstPareto`, d.top_bst, '#ef4444');
+    if (d.ft && d.ft.top_ft && d.ft.top_ft.length) {
+        drawPareto(`${idPrefix}FtPareto`, d.ft.top_ft, '#a855f7');
+    }
     drawHourlyChart(`${idPrefix}Hourly`, d.hourly_fails);
     if (d.backlog_pareto && d.backlog_pareto.length) {
         drawPareto(`${idPrefix}BacklogPareto`, d.backlog_pareto, '#ef4444');
