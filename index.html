@@ -5,57 +5,97 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Salcomp Production Dashboards</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+:root {
+  --bg-0:#0c0d0b; --bg-1s:#181a15; --bg-2:#1f221b; --line:#2c3026;
+  --ink:#eef1e6; --ink-dim:#a8b09a; --ink-faint:#6b7460;
+  --accent:#9eff3d; --accent-2:#5ad6a0;
+  --glass:rgba(18,20,16,.80); --grid:rgba(158,255,61,.035);
+  --shadow:0 18px 50px rgba(0,0,0,.55);
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  --sans:"IBM Plex Sans",-apple-system,"Segoe UI",system-ui,sans-serif;
+}
+[data-theme="light"] {
+  --bg-0:#f4f2e9; --bg-1s:#ffffff; --bg-2:#efece1; --line:#ddd8c6;
+  --ink:#1c1f17; --ink-dim:#5a614c; --ink-faint:#8b9077;
+  --accent:#2f7d12; --accent-2:#0f9b6c;
+  --glass:rgba(251,250,244,.85); --grid:rgba(47,125,18,.05);
+  --shadow:0 14px 40px rgba(80,80,40,.14);
+}
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: var(--sans);
     background:
-      radial-gradient(900px 500px at 85% -5%, rgba(16,185,129,.10), transparent 60%),
-      radial-gradient(700px 420px at -5% 5%, rgba(59,130,246,.10), transparent 55%),
-      linear-gradient(135deg, #0b1120, #1e293b);
-    color: #e2e8f0; min-height: 100vh;
+      radial-gradient(900px 500px at 88% -8%, rgba(158,255,61,.10), transparent 58%),
+      radial-gradient(700px 420px at -8% 6%, rgba(90,214,160,.07), transparent 55%),
+      var(--bg-0);
+    background-attachment:fixed;
+    color: var(--ink); min-height: 100vh;
     display: flex; align-items: center; justify-content: center; padding: 24px;
+    transition: background .4s ease, color .4s ease;
 }
+body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),
+                     linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:34px 34px; }
 .app {
-    width: 100%; max-width: 600px; background: rgba(15,23,42,0.72);
+    position:relative; z-index:1;
+    width: 100%; max-width: 600px; background: var(--glass);
     backdrop-filter: blur(14px);
-    border: 1px solid #334155; border-radius: 26px; padding: 44px 40px;
-    box-shadow: 0 24px 80px rgba(0,0,0,0.55);
+    border: 1px solid var(--line); border-radius: 22px; padding: 40px;
+    box-shadow: var(--shadow);
 }
-.brand { font-size: 26px; font-weight: 800; color: #f1f5f9; letter-spacing:-.5px; }
-.brand .accent { color: #10b981; }
-.sub { color: #64748b; font-size: 13px; margin: 8px 0 30px; }
+.top { display:flex; align-items:flex-start; justify-content:space-between; }
+.brand { font-size: 24px; font-weight: 700; color: var(--ink); letter-spacing:-.5px; font-family:var(--mono); }
+.brand .accent { color: var(--accent); }
+.eyebrow { font-family:var(--mono); font-size:10px; letter-spacing:.28em; color:var(--accent);
+    text-transform:uppercase; font-weight:600; margin-bottom:6px; }
+.sub { color: var(--ink-faint); font-size: 12.5px; margin: 8px 0 30px; font-family:var(--mono); }
 .live-dot { display:inline-block; width:7px; height:7px; border-radius:50%;
-    background:#10b981; margin-right:6px; box-shadow:0 0 0 0 rgba(16,185,129,.6);
+    background:var(--accent); margin-right:6px; box-shadow:0 0 0 0 rgba(158,255,61,.6);
     animation:pulse 2s infinite; }
-@keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(16,185,129,.5)}
-    70%{box-shadow:0 0 0 8px rgba(16,185,129,0)} 100%{box-shadow:0 0 0 0 rgba(16,185,129,0)} }
+@keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(158,255,61,.5)}
+    70%{box-shadow:0 0 0 8px rgba(158,255,61,0)} 100%{box-shadow:0 0 0 0 rgba(158,255,61,0)} }
+.theme-tog { display:inline-flex; align-items:center; gap:7px; cursor:pointer;
+    background:var(--bg-2); border:1px solid var(--line); border-radius:999px; padding:5px 7px; transition:.2s; }
+.theme-tog:hover { border-color:var(--accent); }
+.theme-tog .ttrack { position:relative; width:36px; height:18px; border-radius:999px; background:var(--line); }
+.theme-tog .tknob { position:absolute; top:2px; left:2px; width:14px; height:14px; border-radius:50%;
+    background:var(--accent); transition:.25s; }
+[data-theme="light"] .theme-tog .tknob { transform:translateX(18px); }
 .card {
     display: block; position:relative; overflow:hidden;
-    padding: 22px 24px 20px; background: rgba(30,41,59,0.55);
-    border-radius: 18px; margin-bottom: 14px; text-decoration: none;
-    color: inherit; border: 1px solid #334155; transition: all 0.18s;
+    padding: 22px 24px 20px; background: var(--bg-1s);
+    border-radius: 14px; margin-bottom: 14px; text-decoration: none;
+    color: inherit; border: 1px solid var(--line); transition: all 0.18s;
 }
-.card-accent { position:absolute; top:0; left:0; right:0; height:3px; background:#10b981; }
-.card.dpr .card-accent { background:#10b981; }
-.card.hpr .card-accent { background:#3b82f6; }
-.card.wpr .card-accent { background:#f59e0b; }
-.card:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(0,0,0,0.4); }
-.card.dpr:hover { border-color:#10b981; }
-.card.hpr:hover { border-color:#3b82f6; }
-.card.wpr:hover { border-color:#f59e0b; }
-.card-icon { font-size: 26px; margin-bottom: 10px; }
-.card-title { font-size: 17px; font-weight: 700; color: #f1f5f9; margin-bottom: 5px; }
-.card-sub { font-size: 12.5px; color: #94a3b8; }
-.card-go { font-size: 12px; font-weight:600; margin-top:12px; opacity:0; transition:opacity .18s; }
-.card.dpr .card-go { color:#5eead4; } .card.hpr .card-go { color:#93c5fd; } .card.wpr .card-go { color:#fcd34d; }
+.card-accent { position:absolute; top:0; left:0; right:0; height:3px; background:var(--accent); }
+.card.dpr .card-accent { background:#5ad6a0; }
+.card.hpr .card-accent { background:#4aa3ff; }
+.card.wpr .card-accent { background:#ffb43d; }
+.card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.card.dpr:hover { border-color:#5ad6a0; }
+.card.hpr:hover { border-color:#4aa3ff; }
+.card.wpr:hover { border-color:#ffb43d; }
+.card-icon { font-size: 24px; margin-bottom: 10px; }
+.card-title { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 5px; font-family:var(--mono); }
+.card-sub { font-size: 12px; color: var(--ink-dim); }
+.card-go { font-size: 11.5px; font-weight:600; margin-top:12px; opacity:0; transition:opacity .18s; font-family:var(--mono); }
+.card.dpr .card-go { color:#5ad6a0; } .card.hpr .card-go { color:#4aa3ff; } .card.wpr .card-go { color:#ffb43d; }
 .card:hover .card-go { opacity:1; }
-.footer { margin-top: 26px; font-size: 11px; color: #64748b; text-align: center; }
+.footer { margin-top: 26px; font-size: 11px; color: var(--ink-faint); text-align: center; font-family:var(--mono); }
 </style>
 </head>
 <body>
 <div class="app">
-    <div class="brand">⚡ <span class="accent">Salcomp</span> Production</div>
-    <div class="sub"><span class="live-dot"></span>Last updated: Monday, June 01, 2026 · 12:22 PM</div>
+    <div class="top">
+      <div><div class="eyebrow">Salcomp USA · Test Operations</div>
+        <div class="brand">⚡ <span class="accent">Salcomp</span> Production</div></div>
+      <span class="theme-tog" onclick="toggleTheme()" title="Toggle light/dark">
+        <span id="ticon">🌙</span><span class="ttrack"><span class="tknob"></span></span>
+      </span>
+    </div>
+    <div class="sub"><span class="live-dot"></span>Last updated: Monday, June 01, 2026 · 01:04 PM</div>
 
     <a class="card dpr" href="battery_dashboard.html">
         <div class="card-accent"></div>
@@ -82,5 +122,17 @@ body {
     </a>
     <div class="footer">Shared view — refresh this page for latest data</div>
 </div>
+<script>
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme', t);
+  var ic=document.getElementById('ticon'); if(ic) ic.textContent = t==='light'?'☀️':'🌙';
+}
+function toggleTheme(){
+  var cur=document.documentElement.getAttribute('data-theme')==='light'?'light':'dark';
+  var next=cur==='light'?'dark':'light'; applyTheme(next);
+  try{ localStorage.setItem('wpr-theme', next); }catch(e){}
+}
+(function(){ var t='dark'; try{ t=localStorage.getItem('wpr-theme')||'dark'; }catch(e){} applyTheme(t); })();
+</script>
 </body>
 </html>
