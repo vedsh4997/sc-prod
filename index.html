@@ -2,54 +2,84 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Salcomp Production Dashboards</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: linear-gradient(135deg, #0f172a, #1e293b);
+    background:
+      radial-gradient(900px 500px at 85% -5%, rgba(16,185,129,.10), transparent 60%),
+      radial-gradient(700px 420px at -5% 5%, rgba(59,130,246,.10), transparent 55%),
+      linear-gradient(135deg, #0b1120, #1e293b);
     color: #e2e8f0; min-height: 100vh;
-    display: flex; align-items: center; justify-content: center;
-    padding: 24px;
+    display: flex; align-items: center; justify-content: center; padding: 24px;
 }
 .app {
-    width: 100%; max-width: 560px; background: rgba(15,23,42,0.7);
-    border: 1px solid #334155; border-radius: 24px; padding: 40px;
-    box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+    width: 100%; max-width: 600px; background: rgba(15,23,42,0.72);
+    backdrop-filter: blur(14px);
+    border: 1px solid #334155; border-radius: 26px; padding: 44px 40px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.55);
 }
-.brand { font-size: 24px; font-weight: 800; color: #f1f5f9; margin-bottom: 8px; }
+.brand { font-size: 26px; font-weight: 800; color: #f1f5f9; letter-spacing:-.5px; }
 .brand .accent { color: #10b981; }
-.sub { color: #64748b; font-size: 13px; margin-bottom: 32px; }
+.sub { color: #64748b; font-size: 13px; margin: 8px 0 30px; }
+.live-dot { display:inline-block; width:7px; height:7px; border-radius:50%;
+    background:#10b981; margin-right:6px; box-shadow:0 0 0 0 rgba(16,185,129,.6);
+    animation:pulse 2s infinite; }
+@keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(16,185,129,.5)}
+    70%{box-shadow:0 0 0 8px rgba(16,185,129,0)} 100%{box-shadow:0 0 0 0 rgba(16,185,129,0)} }
 .card {
-    display: block; padding: 24px; background: rgba(30,41,59,0.6);
-    border-radius: 16px; margin-bottom: 14px; text-decoration: none;
-    color: inherit; border: 1px solid #334155; transition: all 0.2s;
+    display: block; position:relative; overflow:hidden;
+    padding: 22px 24px 20px; background: rgba(30,41,59,0.55);
+    border-radius: 18px; margin-bottom: 14px; text-decoration: none;
+    color: inherit; border: 1px solid #334155; transition: all 0.18s;
 }
-.card:hover { transform: translateY(-2px); border-color: #10b981;
-              box-shadow: 0 12px 32px rgba(16,185,129,0.15); }
-.card-title { font-size: 18px; font-weight: 700; color: #f1f5f9; margin-bottom: 6px; }
-.card-sub { font-size: 13px; color: #94a3b8; }
-.card-icon { font-size: 28px; margin-bottom: 8px; }
-.footer { margin-top: 24px; font-size: 11px; color: #64748b; text-align: center; }
+.card-accent { position:absolute; top:0; left:0; right:0; height:3px; background:#10b981; }
+.card.dpr .card-accent { background:#10b981; }
+.card.hpr .card-accent { background:#3b82f6; }
+.card.wpr .card-accent { background:#f59e0b; }
+.card:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(0,0,0,0.4); }
+.card.dpr:hover { border-color:#10b981; }
+.card.hpr:hover { border-color:#3b82f6; }
+.card.wpr:hover { border-color:#f59e0b; }
+.card-icon { font-size: 26px; margin-bottom: 10px; }
+.card-title { font-size: 17px; font-weight: 700; color: #f1f5f9; margin-bottom: 5px; }
+.card-sub { font-size: 12.5px; color: #94a3b8; }
+.card-go { font-size: 12px; font-weight:600; margin-top:12px; opacity:0; transition:opacity .18s; }
+.card.dpr .card-go { color:#5eead4; } .card.hpr .card-go { color:#93c5fd; } .card.wpr .card-go { color:#fcd34d; }
+.card:hover .card-go { opacity:1; }
+.footer { margin-top: 26px; font-size: 11px; color: #64748b; text-align: center; }
 </style>
 </head>
 <body>
 <div class="app">
     <div class="brand">⚡ <span class="accent">Salcomp</span> Production</div>
-    <div class="sub">Last updated: Monday, June 01, 2026 · 11:41 AM</div>
+    <div class="sub"><span class="live-dot"></span>Last updated: Monday, June 01, 2026 · 11:47 AM</div>
 
-    <a class="card" href="battery_dashboard.html">
+    <a class="card dpr" href="battery_dashboard.html">
+        <div class="card-accent"></div>
         <div class="card-icon">📊</div>
         <div class="card-title">Daily Production Report (DPR)</div>
         <div class="card-sub">R3 · R4 · BL/BN · IQ9 — daily yield analysis</div>
+        <div class="card-go">Open report →</div>
     </a>
 
-    <a class="card" href="hpr_dashboard.html">
+    <a class="card hpr" href="hpr_dashboard.html">
+        <div class="card-accent"></div>
         <div class="card-icon">⏱</div>
         <div class="card-title">Hourly Production Report (HPR)</div>
         <div class="card-sub">Hour-by-hour tracking with production flow diagrams</div>
+        <div class="card-go">Open report →</div>
     </a>
 
+    <a class="card wpr" href="wpr_dashboard.html">
+        <div class="card-accent"></div>
+        <div class="card-icon">📅</div>
+        <div class="card-title">Weekly Production Report (WPR)</div>
+        <div class="card-sub">R3 · R4 · BL/BN · IQ8 · IQ9 — weekly yield &amp; failure analysis</div>
+        <div class="card-go">Open report →</div>
+    </a>
     <div class="footer">Shared view — refresh this page for latest data</div>
 </div>
 </body>

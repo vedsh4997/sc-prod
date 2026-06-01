@@ -1,0 +1,399 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Weekly Production Report · 2026-05-23 → 2026-05-30</title>
+<style>
+:root{
+  --bg-0:#0a0e16; --bg-1:#111725; --bg-2:#161d2e; --line:#1f2940;
+  --ink:#e8eef7; --ink-dim:#94a3b8; --ink-faint:#5b6b86;
+  --accent:#3b82f6; --good:#34d399; --warn:#fbbf24; --bad:#f87171;
+  --glass:rgba(17,23,37,.72);
+  --mono:ui-monospace,"SF Mono","Cascadia Code",Consolas,monospace;
+  --sans:-apple-system,"Segoe UI",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:
+   radial-gradient(1200px 600px at 80% -10%,rgba(59,130,246,.10),transparent 60%),
+   radial-gradient(900px 500px at -10% 10%,rgba(45,212,191,.07),transparent 55%),
+   var(--bg-0);
+  color:var(--ink);font-family:var(--sans);line-height:1.5;
+  -webkit-font-smoothing:antialiased;padding-bottom:64px}
+.num,.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.good{color:var(--good)} .warn{color:var(--warn)} .bad{color:var(--bad)}
+
+header{position:sticky;top:0;z-index:20;backdrop-filter:blur(18px);
+  background:var(--glass);border-bottom:1px solid var(--line);
+  padding:16px 28px;display:flex;align-items:center;gap:18px}
+.brand{display:flex;flex-direction:column}
+.brand .eyebrow{font-size:11px;letter-spacing:.22em;color:var(--ink-faint);
+  text-transform:uppercase;font-weight:600}
+.brand h1{font-size:20px;font-weight:700;letter-spacing:-.01em}
+.live{display:flex;align-items:center;gap:7px;margin-left:auto;font-size:12px;color:var(--ink-dim)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--good);
+  box-shadow:0 0 0 0 rgba(52,211,153,.6);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(52,211,153,.5)}70%{box-shadow:0 0 0 9px rgba(52,211,153,0)}100%{box-shadow:0 0 0 0 rgba(52,211,153,0)}}
+.week{font-family:var(--mono);color:var(--ink)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:26px 28px}
+.section-title{font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-faint);font-weight:700;margin:30px 2px 14px}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.kpi{background:linear-gradient(180deg,var(--bg-1),var(--bg-2));
+  border:1px solid var(--line);border-radius:16px;padding:18px 18px 16px;position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;inset:0 auto auto 0;width:3px;height:100%;background:var(--accent);opacity:.8}
+.kpi.good::before{background:var(--good)} .kpi.warn::before{background:var(--warn)} .kpi.bad::before{background:var(--bad)}
+.kpi-label{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim);font-weight:600}
+.kpi-value{font-family:var(--mono);font-size:34px;font-weight:600;margin:6px 0 2px;letter-spacing:-.02em}
+.kpi-value .u{font-size:18px;color:var(--ink-dim)}
+.kpi-sub{font-size:12px;color:var(--ink-faint)}
+
+.lines{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.line-card{background:var(--bg-1);border:1px solid var(--line);border-radius:16px;
+  padding:16px 16px 14px;position:relative;overflow:hidden}
+.line-bar{position:absolute;top:0;left:0;right:0;height:3px;background:var(--c)}
+.line-card.idle{opacity:.5}
+.line-head{display:flex;justify-content:space-between;align-items:baseline;margin-top:4px}
+.line-name{font-weight:700;font-size:14px}
+.line-fpy{font-family:var(--mono);font-size:22px;font-weight:600}
+.line-meta{font-size:11.5px;color:var(--ink-faint);margin:6px 0 10px}
+.schips{display:flex;flex-wrap:wrap;gap:6px}
+.schip{font-family:var(--mono);font-size:10.5px;color:var(--ink-dim);
+  background:var(--bg-2);border:1px solid var(--line);border-radius:999px;padding:2px 8px}
+.schip b{color:var(--ink);margin-right:5px;font-weight:600}
+
+.panel{background:var(--bg-1);border:1px solid var(--line);border-radius:18px;padding:20px 22px}
+.grid-2{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;align-items:start}
+
+/* daily trend */
+.trend{display:flex;align-items:flex-end;gap:10px;height:190px;padding-top:10px}
+.tcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;justify-content:flex-end;height:100%}
+.tbar-wrap{width:100%;display:flex;justify-content:center;align-items:flex-end;height:140px}
+.tbar{width:60%;max-width:42px;border-radius:6px 6px 2px 2px;
+  background:linear-gradient(180deg,var(--accent),#1e40af);position:relative;transition:.3s}
+.tbar .pct{position:absolute;top:-19px;left:50%;transform:translateX(-50%);
+  font-family:var(--mono);font-size:11px;color:var(--ink)}
+.tlabel{font-size:10.5px;color:var(--ink-faint);text-align:center}
+.tvol{font-family:var(--mono);font-size:10px;color:var(--ink-dim)}
+
+/* flow */
+.flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px}
+.flow-node{flex:1;min-width:84px;text-align:center;background:var(--bg-2);
+  border:1px solid var(--line);border-radius:12px;padding:12px 6px}
+.flow-node.good{border-color:rgba(52,211,153,.35)} .flow-node.warn{border-color:rgba(251,191,36,.35)} .flow-node.bad{border-color:rgba(248,113,113,.4)}
+.flow-stage{font-size:11px;letter-spacing:.08em;color:var(--ink-dim);font-weight:700}
+.flow-fpy{font-family:var(--mono);font-size:20px;font-weight:600;margin:3px 0}
+.flow-n{font-family:var(--mono);font-size:11px;color:var(--ink-faint)}
+.flow-arrow{color:var(--ink-faint);font-size:18px}
+
+/* pareto */
+.par-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.par-filter{display:flex;gap:6px;flex-wrap:wrap}
+.fbtn{font-size:11px;font-family:var(--sans);background:var(--bg-2);color:var(--ink-dim);
+  border:1px solid var(--line);border-radius:999px;padding:4px 11px;cursor:pointer;transition:.15s}
+.fbtn:hover{color:var(--ink)} .fbtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.par-row{display:grid;grid-template-columns:170px 1fr 52px;gap:12px;align-items:center;margin:7px 0}
+.par-name{font-family:var(--mono);font-size:12px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.par-track{background:var(--bg-2);border-radius:6px;height:18px;overflow:hidden}
+.par-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#f87171,#fb923c);transition:width .4s}
+.par-n{font-family:var(--mono);font-size:12px;color:var(--ink-dim);text-align:right}
+
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);font-weight:600}
+td.num{text-align:right}
+details{margin-top:18px}
+summary{cursor:pointer;color:var(--ink-dim);font-size:12.5px;list-style:none;
+  padding:8px 0;user-select:none}
+summary::before{content:"▸ ";color:var(--accent)}
+details[open] summary::before{content:"▾ "}
+.foot{text-align:center;color:var(--ink-faint);font-size:11px;margin-top:36px}
+.hint-inline{font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink-faint);font-size:11px}
+.line-card.clickable{cursor:pointer;transition:transform .15s,border-color .15s,box-shadow .15s}
+.line-card.clickable:hover{transform:translateY(-3px);border-color:var(--c);
+  box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.drill-hint{margin-top:10px;font-size:11px;color:var(--c);opacity:0;transition:opacity .15s;font-weight:600}
+.line-card.clickable:hover .drill-hint{opacity:1}
+.back-btn{display:inline-flex;align-items:center;gap:7px;background:var(--bg-2);
+  border:1px solid var(--line);border-radius:10px;color:var(--ink-dim);font-size:13px;
+  font-family:var(--sans);padding:8px 14px;cursor:pointer;margin-bottom:20px;transition:.15s}
+.back-btn:hover{color:var(--ink);border-color:var(--accent)}
+.detail-hero{display:flex;align-items:center;gap:18px;margin-bottom:8px}
+.detail-badge{width:6px;height:48px;border-radius:6px;background:var(--c)}
+.detail-title{font-size:26px;font-weight:800;letter-spacing:-.01em}
+.detail-sub{font-size:13px;color:var(--ink-faint);margin-top:2px}
+@media(max-width:880px){.kpis,.lines{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}}
+@media(max-width:520px){.kpis,.lines{grid-template-columns:1fr}}
+</style></head><body>
+
+<header>
+  <div class="brand">
+    <span class="eyebrow">Salcomp USA · Test Operations</span>
+    <h1>Weekly Production Report</h1>
+  </div>
+  <div class="live"><span class="dot"></span>
+    <span class="week">2026-05-23 → 2026-05-30</span></div>
+</header>
+
+<div class="wrap">
+ <div id="summaryView">
+  <div class="kpis"><div class="kpi good">
+          <div class="kpi-label">Weekly First-Pass Yield</div>
+          <div class="kpi-value">97.4<span class='u'>%</span></div>
+          <div class="kpi-sub">Final 98.9% &nbsp;·&nbsp; 6,559 first-pass fails</div></div><div class="kpi ">
+          <div class="kpi-label">Units Built</div>
+          <div class="kpi-value">73,308</div>
+          <div class="kpi-sub">258,099 tests &nbsp;·&nbsp; 9,846 golden excl.</div></div><div class="kpi warn">
+          <div class="kpi-label">Units Reworked</div>
+          <div class="kpi-value">8.8<span class='u'>%</span></div>
+          <div class="kpi-sub">6,477 units hit ≥1 fail</div></div><div class="kpi ">
+          <div class="kpi-label">Peak Day</div>
+          <div class="kpi-value">71,830</div>
+          <div class="kpi-sub">first-attempts on 2026-05-28</div></div></div>
+
+  <div class="section-title">Product Lines <span class="hint-inline">— click any product for failure analysis</span></div>
+  <div class="lines">
+        <div class="line-card clickable" style="--c:#3b82f6" data-line="IQ9" onclick="openProduct('IQ9')">
+          <div class="line-bar"></div>
+          <div class="line-head">
+            <span class="line-name">IQ9</span>
+            <span class="line-fpy good">97.8%</span>
+          </div>
+          <div class="line-meta">28,838 units &nbsp;·&nbsp; 102,344 attempts &nbsp;·&nbsp; final 98.8%</div>
+          <div class="schips"><span class='schip'><b>ICT</b>95.9%</span><span class='schip'><b>FT</b>98.5%</span><span class='schip'><b>HT</b>99.5%</span><span class='schip'><b>GT</b>97.4%</span></div>
+          <div class="drill-hint">View failure analysis →</div>
+        </div>
+        <div class="line-card clickable" style="--c:#2dd4bf" data-line="IQ8" onclick="openProduct('IQ8')">
+          <div class="line-bar"></div>
+          <div class="line-head">
+            <span class="line-name">IQ8</span>
+            <span class="line-fpy good">97.3%</span>
+          </div>
+          <div class="line-meta">35,150 units &nbsp;·&nbsp; 129,777 attempts &nbsp;·&nbsp; final 99.0%</div>
+          <div class="schips"><span class='schip'><b>ICT</b>95.8%</span><span class='schip'><b>FT</b>97.8%</span><span class='schip'><b>HT</b>99.3%</span><span class='schip'><b>GT</b>96.5%</span></div>
+          <div class="drill-hint">View failure analysis →</div>
+        </div>
+        <div class="line-card clickable" style="--c:#38bdf8" data-line="BL / BN" onclick="openProduct('BL / BN')">
+          <div class="line-bar"></div>
+          <div class="line-head">
+            <span class="line-name">BL / BN</span>
+            <span class="line-fpy warn">95.0%</span>
+          </div>
+          <div class="line-meta">3,498 units &nbsp;·&nbsp; 12,210 attempts &nbsp;·&nbsp; final 97.6%</div>
+          <div class="schips"><span class='schip'><b>ICT</b>93.3%</span><span class='schip'><b>FT</b>94.0%</span><span class='schip'><b>HT</b>97.7%</span><span class='schip'><b>GT</b>95.2%</span></div>
+          <div class="drill-hint">View failure analysis →</div>
+        </div>
+        <div class="line-card clickable" style="--c:#f59e0b" data-line="R4" onclick="openProduct('R4')">
+          <div class="line-bar"></div>
+          <div class="line-head">
+            <span class="line-name">R4</span>
+            <span class="line-fpy warn">96.2%</span>
+          </div>
+          <div class="line-meta">1,415 units &nbsp;·&nbsp; 2,810 attempts &nbsp;·&nbsp; final 99.8%</div>
+          <div class="schips"><span class='schip'><b>HT</b>97.2%</span><span class='schip'><b>BST</b>95.2%</span></div>
+          <div class="drill-hint">View failure analysis →</div>
+        </div>
+        <div class="line-card idle" style="--c:#fb7185">
+          <div class="line-bar"></div>
+          <div class="line-head"><span class="line-name">R3</span>
+            <span class="line-fpy" style="color:var(--ink-faint)">—</span></div>
+          <div class="line-meta">no units this week</div>
+        </div>
+        <div class="line-card clickable" style="--c:#a78bfa" data-line="BMCC / Comm" onclick="openProduct('BMCC / Comm')">
+          <div class="line-bar"></div>
+          <div class="line-head">
+            <span class="line-name">BMCC / Comm</span>
+            <span class="line-fpy warn">96.8%</span>
+          </div>
+          <div class="line-meta">1,273 units &nbsp;·&nbsp; 1,644 attempts &nbsp;·&nbsp; final 97.5%</div>
+          <div class="schips"><span class='schip'><b>ICT</b>97.1%</span><span class='schip'><b>FT</b>91.4%</span><span class='schip'><b>HT</b>98.7%</span></div>
+          <div class="drill-hint">View failure analysis →</div>
+        </div>
+        <div class="line-card clickable" style="--c:#64748b" data-line="Unmapped" onclick="openProduct('Unmapped')">
+          <div class="line-bar"></div>
+          <div class="line-head">
+            <span class="line-name">Unmapped</span>
+            <span class="line-fpy good">97.9%</span>
+          </div>
+          <div class="line-meta">3,134 units &nbsp;·&nbsp; 3,399 attempts &nbsp;·&nbsp; final 98.5%</div>
+          <div class="schips"><span class='schip'><b>ICT</b>97.5%</span><span class='schip'><b>FT</b>97.8%</span><span class='schip'><b>RWK</b>99.4%</span></div>
+          <div class="drill-hint">View failure analysis →</div>
+        </div></div>
+
+  <div class="section-title">Daily First-Pass Yield</div>
+  <div class="panel"><div class="trend" id="trend"></div></div>
+
+  <div class="section-title">Stage Flow · First-Pass Yield</div>
+  <div class="panel"><div class="flow"><div class="flow-node warn">
+            <div class="flow-stage">ICT</div>
+            <div class="flow-fpy">95.8%</div>
+            <div class="flow-n">66,251</div></div><div class='flow-arrow'>→</div><div class="flow-node good">
+            <div class="flow-stage">FT</div>
+            <div class="flow-fpy">97.9%</div>
+            <div class="flow-n">62,114</div></div><div class='flow-arrow'>→</div><div class="flow-node good">
+            <div class="flow-stage">HT</div>
+            <div class="flow-fpy">99.2%</div>
+            <div class="flow-n">61,622</div></div><div class='flow-arrow'>→</div><div class="flow-node warn">
+            <div class="flow-stage">BST</div>
+            <div class="flow-fpy">95.2%</div>
+            <div class="flow-n">1,409</div></div><div class='flow-arrow'>→</div><div class="flow-node warn">
+            <div class="flow-stage">GT</div>
+            <div class="flow-fpy">96.8%</div>
+            <div class="flow-n">60,103</div></div><div class='flow-arrow'>→</div><div class="flow-node good">
+            <div class="flow-stage">RWK</div>
+            <div class="flow-fpy">99.4%</div>
+            <div class="flow-n">685</div></div></div></div>
+
+  <div class="section-title">Top Failure Modes · This Week</div>
+  <div class="panel">
+    <div class="par-head">
+      <span style="font-size:12.5px;color:var(--ink-dim)">First-pass fails · finish_test excluded</span>
+      <div class="par-filter" id="pfilter"></div>
+    </div>
+    <div id="pareto"></div>
+  </div>
+
+  <details>
+    <summary>show station health detail</summary>
+    <div class="panel" style="margin-top:10px">
+      <table><thead><tr><th>Station</th><th>Stage</th><th class="num">Tested</th><th class="num">Fails</th><th class="num">FPY</th></tr></thead>
+      <tbody><tr><td class='mono'>FT134</td><td>FT</td><td class='mono num'>393</td><td class='mono num'>112</td><td class='mono num bad'>71.5%</td></tr><tr><td class='mono'>FT144</td><td>FT</td><td class='mono num'>306</td><td class='mono num'>83</td><td class='mono num bad'>72.9%</td></tr><tr><td class='mono'>FT-E041</td><td>FT</td><td class='mono num'>144</td><td class='mono num'>23</td><td class='mono num bad'>84.0%</td></tr><tr><td class='mono'>ICT-SAL-34</td><td>ICT</td><td class='mono num'>51</td><td class='mono num'>8</td><td class='mono num bad'>84.3%</td></tr><tr><td class='mono'>FT-E012</td><td>FT</td><td class='mono num'>59</td><td class='mono num'>9</td><td class='mono num bad'>84.8%</td></tr><tr><td class='mono'>FT-E002</td><td>FT</td><td class='mono num'>60</td><td class='mono num'>9</td><td class='mono num bad'>85.0%</td></tr><tr><td class='mono'>FT-F005-S2</td><td>FT</td><td class='mono num'>431</td><td class='mono num'>51</td><td class='mono num bad'>88.2%</td></tr><tr><td class='mono'>GT-C036</td><td>GT</td><td class='mono num'>320</td><td class='mono num'>34</td><td class='mono num bad'>89.4%</td></tr><tr><td class='mono'>FT-D054-S4</td><td>FT</td><td class='mono num'>581</td><td class='mono num'>61</td><td class='mono num bad'>89.5%</td></tr><tr><td class='mono'>GT-C084</td><td>GT</td><td class='mono num'>2,099</td><td class='mono num'>206</td><td class='mono num bad'>90.2%</td></tr><tr><td class='mono'>FT-E009</td><td>FT</td><td class='mono num'>222</td><td class='mono num'>18</td><td class='mono num bad'>91.9%</td></tr><tr><td class='mono'>ICT-SAL-25</td><td>ICT</td><td class='mono num'>5,234</td><td class='mono num'>421</td><td class='mono num bad'>92.0%</td></tr><tr><td class='mono'>GT-C062</td><td>GT</td><td class='mono num'>225</td><td class='mono num'>18</td><td class='mono num bad'>92.0%</td></tr><tr><td class='mono'>ICT-SAL-21</td><td>ICT</td><td class='mono num'>3,416</td><td class='mono num'>271</td><td class='mono num bad'>92.1%</td></tr><tr><td class='mono'>GT-C045</td><td>GT</td><td class='mono num'>2,416</td><td class='mono num'>188</td><td class='mono num bad'>92.2%</td></tr><tr><td class='mono'>FT-E047</td><td>FT</td><td class='mono num'>279</td><td class='mono num'>21</td><td class='mono num bad'>92.5%</td></tr><tr><td class='mono'>FT-E045</td><td>FT</td><td class='mono num'>256</td><td class='mono num'>18</td><td class='mono num bad'>93.0%</td></tr><tr><td class='mono'>FT-E042</td><td>FT</td><td class='mono num'>259</td><td class='mono num'>18</td><td class='mono num bad'>93.0%</td></tr></tbody></table>
+    </div>
+  </details>
+ </div>
+
+ <div id="detailView" style="display:none"></div>
+
+  <div class="foot">Generated 2026-06-01 11:47 · source 20260530043000_WPR_20260523_060000-0500_to_20260530_060000-0500.csv.zip · unique-SN first-attempt grain, golden units excluded · cross-check: file's own station table = 97.21% FPY</div>
+</div>
+
+<script>
+const M = {"generated": "2026-06-01 11:47", "week_start": "2026-05-23", "week_end": "2026-05-30", "fpy": 97.4, "final": 98.87, "total_records": 258099, "unique_units": 73308, "fp_fails": 6559, "reworked": 6477, "rework_pct": 8.8, "gold": 9846, "peak_day": {"date": "2026-05-28", "fpy": 97.59, "n": 71830}, "active_days": 7, "lines": [{"line": "IQ9", "accent": "#3b82f6", "idle": false, "fpy": 97.8, "final": 98.84, "units": 28838, "attempts": 102344, "stages": [{"stage": "ICT", "fpy": 95.9, "n": 26269}, {"stage": "FT", "fpy": 98.5, "n": 25586}, {"stage": "HT", "fpy": 99.5, "n": 25209}, {"stage": "GT", "fpy": 97.4, "n": 25280}]}, {"line": "IQ8", "accent": "#2dd4bf", "idle": false, "fpy": 97.33, "final": 99.02, "units": 35150, "attempts": 129777, "stages": [{"stage": "ICT", "fpy": 95.8, "n": 33078}, {"stage": "FT", "fpy": 97.8, "n": 33051}, {"stage": "HT", "fpy": 99.3, "n": 31815}, {"stage": "GT", "fpy": 96.5, "n": 31833}]}, {"line": "BL / BN", "accent": "#38bdf8", "idle": false, "fpy": 94.99, "final": 97.58, "units": 3498, "attempts": 12210, "stages": [{"stage": "ICT", "fpy": 93.3, "n": 3188}, {"stage": "FT", "fpy": 94.0, "n": 3069}, {"stage": "HT", "fpy": 97.7, "n": 2963}, {"stage": "GT", "fpy": 95.2, "n": 2990}]}, {"line": "R4", "accent": "#f59e0b", "idle": false, "fpy": 96.23, "final": 99.82, "units": 1415, "attempts": 2810, "stages": [{"stage": "HT", "fpy": 97.2, "n": 1401}, {"stage": "BST", "fpy": 95.2, "n": 1409}]}, {"line": "R3", "accent": "#fb7185", "idle": true, "fpy": 0.0, "final": 0.0, "units": 0, "attempts": 0, "stages": []}, {"line": "BMCC / Comm", "accent": "#a78bfa", "idle": false, "fpy": 96.84, "final": 97.51, "units": 1273, "attempts": 1644, "stages": [{"stage": "ICT", "fpy": 97.1, "n": 1270}, {"stage": "FT", "fpy": 91.4, "n": 140}, {"stage": "HT", "fpy": 98.7, "n": 234}]}, {"line": "Unmapped", "accent": "#64748b", "idle": false, "fpy": 97.91, "final": 98.53, "units": 3134, "attempts": 3399, "stages": [{"stage": "ICT", "fpy": 97.5, "n": 2446}, {"stage": "FT", "fpy": 97.8, "n": 268}, {"stage": "RWK", "fpy": 99.4, "n": 685}]}], "daily": [{"date": "2026-05-23", "fpy": 98.03, "n": 13819}, {"date": "2026-05-24", "fpy": 96.65, "n": 179}, {"date": "2026-05-26", "fpy": 96.83, "n": 42240}, {"date": "2026-05-27", "fpy": 97.56, "n": 64352}, {"date": "2026-05-28", "fpy": 97.59, "n": 71830}, {"date": "2026-05-29", "fpy": 97.29, "n": 46804}, {"date": "2026-05-30", "fpy": 97.13, "n": 12960}], "stage_flow": [{"stage": "ICT", "label": "ICT", "fpy": 95.79, "n": 66251}, {"stage": "FT", "label": "FT (Functional)", "fpy": 97.91, "n": 62114}, {"stage": "HT", "label": "HT (Hi-Pot)", "fpy": 99.25, "n": 61622}, {"stage": "BST", "label": "BST", "fpy": 95.24, "n": 1409}, {"stage": "GT", "label": "GT (Gang)", "fpy": 96.77, "n": 60103}, {"stage": "RWK", "label": "Rework/RMA", "fpy": 99.42, "n": 685}], "pareto_all": [{"step": "ict_hoover", "n": 2787}, {"step": "pcu_presence_report", "n": 777}, {"step": "check_bed_of_nails", "n": 389}, {"step": "dc_to_ac", "n": 384}, {"step": "idle_iin_report", "n": 283}, {"step": "areacheck", "n": 269}, {"step": "power_up", "n": 232}, {"step": "cal_swift", "n": 192}, {"step": "start_pcu_power_production", "n": 192}, {"step": "pcu_power_report", "n": 185}, {"step": "pcu_led", "n": 88}, {"step": "cell_check", "n": 78}, {"step": "Check_Local_DC", "n": 74}, {"step": "verify_tan", "n": 72}], "pareto_by_line": {"IQ9": [{"step": "ict_hoover", "n": 1080}, {"step": "pcu_presence_report", "n": 244}, {"step": "check_bed_of_nails", "n": 173}, {"step": "idle_iin_report", "n": 147}, {"step": "pcu_power_report", "n": 137}, {"step": "dc_to_ac", "n": 109}, {"step": "areacheck", "n": 64}, {"step": "cal_swift", "n": 49}, {"step": "pcu_led", "n": 41}, {"step": "power_down", "n": 38}, {"step": "Voltage_Ramp", "n": 38}, {"step": "power_up", "n": 23}, {"step": "check_framework test", "n": 17}, {"step": "configure_rack", "n": 14}], "IQ8": [{"step": "ict_hoover", "n": 1394}, {"step": "pcu_presence_report", "n": 533}, {"step": "check_bed_of_nails", "n": 216}, {"step": "dc_to_ac", "n": 213}, {"step": "start_pcu_power_production", "n": 183}, {"step": "areacheck", "n": 175}, {"step": "power_up", "n": 154}, {"step": "idle_iin_report", "n": 135}, {"step": "cal_swift", "n": 95}, {"step": "verify_tan", "n": 66}, {"step": "program_tan", "n": 63}, {"step": "pcu_led", "n": 47}, {"step": "Check_Local_DC", "n": 37}, {"step": "pcu_power_report", "n": 37}], "BL / BN": [{"step": "ict_hoover", "n": 215}, {"step": "dc_to_ac", "n": 62}, {"step": "cell_check", "n": 54}, {"step": "power_up", "n": 54}, {"step": "post_power_up_check", "n": 48}, {"step": "cal_swift", "n": 45}, {"step": "solder_reflow_check", "n": 32}, {"step": "Check_Local_DC", "n": 25}, {"step": "areacheck", "n": 23}, {"step": "power_down", "n": 17}, {"step": "Temperature_Accuracy", "n": 17}, {"step": "Cell_Acc_Verification_Test", "n": 13}, {"step": "pcu_power_report", "n": 11}, {"step": "pcu_quick_validation", "n": 3}], "R4": [{"step": "cell_check", "n": 24}, {"step": "post_power_up_check", "n": 19}, {"step": "ac_to_pe", "n": 18}, {"step": "encharge_sn_flash", "n": 15}, {"step": "dc_to_pe_positive", "n": 10}, {"step": "Continuity_back", "n": 5}, {"step": "firmware_version_check", "n": 4}, {"step": "dc_to_pe_negative", "n": 3}, {"step": "areacheck", "n": 3}, {"step": "check_framework test", "n": 2}, {"step": "system_power_down", "n": 2}, {"step": "charge_discharge_1", "n": 1}, {"step": "charge_discharge_2", "n": 1}, {"step": "enable_display", "n": 1}], "BMCC / Comm": [{"step": "ict_hoover", "n": 37}, {"step": "DC_Power_UP_test", "n": 7}, {"step": "areacheck", "n": 4}, {"step": "FW_Version_Check", "n": 1}, {"step": "AC_Power_UP_test", "n": 1}, {"step": "current_accuracy_test", "n": 1}], "Unmapped": [{"step": "ict_hoover", "n": 61}, {"step": "cal_swift", "n": 3}, {"step": "power_down", "n": 1}, {"step": "power_up", "n": 1}, {"step": "check_firmware", "n": 1}, {"step": "Check_Local_DC", "n": 1}]}, "worst_stations": [{"station": "FT134", "stage": "FT", "fpy": 71.5, "fails": 112, "tested": 393}, {"station": "FT144", "stage": "FT", "fpy": 72.88, "fails": 83, "tested": 306}, {"station": "FT-E041", "stage": "FT", "fpy": 84.03, "fails": 23, "tested": 144}, {"station": "ICT-SAL-34", "stage": "ICT", "fpy": 84.31, "fails": 8, "tested": 51}, {"station": "FT-E012", "stage": "FT", "fpy": 84.75, "fails": 9, "tested": 59}, {"station": "FT-E002", "stage": "FT", "fpy": 85.0, "fails": 9, "tested": 60}, {"station": "FT-F005-S2", "stage": "FT", "fpy": 88.17, "fails": 51, "tested": 431}, {"station": "GT-C036", "stage": "GT", "fpy": 89.38, "fails": 34, "tested": 320}, {"station": "FT-D054-S4", "stage": "FT", "fpy": 89.5, "fails": 61, "tested": 581}, {"station": "GT-C084", "stage": "GT", "fpy": 90.19, "fails": 206, "tested": 2099}, {"station": "FT-E009", "stage": "FT", "fpy": 91.89, "fails": 18, "tested": 222}, {"station": "ICT-SAL-25", "stage": "ICT", "fpy": 91.96, "fails": 421, "tested": 5234}, {"station": "GT-C062", "stage": "GT", "fpy": 92.0, "fails": 18, "tested": 225}, {"station": "ICT-SAL-21", "stage": "ICT", "fpy": 92.07, "fails": 271, "tested": 3416}, {"station": "GT-C045", "stage": "GT", "fpy": 92.22, "fails": 188, "tested": 2416}, {"station": "FT-E047", "stage": "FT", "fpy": 92.47, "fails": 21, "tested": 279}, {"station": "FT-E045", "stage": "FT", "fpy": 92.97, "fails": 18, "tested": 256}, {"station": "FT-E042", "stage": "FT", "fpy": 93.05, "fails": 18, "tested": 259}], "detail": {"IQ9": {"line": "IQ9", "accent": "#3b82f6", "fpy": 97.8, "final": 98.84, "units": 28838, "attempts": 102344, "fp_fails": 2249, "reworked": 2249, "stage_flow": [{"stage": "ICT", "label": "ICT", "fpy": 95.89, "n": 26269, "fails": 1080}, {"stage": "FT", "label": "FT (Functional)", "fpy": 98.51, "n": 25586, "fails": 382}, {"stage": "HT", "label": "HT (Hi-Pot)", "fpy": 99.53, "n": 25209, "fails": 118}, {"stage": "GT", "label": "GT (Gang)", "fpy": 97.35, "n": 25280, "fails": 669}], "daily": [{"date": "2026-05-23", "fpy": 98.11, "n": 13631}, {"date": "2026-05-24", "fpy": 97.19, "n": 178}, {"date": "2026-05-26", "fpy": 97.91, "n": 21199}, {"date": "2026-05-27", "fpy": 97.55, "n": 20862}, {"date": "2026-05-28", "fpy": 98.32, "n": 23768}, {"date": "2026-05-29", "fpy": 96.96, "n": 16857}, {"date": "2026-05-30", "fpy": 97.95, "n": 5849}], "pareto": [{"step": "ict_hoover", "n": 1080}, {"step": "pcu_presence_report", "n": 244}, {"step": "check_bed_of_nails", "n": 173}, {"step": "idle_iin_report", "n": 147}, {"step": "pcu_power_report", "n": 137}, {"step": "dc_to_ac", "n": 109}, {"step": "areacheck", "n": 64}, {"step": "cal_swift", "n": 49}, {"step": "pcu_led", "n": 41}, {"step": "power_down", "n": 38}, {"step": "Voltage_Ramp", "n": 38}, {"step": "power_up", "n": 23}, {"step": "check_framework test", "n": 17}, {"step": "configure_rack", "n": 14}], "worst_stations": [{"station": "FT-F010-S3", "stage": "FT", "fpy": 72.73, "fails": 3, "tested": 11}, {"station": "FT-F010-S2", "stage": "FT", "fpy": 79.17, "fails": 5, "tested": 24}, {"station": "ICT-SAL-34", "stage": "ICT", "fpy": 84.31, "fails": 8, "tested": 51}, {"station": "FT-D054-S4", "stage": "FT", "fpy": 89.5, "fails": 61, "tested": 581}, {"station": "GT-C062", "stage": "GT", "fpy": 92.0, "fails": 18, "tested": 225}, {"station": "GT-C047", "stage": "GT", "fpy": 93.06, "fails": 200, "tested": 2883}, {"station": "GT-C057", "stage": "GT", "fpy": 93.75, "fails": 1, "tested": 16}, {"station": "GT-C002", "stage": "GT", "fpy": 94.05, "fails": 10, "tested": 168}, {"station": "ICT-SAL-29", "stage": "ICT", "fpy": 94.21, "fails": 7, "tested": 121}, {"station": "ICT-SAL-36", "stage": "ICT", "fpy": 94.73, "fails": 229, "tested": 4347}]}, "IQ8": {"line": "IQ8", "accent": "#2dd4bf", "fpy": 97.33, "final": 99.02, "units": 35150, "attempts": 129777, "fp_fails": 3469, "reworked": 3407, "stage_flow": [{"stage": "ICT", "label": "ICT", "fpy": 95.79, "n": 33078, "fails": 1394}, {"stage": "FT", "label": "FT (Functional)", "fpy": 97.83, "n": 33051, "fails": 717}, {"stage": "HT", "label": "HT (Hi-Pot)", "fpy": 99.27, "n": 31815, "fails": 231}, {"stage": "GT", "label": "GT (Gang)", "fpy": 96.46, "n": 31833, "fails": 1127}], "daily": [{"date": "2026-05-23", "fpy": 91.8, "n": 183}, {"date": "2026-05-26", "fpy": 95.83, "n": 18134}, {"date": "2026-05-27", "fpy": 97.79, "n": 39054}, {"date": "2026-05-28", "fpy": 97.25, "n": 42126}, {"date": "2026-05-29", "fpy": 97.7, "n": 25133}, {"date": "2026-05-30", "fpy": 98.06, "n": 5147}], "pareto": [{"step": "ict_hoover", "n": 1394}, {"step": "pcu_presence_report", "n": 533}, {"step": "check_bed_of_nails", "n": 216}, {"step": "dc_to_ac", "n": 213}, {"step": "start_pcu_power_production", "n": 183}, {"step": "areacheck", "n": 175}, {"step": "power_up", "n": 154}, {"step": "idle_iin_report", "n": 135}, {"step": "cal_swift", "n": 95}, {"step": "verify_tan", "n": 66}, {"step": "program_tan", "n": 63}, {"step": "pcu_led", "n": 47}, {"step": "Check_Local_DC", "n": 37}, {"step": "pcu_power_report", "n": 37}], "worst_stations": [{"station": "FT134", "stage": "FT", "fpy": 71.36, "fails": 112, "tested": 391}, {"station": "FT144", "stage": "FT", "fpy": 72.79, "fails": 83, "tested": 305}, {"station": "ICT-SAL-32", "stage": "ICT", "fpy": 76.92, "fails": 3, "tested": 13}, {"station": "FT-E002", "stage": "FT", "fpy": 85.0, "fails": 9, "tested": 60}, {"station": "FT-F005-S2", "stage": "FT", "fpy": 87.89, "fails": 50, "tested": 413}, {"station": "GT-C084", "stage": "GT", "fpy": 90.19, "fails": 206, "tested": 2099}, {"station": "ICT-SAL-25", "stage": "ICT", "fpy": 92.15, "fails": 397, "tested": 5056}, {"station": "ICT-SAL-21", "stage": "ICT", "fpy": 92.16, "fails": 259, "tested": 3302}, {"station": "GT-C045", "stage": "GT", "fpy": 92.22, "fails": 188, "tested": 2416}, {"station": "FT-F002-S3", "stage": "FT", "fpy": 92.95, "fails": 28, "tested": 397}]}, "BL / BN": {"line": "BL / BN", "accent": "#38bdf8", "fpy": 94.99, "final": 97.58, "units": 3498, "attempts": 12210, "fp_fails": 612, "reworked": 594, "stage_flow": [{"stage": "ICT", "label": "ICT", "fpy": 93.26, "n": 3188, "fails": 215}, {"stage": "FT", "label": "FT (Functional)", "fpy": 94.0, "n": 3069, "fails": 184}, {"stage": "HT", "label": "HT (Hi-Pot)", "fpy": 97.67, "n": 2963, "fails": 69}, {"stage": "GT", "label": "GT (Gang)", "fpy": 95.18, "n": 2990, "fails": 144}], "daily": [{"date": "2026-05-24", "fpy": 0.0, "n": 1}, {"date": "2026-05-26", "fpy": 93.17, "n": 1846}, {"date": "2026-05-27", "fpy": 95.15, "n": 3073}, {"date": "2026-05-28", "fpy": 96.46, "n": 3644}, {"date": "2026-05-29", "fpy": 96.01, "n": 2782}, {"date": "2026-05-30", "fpy": 88.89, "n": 864}], "pareto": [{"step": "ict_hoover", "n": 215}, {"step": "dc_to_ac", "n": 62}, {"step": "cell_check", "n": 54}, {"step": "power_up", "n": 54}, {"step": "post_power_up_check", "n": 48}, {"step": "cal_swift", "n": 45}, {"step": "solder_reflow_check", "n": 32}, {"step": "Check_Local_DC", "n": 25}, {"step": "areacheck", "n": 23}, {"step": "power_down", "n": 17}, {"step": "Temperature_Accuracy", "n": 17}, {"step": "Cell_Acc_Verification_Test", "n": 13}, {"step": "pcu_power_report", "n": 11}, {"step": "pcu_quick_validation", "n": 3}], "worst_stations": [{"station": "FT-E041", "stage": "FT", "fpy": 84.03, "fails": 23, "tested": 144}, {"station": "GT-C036", "stage": "GT", "fpy": 89.38, "fails": 34, "tested": 320}, {"station": "FT-E009", "stage": "FT", "fpy": 91.89, "fails": 18, "tested": 222}, {"station": "FT-E047", "stage": "FT", "fpy": 92.47, "fails": 21, "tested": 279}, {"station": "FT-E045", "stage": "FT", "fpy": 92.97, "fails": 18, "tested": 256}, {"station": "FT-E042", "stage": "FT", "fpy": 93.05, "fails": 18, "tested": 259}, {"station": "ICT-SAL-35", "stage": "ICT", "fpy": 93.09, "fails": 92, "tested": 1332}, {"station": "FT-E034", "stage": "FT", "fpy": 93.1, "fails": 18, "tested": 261}, {"station": "ICT-SAL-33", "stage": "ICT", "fpy": 93.37, "fails": 123, "tested": 1856}, {"station": "GT-C023", "stage": "GT", "fpy": 93.52, "fails": 39, "tested": 602}]}, "R4": {"line": "R4", "accent": "#f59e0b", "fpy": 96.23, "final": 99.82, "units": 1415, "attempts": 2810, "fp_fails": 106, "reworked": 101, "stage_flow": [{"stage": "HT", "label": "HT (Hi-Pot)", "fpy": 97.22, "n": 1401, "fails": 39}, {"stage": "BST", "label": "BST", "fpy": 95.24, "n": 1409, "fails": 67}], "daily": [{"date": "2026-05-23", "fpy": 100.0, "n": 5}, {"date": "2026-05-26", "fpy": 97.36, "n": 493}, {"date": "2026-05-27", "fpy": 95.18, "n": 768}, {"date": "2026-05-28", "fpy": 97.61, "n": 794}, {"date": "2026-05-29", "fpy": 95.49, "n": 599}, {"date": "2026-05-30", "fpy": 93.38, "n": 151}], "pareto": [{"step": "cell_check", "n": 24}, {"step": "post_power_up_check", "n": 19}, {"step": "ac_to_pe", "n": 18}, {"step": "encharge_sn_flash", "n": 15}, {"step": "dc_to_pe_positive", "n": 10}, {"step": "Continuity_back", "n": 5}, {"step": "firmware_version_check", "n": 4}, {"step": "dc_to_pe_negative", "n": 3}, {"step": "areacheck", "n": 3}, {"step": "check_framework test", "n": 2}, {"step": "system_power_down", "n": 2}, {"step": "charge_discharge_1", "n": 1}, {"step": "charge_discharge_2", "n": 1}, {"step": "enable_display", "n": 1}], "worst_stations": [{"station": "HT83", "stage": "HT", "fpy": 93.15, "fails": 20, "tested": 292}, {"station": "BST01", "stage": "BST", "fpy": 94.44, "fails": 23, "tested": 414}, {"station": "BST16", "stage": "BST", "fpy": 95.08, "fails": 16, "tested": 325}, {"station": "BST26", "stage": "BST", "fpy": 95.32, "fails": 19, "tested": 406}, {"station": "BST20", "stage": "BST", "fpy": 96.59, "fails": 9, "tested": 264}, {"station": "HT33", "stage": "HT", "fpy": 98.29, "fails": 19, "tested": 1109}]}, "BMCC / Comm": {"line": "BMCC / Comm", "accent": "#a78bfa", "fpy": 96.84, "final": 97.51, "units": 1273, "attempts": 1644, "fp_fails": 52, "reworked": 52, "stage_flow": [{"stage": "ICT", "label": "ICT", "fpy": 97.09, "n": 1270, "fails": 37}, {"stage": "FT", "label": "FT (Functional)", "fpy": 91.43, "n": 140, "fails": 12}, {"stage": "HT", "label": "HT (Hi-Pot)", "fpy": 98.72, "n": 234, "fails": 3}], "daily": [{"date": "2026-05-26", "fpy": 100.0, "n": 175}, {"date": "2026-05-27", "fpy": 91.67, "n": 24}, {"date": "2026-05-28", "fpy": 95.6, "n": 546}, {"date": "2026-05-29", "fpy": 95.83, "n": 527}, {"date": "2026-05-30", "fpy": 98.92, "n": 372}], "pareto": [{"step": "ict_hoover", "n": 37}, {"step": "DC_Power_UP_test", "n": 7}, {"step": "areacheck", "n": 4}, {"step": "FW_Version_Check", "n": 1}, {"step": "AC_Power_UP_test", "n": 1}, {"step": "current_accuracy_test", "n": 1}], "worst_stations": [{"station": "FT-E012", "stage": "FT", "fpy": 84.75, "fails": 9, "tested": 59}, {"station": "FT-E003", "stage": "FT", "fpy": 96.3, "fails": 3, "tested": 81}, {"station": "ICT-SAL-27", "stage": "ICT", "fpy": 97.05, "fails": 37, "tested": 1254}, {"station": "HT43", "stage": "HT", "fpy": 98.72, "fails": 3, "tested": 234}, {"station": "ICT-SAL-28", "stage": "ICT", "fpy": 100.0, "fails": 0, "tested": 16}]}, "Unmapped": {"line": "Unmapped", "accent": "#64748b", "fpy": 97.91, "final": 98.53, "units": 3134, "attempts": 3399, "fp_fails": 71, "reworked": 74, "stage_flow": [{"stage": "ICT", "label": "ICT", "fpy": 97.51, "n": 2446, "fails": 61}, {"stage": "FT", "label": "FT (Functional)", "fpy": 97.76, "n": 268, "fails": 6}, {"stage": "RWK", "label": "Rework/RMA", "fpy": 99.42, "n": 685, "fails": 4}], "daily": [{"date": "2026-05-26", "fpy": 100.0, "n": 393}, {"date": "2026-05-27", "fpy": 98.95, "n": 571}, {"date": "2026-05-28", "fpy": 99.47, "n": 952}, {"date": "2026-05-29", "fpy": 98.01, "n": 906}, {"date": "2026-05-30", "fpy": 92.72, "n": 577}], "pareto": [{"step": "ict_hoover", "n": 61}, {"step": "cal_swift", "n": 3}, {"step": "power_down", "n": 1}, {"step": "power_up", "n": 1}, {"step": "check_firmware", "n": 1}, {"step": "Check_Local_DC", "n": 1}], "worst_stations": [{"station": "ICT-SAL-25", "stage": "ICT", "fpy": 86.52, "fails": 24, "tested": 178}, {"station": "ICT-SAL-21", "stage": "ICT", "fpy": 89.47, "fails": 12, "tested": 114}, {"station": "FT-F005-S4", "stage": "FT", "fpy": 92.31, "fails": 1, "tested": 13}, {"station": "FT-F002-S4", "stage": "FT", "fpy": 93.33, "fails": 1, "tested": 15}, {"station": "FT-F004-S3", "stage": "FT", "fpy": 94.12, "fails": 1, "tested": 17}, {"station": "FT-F008-S1", "stage": "FT", "fpy": 94.12, "fails": 1, "tested": 17}, {"station": "FT-F005-S2", "stage": "FT", "fpy": 94.44, "fails": 1, "tested": 18}, {"station": "FT-F005-S3", "stage": "FT", "fpy": 94.44, "fails": 1, "tested": 18}, {"station": "ICT-SAL-27", "stage": "ICT", "fpy": 98.59, "fails": 25, "tested": 1770}, {"station": "RWK097", "stage": "RWK", "fpy": 99.42, "fails": 4, "tested": 685}]}}, "official": {"fpy": 97.21, "pass": 249968, "tot": 257155}, "prev": null};
+
+// ---- daily trend ----
+(function(){
+  const days = M.daily, max = Math.max(...days.map(d=>d.n),1);
+  const lo = Math.min(...days.map(d=>d.fpy)), hi = 100;
+  const el = document.getElementById('trend');
+  el.innerHTML = days.map(d=>{
+    const h = 30 + (d.fpy-Math.min(lo,90))/(hi-Math.min(lo,90))*100;
+    const tone = d.fpy>=97?'var(--good)':d.fpy>=94?'var(--warn)':'var(--bad)';
+    const dd = new Date(d.date+'T00:00:00');
+    const lab = dd.toLocaleDateString('en-US',{weekday:'short',month:'numeric',day:'numeric'});
+    return `<div class="tcol">
+      <div class="tbar-wrap"><div class="tbar" style="height:${h}px;background:linear-gradient(180deg,${tone},#1e3a8a55)">
+        <span class="pct">${d.fpy.toFixed(1)}%</span></div></div>
+      <div class="tlabel">${lab}</div>
+      <div class="tvol">${d.n.toLocaleString()}</div></div>`;
+  }).join('');
+})();
+
+// ---- pareto with line filter ----
+const PAR = {'All': M.pareto_all, ...M.pareto_by_line};
+function drawPareto(key){
+  const data = PAR[key]||[];
+  const max = Math.max(...data.map(d=>d.n),1);
+  document.getElementById('pareto').innerHTML = data.map(d=>`
+    <div class="par-row">
+      <div class="par-name" title="${d.step}">${d.step}</div>
+      <div class="par-track"><div class="par-fill" style="width:${(d.n/max*100).toFixed(1)}%"></div></div>
+      <div class="par-n">${d.n.toLocaleString()}</div>
+    </div>`).join('') || '<div style="color:var(--ink-faint);font-size:12px">No first-pass failures.</div>';
+}
+(function(){
+  const keys = Object.keys(PAR);
+  document.getElementById('pfilter').innerHTML = keys.map((k,i)=>
+    `<button class="fbtn ${i===0?'on':''}" data-k="${k}">${k}</button>`).join('');
+  document.querySelectorAll('.fbtn').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.fbtn').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on'); drawPareto(b.dataset.k);
+  });
+  drawPareto('All');
+})();
+
+// ============ PRODUCT DRILL-DOWN ============
+function tone(v){ return v>=97?'good':v>=94?'warn':'bad'; }
+
+function openProduct(line){
+  const D = M.detail[line];
+  if(!D) return;
+  const fpyMax = 100, dl = D.daily, dmax = Math.max(...dl.map(d=>d.n),1);
+  const dlo = Math.min(...dl.map(d=>d.fpy), 90);
+
+  // KPI row
+  const kpis = `
+    <div class="kpi ${tone(D.fpy)}"><div class="kpi-label">First-Pass Yield</div>
+      <div class="kpi-value">${D.fpy.toFixed(1)}<span class="u">%</span></div>
+      <div class="kpi-sub">Final ${D.final.toFixed(1)}% · ${D.fp_fails.toLocaleString()} first-pass fails</div></div>
+    <div class="kpi"><div class="kpi-label">Units Built</div>
+      <div class="kpi-value">${D.units.toLocaleString()}</div>
+      <div class="kpi-sub">${D.attempts.toLocaleString()} test attempts</div></div>
+    <div class="kpi ${D.units?(D.reworked/D.units*100<=5?'good':D.reworked/D.units*100<=10?'warn':'bad'):''}">
+      <div class="kpi-label">Units Reworked</div>
+      <div class="kpi-value">${D.units?(D.reworked/D.units*100).toFixed(1):'0'}<span class="u">%</span></div>
+      <div class="kpi-sub">${D.reworked.toLocaleString()} units hit ≥1 fail</div></div>`;
+
+  // stage flow
+  let flow='';
+  D.stage_flow.forEach((s,i)=>{
+    flow += `<div class="flow-node ${tone(s.fpy)}"><div class="flow-stage">${s.stage}</div>
+      <div class="flow-fpy">${s.fpy.toFixed(1)}%</div><div class="flow-n">${s.n.toLocaleString()}</div></div>`;
+    if(i<D.stage_flow.length-1) flow += "<div class='flow-arrow'>→</div>";
+  });
+
+  // daily trend
+  const trend = dl.map(d=>{
+    const h = 30 + (d.fpy-dlo)/(fpyMax-dlo)*100;
+    const tn = d.fpy>=97?'var(--good)':d.fpy>=94?'var(--warn)':'var(--bad)';
+    const dd = new Date(d.date+'T00:00:00');
+    const lab = dd.toLocaleDateString('en-US',{weekday:'short',month:'numeric',day:'numeric'});
+    return `<div class="tcol"><div class="tbar-wrap">
+      <div class="tbar" style="height:${h}px;background:linear-gradient(180deg,${tn},#1e3a8a55)">
+      <span class="pct">${d.fpy.toFixed(1)}%</span></div></div>
+      <div class="tlabel">${lab}</div><div class="tvol">${d.n.toLocaleString()}</div></div>`;
+  }).join('');
+
+  // pareto (this product's failure modes — the important one)
+  const pmax = Math.max(...D.pareto.map(d=>d.n),1);
+  const pareto = D.pareto.map(d=>`
+    <div class="par-row"><div class="par-name" title="${d.step}">${d.step}</div>
+    <div class="par-track"><div class="par-fill" style="width:${(d.n/pmax*100).toFixed(1)}%"></div></div>
+    <div class="par-n">${d.n.toLocaleString()}</div></div>`).join('')
+    || '<div style="color:var(--ink-faint);font-size:12px">No first-pass failures for this product. 🎉</div>';
+
+  // worst stations
+  const st = D.worst_stations.map(r=>`<tr><td class="mono">${r.station}</td><td>${r.stage}</td>
+    <td class="mono num">${r.tested.toLocaleString()}</td><td class="mono num">${r.fails.toLocaleString()}</td>
+    <td class="mono num ${tone(r.fpy)}">${r.fpy.toFixed(1)}%</td></tr>`).join('')
+    || '<tr><td colspan="5" style="color:var(--ink-faint)">No stations with enough volume.</td></tr>';
+
+  document.getElementById('detailView').innerHTML = `
+    <button class="back-btn" onclick="closeProduct()">← All Products</button>
+    <div class="detail-hero" style="--c:${D.accent}">
+      <div class="detail-badge"></div>
+      <div><div class="detail-title">${D.line}</div>
+        <div class="detail-sub">Weekly failure analysis · ${M.week_start} → ${M.week_end}</div></div>
+    </div>
+    <div class="kpis" style="margin-top:18px">${kpis}</div>
+    <div class="section-title">Stage Flow · First-Pass Yield</div>
+    <div class="panel"><div class="flow">${flow}</div></div>
+    <div class="section-title">Daily First-Pass Yield</div>
+    <div class="panel"><div class="trend">${trend}</div></div>
+    <div class="section-title">Top Failure Modes · ${D.line}</div>
+    <div class="panel">${pareto}</div>
+    <div class="section-title">Station Health · ${D.line}</div>
+    <div class="panel"><table>
+      <thead><tr><th>Station</th><th>Stage</th><th class="num">Tested</th><th class="num">Fails</th><th class="num">FPY</th></tr></thead>
+      <tbody>${st}</tbody></table></div>`;
+
+  document.getElementById('summaryView').style.display='none';
+  document.getElementById('detailView').style.display='block';
+  window.scrollTo(0,0);
+}
+
+function closeProduct(){
+  document.getElementById('detailView').style.display='none';
+  document.getElementById('summaryView').style.display='block';
+  window.scrollTo(0,0);
+}
+</script>
+</body></html>
