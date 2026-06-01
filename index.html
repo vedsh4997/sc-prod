@@ -64,26 +64,34 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
     background:var(--accent); transition:.25s; }
 [data-theme="light"] .theme-tog .tknob { transform:translateX(18px); }
 .card {
-    display: block; position:relative; overflow:hidden;
-    padding: 22px 24px 20px; background: var(--bg-1s);
-    border-radius: 14px; margin-bottom: 14px; text-decoration: none;
-    color: inherit; border: 1px solid var(--line); transition: all 0.18s;
+    display: flex; align-items: center; gap: 18px; position:relative; overflow:hidden;
+    padding: 18px 20px; background: var(--bg-1s);
+    border-radius: 14px; margin-bottom: 12px; text-decoration: none;
+    color: inherit; border: 1px solid var(--line);
+    border-left: 3px solid var(--line); transition: all 0.18s;
 }
-.card-accent { position:absolute; top:0; left:0; right:0; height:3px; background:var(--accent); }
-.card.dpr .card-accent { background:#5ad6a0; }
-.card.hpr .card-accent { background:#4aa3ff; }
-.card.wpr .card-accent { background:#ffb43d; }
-.card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
-.card.dpr:hover { border-color:#5ad6a0; }
-.card.hpr:hover { border-color:#4aa3ff; }
-.card.wpr:hover { border-color:#ffb43d; }
-.card-icon { font-size: 24px; margin-bottom: 10px; }
-.card-title { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 5px; font-family:var(--mono); }
-.card-sub { font-size: 12px; color: var(--ink-dim); }
-.card-go { font-size: 11.5px; font-weight:600; margin-top:12px; opacity:0; transition:opacity .18s; font-family:var(--mono); }
-.card.dpr .card-go { color:#5ad6a0; } .card.hpr .card-go { color:#4aa3ff; } .card.wpr .card-go { color:#ffb43d; }
-.card:hover .card-go { opacity:1; }
-.footer { margin-top: 26px; font-size: 11px; color: var(--ink-faint); text-align: center; font-family:var(--mono); }
+.card.dpr { border-left-color:#5ad6a0; }
+.card.hpr { border-left-color:#4aa3ff; }
+.card.wpr { border-left-color:#ffb43d; }
+.card:hover { transform: translateX(3px); box-shadow: var(--shadow); }
+.card.dpr:hover { border-color:#5ad6a0; border-left-color:#5ad6a0; }
+.card.hpr:hover { border-color:#4aa3ff; border-left-color:#4aa3ff; }
+.card.wpr:hover { border-color:#ffb43d; border-left-color:#ffb43d; }
+.card-ic { flex:none; width:46px; height:46px; border-radius:11px; display:flex;
+    align-items:center; justify-content:center; font-size:22px; background:var(--bg-2);
+    border:1px solid var(--line); }
+.card-body { flex:1; min-width:0; }
+.card-title { font-size: 16px; font-weight: 700; color: var(--ink); font-family:var(--mono); }
+.card-sub { font-size: 12px; color: var(--ink-dim); margin-top:3px; }
+.card-right { flex:none; display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
+.card-cadence { font-family:var(--mono); font-size:9px; letter-spacing:.14em; font-weight:700;
+    padding:3px 8px; border-radius:5px; }
+.card.dpr .card-cadence { color:#5ad6a0; background:rgba(90,214,160,.12); }
+.card.hpr .card-cadence { color:#4aa3ff; background:rgba(74,163,255,.12); }
+.card.wpr .card-cadence { color:#ffb43d; background:rgba(255,180,61,.12); }
+.card-arrow { font-family:var(--mono); font-size:18px; color:var(--ink-faint); transition:.18s; }
+.card:hover .card-arrow { color:var(--accent); transform:translateX(3px); }
+.footer { margin-top: 24px; font-size: 11px; color: var(--ink-faint); text-align: center; font-family:var(--mono); }
 </style>
 </head>
 <body>
@@ -95,30 +103,33 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
         <span id="ticon">🌙</span><span class="ttrack"><span class="tknob"></span></span>
       </span>
     </div>
-    <div class="sub"><span class="live-dot"></span>Last updated: Monday, June 01, 2026 · 05:49 PM</div>
+    <div class="sub"><span class="live-dot"></span>Last updated: Monday, June 01, 2026 · 05:55 PM</div>
 
     <a class="card dpr" href="battery_dashboard.html">
-        <div class="card-accent"></div>
-        <div class="card-icon">📊</div>
-        <div class="card-title">Daily Production Report (DPR)</div>
-        <div class="card-sub">R3 · R4 · BL/BN · IQ9 — daily yield analysis</div>
-        <div class="card-go">Open report →</div>
+        <div class="card-ic">📊</div>
+        <div class="card-body">
+          <div class="card-title">Daily Production Report</div>
+          <div class="card-sub">R3 · R4 · BL/BN · IQ9 — daily yield analysis</div>
+        </div>
+        <div class="card-right"><span class="card-cadence">DAILY</span><span class="card-arrow">→</span></div>
     </a>
 
     <a class="card hpr" href="hpr_dashboard.html">
-        <div class="card-accent"></div>
-        <div class="card-icon">⏱</div>
-        <div class="card-title">Hourly Production Report (HPR)</div>
-        <div class="card-sub">Hour-by-hour tracking with production flow diagrams</div>
-        <div class="card-go">Open report →</div>
+        <div class="card-ic">⏱</div>
+        <div class="card-body">
+          <div class="card-title">Hourly Production Report</div>
+          <div class="card-sub">Hour-by-hour tracking · production flow · machine health</div>
+        </div>
+        <div class="card-right"><span class="card-cadence">HOURLY</span><span class="card-arrow">→</span></div>
     </a>
 
     <a class="card wpr" href="wpr_dashboard.html">
-        <div class="card-accent"></div>
-        <div class="card-icon">📅</div>
-        <div class="card-title">Weekly Production Report (WPR)</div>
-        <div class="card-sub">R3 · R4 · BL/BN · IQ8 · IQ9 — weekly yield &amp; failure analysis</div>
-        <div class="card-go">Open report →</div>
+        <div class="card-ic">📅</div>
+        <div class="card-body">
+          <div class="card-title">Weekly Production Report</div>
+          <div class="card-sub">R3 · R4 · BL/BN · IQ8 · IQ9 — weekly yield &amp; failure analysis</div>
+        </div>
+        <div class="card-right"><span class="card-cadence">WEEKLY</span><span class="card-arrow">&#8594;</span></div>
     </a>
     <div class="footer">Shared view — refresh this page for latest data</div>
 </div>
