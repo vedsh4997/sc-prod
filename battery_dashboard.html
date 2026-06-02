@@ -928,7 +928,7 @@ footer { text-align: center; color: var(--border-2); font-size: 11px; padding: 2
 <header>
     <div class="header-left">
         <h1>Production Dashboard <span id="publicBadge" class="public-badge" style="display:none">🌐 SHARED VIEW</span></h1>
-        <div class="sub">R3 · R4 · BL/BN · IQ9 · Generated Monday, June 01, 2026 · 11:10 PM</div>
+        <div class="sub">R3 · R4 · BL/BN · IQ9 · Generated Monday, June 01, 2026 · 11:28 PM</div>
         <div class="header-credit">
             <span class="hc-label">Designed & Built by</span>
             <span class="hc-name">Ved (Vedant Dhirendra)</span>
@@ -2844,10 +2844,16 @@ function buildInverterColumn(d, prefix) {
         </div>
         ${ft ? `
         <div class="panel ft-panel">
-            <h3><span style="color:var(--iq9)">⚡</span> FT — Functional Test (first stage)
+            <h3><span style="color:var(--iq9)">⚡</span> FT — Functional Test (failure analysis)
                 <span class="overall-tag">${ft.pass}/${ft.total} pass · ${ftYield}% yield</span></h3>
             <canvas id="${pid}-ftPareto"></canvas>
-        </div>` : ''}
+        </div>
+        ${ft.fpy_ft && ft.fpy_ft.length ? `
+        <div class="panel ft-panel">
+            <h3><span style="color:var(--iq9)">⚙</span> Per-Tester FPY — FT
+                <span class="overall-tag">${ft.fpy_ft_avg}% avg</span></h3>
+            <canvas id="${pid}-fpyFt"></canvas>
+        </div>` : ''}` : ''}
         <div class="panel">
             <h3>Per-Tester FPY — HT <span class="overall-tag">Overall: ${(d.fpy_ht_overall||0).toFixed(2)}% (${d.fpy_ht_total_pass||0}/${d.fpy_ht_total_attempts||0})</span></h3>
             <canvas id="${pid}-fpyHt"></canvas>
@@ -2899,6 +2905,9 @@ function drawInverterCharts(d, prefix) {
     drawPareto(`${prefix}-bstPareto`, d.top_bst, '#ef4444');
     if (d.ft && d.ft.top_ft && d.ft.top_ft.length) {
         drawPareto(`${prefix}-ftPareto`, d.ft.top_ft, 'var(--iq9)');
+    }
+    if (d.ft && d.ft.fpy_ft && d.ft.fpy_ft.length) {
+        drawFpyChart(`${prefix}-fpyFt`, d.ft.fpy_ft, 'var(--accent-2)');
     }
     if (d.backlog_pareto && d.backlog_pareto.length) {
         drawPareto(`${prefix}-backlogPareto`, d.backlog_pareto, '#ef4444');
