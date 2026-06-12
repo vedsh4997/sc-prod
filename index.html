@@ -3,31 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Salcomp Production Dashboards</title>
+<title>Salcomp Production · Mission Control</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
 :root {
-  --bg-0:#0c0d0b; --bg-1s:#181a15; --bg-2:#1f221b; --line:#2c3026;
-  --ink:#eef1e6; --ink-dim:#a8b09a; --ink-faint:#6b7460;
-  --accent:#9eff3d; --accent-2:#5ad6a0;
-  --glass:rgba(18,20,16,.80); --grid:rgba(158,255,61,.035);
-  --shadow:0 18px 50px rgba(0,0,0,.55);
+  --bg-0:#05080f; --bg-1s:#0a1120; --bg-2:#0f1828; --line:#1a2942; --line-2:#25395a;
+  --ink:#eaf2ff; --ink-dim:#8499b8; --ink-faint:#51637e;
+  --accent:#3ad8ff; --accent-2:#2e8bff; --solar:#ffc23a;
+  --good:#2bffb0;
+  --glass:rgba(10,17,32,.82); --grid:rgba(58,216,255,.045);
+  --shadow:0 24px 70px rgba(0,0,0,.6);
   --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
   --sans:"IBM Plex Sans",-apple-system,"Segoe UI",system-ui,sans-serif;
 }
 [data-theme="light"] {
-  --bg-0:#f4f2e9; --bg-1s:#ffffff; --bg-2:#efece1; --line:#ddd8c6;
-  --ink:#1c1f17; --ink-dim:#5a614c; --ink-faint:#8b9077;
-  --accent:#2f7d12; --accent-2:#0f9b6c;
-  --glass:rgba(251,250,244,.85); --grid:rgba(47,125,18,.05);
-  --shadow:0 14px 40px rgba(80,80,40,.14);
+  --bg-0:#eaf0f7; --bg-1s:#ffffff; --bg-2:#f1f5fb; --line:#d4deeb; --line-2:#c0cfe0;
+  --ink:#0a1628; --ink-dim:#4a5a72; --ink-faint:#7d8da3;
+  --accent:#0a7ea4; --accent-2:#1565c0; --solar:#d9920a;
+  --good:#0f9b6c;
+  --glass:rgba(255,255,255,.86); --grid:rgba(10,126,164,.05);
+  --shadow:0 18px 50px rgba(40,70,110,.16);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
     font-family: var(--sans);
     background:
-      radial-gradient(900px 500px at 88% -8%, rgba(158,255,61,.10), transparent 58%),
-      radial-gradient(700px 420px at -8% 6%, rgba(90,214,160,.07), transparent 55%),
+      radial-gradient(1000px 560px at 88% -10%, rgba(58,216,255,.13), transparent 60%),
+      radial-gradient(760px 460px at -8% 6%, rgba(46,139,255,.10), transparent 56%),
+      radial-gradient(600px 600px at 50% 116%, rgba(43,255,176,.05), transparent 60%),
       var(--bg-0);
     background-attachment:fixed;
     color: var(--ink); min-height: 100vh;
@@ -37,32 +40,57 @@ body {
 body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
     background-image:linear-gradient(var(--grid) 1px,transparent 1px),
                      linear-gradient(90deg,var(--grid) 1px,transparent 1px);
-    background-size:34px 34px; }
+    background-size:38px 38px; }
+/* animated solar sun, top-right of the viewport */
+.sun { position:fixed; top:-90px; right:-90px; width:340px; height:340px; pointer-events:none; z-index:0;
+    background:radial-gradient(circle at center, rgba(255,194,58,.22), rgba(255,194,58,.06) 42%, transparent 66%);
+    border-radius:50%; animation:sunPulse 7s ease-in-out infinite; }
+@keyframes sunPulse { 0%,100%{transform:scale(1);opacity:.9} 50%{transform:scale(1.08);opacity:1} }
+.sun::after { content:""; position:absolute; inset:96px; border-radius:50%;
+    background:radial-gradient(circle, var(--solar), rgba(255,194,58,.5) 60%, transparent 72%);
+    box-shadow:0 0 60px rgba(255,194,58,.5); }
 .app {
     position:relative; z-index:1;
-    width: 100%; max-width: 600px; background: var(--glass);
-    backdrop-filter: blur(14px);
-    border: 1px solid var(--line); border-radius: 22px; padding: 40px;
+    width: 100%; max-width: 640px; background: var(--glass);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--line); border-top:2px solid var(--accent); border-radius: 22px; padding: 38px;
     box-shadow: var(--shadow);
 }
+.scan { position:absolute; top:0; left:0; right:0; height:2px; border-radius:22px 22px 0 0; overflow:hidden; }
+.scan::before { content:""; position:absolute; top:0; left:0; width:40%; height:100%;
+    background:linear-gradient(90deg,transparent,var(--accent),transparent); animation:scan 4s linear infinite; }
+@keyframes scan { 0%{transform:translateX(-120%)} 100%{transform:translateX(360%)} }
 .top { display:flex; align-items:flex-start; justify-content:space-between; }
-.brand { font-size: 24px; font-weight: 700; color: var(--ink); letter-spacing:-.5px; font-family:var(--mono); }
+.eyebrow { font-family:var(--mono); font-size:10px; letter-spacing:.3em; color:var(--accent);
+    text-transform:uppercase; font-weight:700; margin-bottom:7px; display:flex; align-items:center; gap:8px; }
+.mc-dot { width:8px; height:8px; border-radius:50%; background:var(--good); box-shadow:0 0 10px var(--good);
+    animation:pulse 1.8s infinite; }
+.brand { font-size: 25px; font-weight: 700; color: var(--ink); letter-spacing:.02em; font-family:var(--mono);
+    text-shadow:0 0 22px rgba(58,216,255,.28); }
 .brand .accent { color: var(--accent); }
-.eyebrow { font-family:var(--mono); font-size:10px; letter-spacing:.28em; color:var(--accent);
-    text-transform:uppercase; font-weight:600; margin-bottom:6px; }
-.sub { color: var(--ink-faint); font-size: 12.5px; margin: 8px 0 30px; font-family:var(--mono); }
+.sub { color: var(--ink-faint); font-size: 12px; margin: 9px 0 4px; font-family:var(--mono); letter-spacing:.04em; }
 .live-dot { display:inline-block; width:7px; height:7px; border-radius:50%;
-    background:var(--accent); margin-right:6px; box-shadow:0 0 0 0 rgba(158,255,61,.6);
-    animation:pulse 2s infinite; }
-@keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(158,255,61,.5)}
-    70%{box-shadow:0 0 0 8px rgba(158,255,61,0)} 100%{box-shadow:0 0 0 0 rgba(158,255,61,0)} }
+    background:var(--good); margin-right:6px; box-shadow:0 0 0 0 rgba(43,255,176,.6); animation:pulse 2s infinite; }
+@keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(43,255,176,.5)}
+    70%{box-shadow:0 0 0 8px rgba(43,255,176,0)} 100%{box-shadow:0 0 0 0 rgba(43,255,176,0)} }
+/* telemetry readout bar */
+.telem { display:flex; gap:0; margin:20px 0 24px; border:1px solid var(--line); border-radius:12px; overflow:hidden;
+    background:var(--bg-1s); }
+.telem-cell { flex:1; padding:11px 14px; border-right:1px solid var(--line); }
+.telem-cell:last-child { border-right:none; }
+.telem-l { font-family:var(--mono); font-size:8.5px; letter-spacing:.16em; color:var(--ink-faint); margin-bottom:3px; }
+.telem-v { font-family:var(--mono); font-size:13px; font-weight:700; color:var(--ink); }
+.telem-v.ok { color:var(--accent); }
+.telem-v.solar { color:var(--solar); }
 .theme-tog { display:inline-flex; align-items:center; gap:7px; cursor:pointer;
     background:var(--bg-2); border:1px solid var(--line); border-radius:999px; padding:5px 7px; transition:.2s; }
 .theme-tog:hover { border-color:var(--accent); }
 .theme-tog .ttrack { position:relative; width:36px; height:18px; border-radius:999px; background:var(--line); }
 .theme-tog .tknob { position:absolute; top:2px; left:2px; width:14px; height:14px; border-radius:50%;
-    background:var(--accent); transition:.25s; }
+    background:var(--accent); transition:.25s; box-shadow:0 0 8px var(--accent); }
 [data-theme="light"] .theme-tog .tknob { transform:translateX(18px); }
+.sec-label { font-family:var(--mono); font-size:10px; letter-spacing:.2em; color:var(--ink-faint);
+    text-transform:uppercase; margin:0 0 12px 2px; }
 .card {
     display: flex; align-items: center; gap: 18px; position:relative; overflow:hidden;
     padding: 18px 20px; background: var(--bg-1s);
@@ -70,46 +98,66 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
     color: inherit; border: 1px solid var(--line);
     border-left: 3px solid var(--line); transition: all 0.18s;
 }
-.card.dpr { border-left-color:#5ad6a0; }
-.card.hpr { border-left-color:#4aa3ff; }
-.card.wpr { border-left-color:#ffb43d; }
-.card:hover { transform: translateX(3px); box-shadow: var(--shadow); }
-.card.dpr:hover { border-color:#5ad6a0; border-left-color:#5ad6a0; }
-.card.hpr:hover { border-color:#4aa3ff; border-left-color:#4aa3ff; }
-.card.wpr:hover { border-color:#ffb43d; border-left-color:#ffb43d; }
-.card-ic { flex:none; width:46px; height:46px; border-radius:11px; display:flex;
+.card::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg,transparent 60%,rgba(58,216,255,.05));
+    opacity:0; transition:.18s; }
+.card.dpr { border-left-color:var(--good); }
+.card.hpr { border-left-color:var(--accent); }
+.card.wpr { border-left-color:var(--solar); }
+.card:hover { transform: translateX(4px); box-shadow: var(--shadow); border-color:var(--line-2); }
+.card:hover::after { opacity:1; }
+.card.dpr:hover { border-left-color:var(--good); }
+.card.hpr:hover { border-left-color:var(--accent); }
+.card.wpr:hover { border-left-color:var(--solar); }
+.card-ic { flex:none; width:48px; height:48px; border-radius:11px; display:flex;
     align-items:center; justify-content:center; font-size:22px; background:var(--bg-2);
     border:1px solid var(--line); }
 .card-body { flex:1; min-width:0; }
-.card-title { font-size: 16px; font-weight: 700; color: var(--ink); font-family:var(--mono); }
+.card-title { font-size: 16px; font-weight: 700; color: var(--ink); font-family:var(--mono); letter-spacing:.02em; }
 .card-sub { font-size: 12px; color: var(--ink-dim); margin-top:3px; }
+.card-sys { font-family:var(--mono); font-size:9px; color:var(--ink-faint); letter-spacing:.1em; margin-top:5px; }
 .card-right { flex:none; display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
 .card-cadence { font-family:var(--mono); font-size:9px; letter-spacing:.14em; font-weight:700;
     padding:3px 8px; border-radius:5px; }
-.card.dpr .card-cadence { color:#5ad6a0; background:rgba(90,214,160,.12); }
-.card.hpr .card-cadence { color:#4aa3ff; background:rgba(74,163,255,.12); }
-.card.wpr .card-cadence { color:#ffb43d; background:rgba(255,180,61,.12); }
+.card.dpr .card-cadence { color:var(--good); background:rgba(43,255,176,.12); }
+.card.hpr .card-cadence { color:var(--accent); background:rgba(58,216,255,.12); }
+.card.wpr .card-cadence { color:var(--solar); background:rgba(255,194,58,.14); }
 .card-arrow { font-family:var(--mono); font-size:18px; color:var(--ink-faint); transition:.18s; }
 .card:hover .card-arrow { color:var(--accent); transform:translateX(3px); }
-.footer { margin-top: 24px; font-size: 11px; color: var(--ink-faint); text-align: center; font-family:var(--mono); }
+.footer { margin-top: 24px; font-size: 10.5px; color: var(--ink-faint); text-align: center; font-family:var(--mono);
+    letter-spacing:.06em; display:flex; align-items:center; justify-content:center; gap:8px; }
+.footer .sol { color:var(--solar); }
 </style>
 </head>
 <body>
+<div class="sun"></div>
 <div class="app">
+    <div class="scan"></div>
     <div class="top">
-      <div><div class="eyebrow">Salcomp USA · Test Operations</div>
-        <div class="brand">⚡ <span class="accent">Salcomp</span> Production</div></div>
+      <div>
+        <div class="eyebrow"><span class="mc-dot"></span>Mission Control · Salcomp USA · Test Ops</div>
+        <div class="brand">⚡ <span class="accent">Salcomp</span> Production</div>
+      </div>
       <span class="theme-tog" onclick="toggleTheme()" title="Toggle light/dark">
         <span id="ticon">🌙</span><span class="ttrack"><span class="tknob"></span></span>
       </span>
     </div>
-    <div class="sub"><span class="live-dot"></span>Last updated: Friday, June 12, 2026 · 12:26 AM</div>
+    <div class="sub"><span class="live-dot"></span>Last sync: Friday, June 12, 2026 · 12:28 AM · Arlington, TX</div>
+
+    <div class="telem">
+      <div class="telem-cell"><div class="telem-l">UPLINK</div><div class="telem-v ok">● LIVE</div></div>
+      <div class="telem-cell"><div class="telem-l">PRODUCT LINES</div><div class="telem-v">R3·R4·BL/BN·IQ8·IQ9</div></div>
+      <div class="telem-cell"><div class="telem-l">DOMAIN</div><div class="telem-v solar">☀ SOLAR · ENPHASE</div></div>
+      <div class="telem-cell"><div class="telem-l">STATION</div><div class="telem-v">ARLINGTON TX</div></div>
+    </div>
+
+    <div class="sec-label">▸ Select Mission System</div>
 
     <a class="card dpr" href="battery_dashboard.html">
         <div class="card-ic">📊</div>
         <div class="card-body">
           <div class="card-title">Daily Production Report</div>
           <div class="card-sub">R3 · R4 · BL/BN · IQ9 — daily yield analysis</div>
+          <div class="card-sys">SYSTEM 01 · DAILY TELEMETRY</div>
         </div>
         <div class="card-right"><span class="card-cadence">DAILY</span><span class="card-arrow">→</span></div>
     </a>
@@ -119,6 +167,7 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
         <div class="card-body">
           <div class="card-title">Hourly Production Report</div>
           <div class="card-sub">Hour-by-hour tracking · production flow · machine health</div>
+          <div class="card-sys">SYSTEM 02 · LIVE FLIGHT DATA</div>
         </div>
         <div class="card-right"><span class="card-cadence">HOURLY</span><span class="card-arrow">→</span></div>
     </a>
@@ -128,10 +177,11 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
         <div class="card-body">
           <div class="card-title">Weekly Production Report</div>
           <div class="card-sub">R3 · R4 · BL/BN · IQ8 · IQ9 — weekly yield &amp; failure analysis</div>
+          <div class="card-sys">SYSTEM 03 · WEEKLY MISSION LOG</div>
         </div>
         <div class="card-right"><span class="card-cadence">WEEKLY</span><span class="card-arrow">&#8594;</span></div>
     </a>
-    <div class="footer">Shared view — refresh this page for latest data</div>
+    <div class="footer"><span class="sol">☀</span> Powered by solar · Built by V. Shukla · refresh for latest telemetry</div>
 </div>
 <script>
 function applyTheme(t){
