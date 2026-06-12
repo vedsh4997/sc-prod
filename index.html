@@ -51,7 +51,7 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
     box-shadow:0 0 60px rgba(255,194,58,.5); }
 .app {
     position:relative; z-index:1;
-    width: 100%; max-width: 640px; background: var(--glass);
+    width: 100%; max-width: 920px; background: var(--glass);
     backdrop-filter: blur(16px);
     border: 1px solid var(--line); border-top:2px solid var(--accent); border-radius: 22px; padding: 38px;
     box-shadow: var(--shadow);
@@ -91,38 +91,38 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
 [data-theme="light"] .theme-tog .tknob { transform:translateX(18px); }
 .sec-label { font-family:var(--mono); font-size:10px; letter-spacing:.2em; color:var(--ink-faint);
     text-transform:uppercase; margin:0 0 12px 2px; }
+.bay { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+@media(max-width:680px){ .bay{ grid-template-columns:1fr; } }
 .card {
-    display: flex; align-items: center; gap: 18px; position:relative; overflow:hidden;
-    padding: 18px 20px; background: var(--bg-1s);
-    border-radius: 14px; margin-bottom: 12px; text-decoration: none;
-    color: inherit; border: 1px solid var(--line);
-    border-left: 3px solid var(--line); transition: all 0.18s;
+    display:flex; flex-direction:column; gap:12px; position:relative; overflow:hidden;
+    padding:20px 18px 16px; background:var(--bg-1s); min-height:240px;
+    border-radius:16px; text-decoration:none; color:inherit;
+    border:1px solid var(--line); border-top:3px solid var(--line); transition:all .2s;
 }
-.card::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg,transparent 60%,rgba(58,216,255,.05));
-    opacity:0; transition:.18s; }
-.card.dpr { border-left-color:var(--good); }
-.card.hpr { border-left-color:var(--accent); }
-.card.wpr { border-left-color:var(--solar); }
-.card:hover { transform: translateX(4px); box-shadow: var(--shadow); border-color:var(--line-2); }
+.card::after { content:""; position:absolute; inset:0;
+    background:radial-gradient(120% 60% at 50% 0%, rgba(58,216,255,.07), transparent 60%); opacity:0; transition:.2s; }
+.card.dpr { border-top-color:var(--good); }
+.card.hpr { border-top-color:var(--accent); }
+.card.wpr { border-top-color:var(--solar); }
+.card:hover { transform:translateY(-5px); box-shadow:var(--shadow); border-color:var(--line-2); }
 .card:hover::after { opacity:1; }
-.card.dpr:hover { border-left-color:var(--good); }
-.card.hpr:hover { border-left-color:var(--accent); }
-.card.wpr:hover { border-left-color:var(--solar); }
-.card-ic { flex:none; width:48px; height:48px; border-radius:11px; display:flex;
-    align-items:center; justify-content:center; font-size:22px; background:var(--bg-2);
-    border:1px solid var(--line); }
-.card-body { flex:1; min-width:0; }
-.card-title { font-size: 16px; font-weight: 700; color: var(--ink); font-family:var(--mono); letter-spacing:.02em; }
-.card-sub { font-size: 12px; color: var(--ink-dim); margin-top:3px; }
-.card-sys { font-family:var(--mono); font-size:9px; color:var(--ink-faint); letter-spacing:.1em; margin-top:5px; }
-.card-right { flex:none; display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
-.card-cadence { font-family:var(--mono); font-size:9px; letter-spacing:.14em; font-weight:700;
-    padding:3px 8px; border-radius:5px; }
+.card-top { display:flex; align-items:center; justify-content:space-between; }
+.card-sysno { font-family:var(--mono); font-size:26px; font-weight:800; color:var(--line-2); line-height:1; opacity:.7; }
+.card.dpr .card-sysno { color:rgba(43,255,176,.3); }
+.card.hpr .card-sysno { color:rgba(58,216,255,.3); }
+.card.wpr .card-sysno { color:rgba(255,194,58,.35); }
+.card-ic { width:52px; height:52px; border-radius:13px; display:flex; align-items:center; justify-content:center;
+    font-size:26px; background:var(--bg-2); border:1px solid var(--line); }
+.card-title { font-size:19px; font-weight:700; color:var(--ink); font-family:var(--mono); line-height:1.25; letter-spacing:.01em; }
+.card-sub { font-size:11.5px; color:var(--ink-dim); line-height:1.5; flex:1; }
+.card-foot { display:flex; align-items:center; justify-content:space-between; padding-top:10px; border-top:1px solid var(--line); }
+.card-sys { font-family:var(--mono); font-size:9px; letter-spacing:.1em; color:var(--ink-faint); }
+.card-cadence { font-family:var(--mono); font-size:9px; letter-spacing:.14em; font-weight:700; padding:4px 9px; border-radius:6px; }
 .card.dpr .card-cadence { color:var(--good); background:rgba(43,255,176,.12); }
 .card.hpr .card-cadence { color:var(--accent); background:rgba(58,216,255,.12); }
 .card.wpr .card-cadence { color:var(--solar); background:rgba(255,194,58,.14); }
-.card-arrow { font-family:var(--mono); font-size:18px; color:var(--ink-faint); transition:.18s; }
-.card:hover .card-arrow { color:var(--accent); transform:translateX(3px); }
+.card-arrow { font-family:var(--mono); font-size:20px; color:var(--ink-faint); transition:.2s; }
+.card:hover .card-arrow { color:var(--accent); transform:translateX(4px); }
 .footer { margin-top: 24px; font-size: 10.5px; color: var(--ink-faint); text-align: center; font-family:var(--mono);
     letter-spacing:.06em; display:flex; align-items:center; justify-content:center; gap:8px; }
 .footer .sol { color:var(--solar); }
@@ -141,7 +141,7 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
         <span id="ticon">🌙</span><span class="ttrack"><span class="tknob"></span></span>
       </span>
     </div>
-    <div class="sub"><span class="live-dot"></span>Last sync: Friday, June 12, 2026 · 12:04 PM · Arlington, TX</div>
+    <div class="sub"><span class="live-dot"></span>Last sync: Friday, June 12, 2026 · 12:08 PM · Arlington, TX</div>
 
     <div class="telem">
       <div class="telem-cell"><div class="telem-l">UPLINK</div><div class="telem-v ok">● LIVE</div></div>
@@ -152,35 +152,31 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
 
     <div class="sec-label">▸ Select Mission System</div>
 
+    <div class="bay">
     <a class="card dpr" href="battery_dashboard.html">
+        <div class="card-top"><span class="card-cadence">DAILY</span><span class="card-sysno">01</span></div>
         <div class="card-ic">📊</div>
-        <div class="card-body">
-          <div class="card-title">Daily Production Report</div>
-          <div class="card-sub">R3 · R4 · BL/BN · IQ9 — daily yield analysis</div>
-          <div class="card-sys">SYSTEM 01 · DAILY TELEMETRY</div>
-        </div>
-        <div class="card-right"><span class="card-cadence">DAILY</span><span class="card-arrow">→</span></div>
+        <div class="card-title">Daily<br>Production<br>Report</div>
+        <div class="card-sub">R3 · R4 · BL/BN · IQ9 — daily yield analysis</div>
+        <div class="card-foot"><span class="card-sys">DAILY TELEMETRY</span><span class="card-arrow">→</span></div>
     </a>
 
     <a class="card hpr" href="hpr_dashboard.html">
+        <div class="card-top"><span class="card-cadence">HOURLY</span><span class="card-sysno">02</span></div>
         <div class="card-ic">⏱</div>
-        <div class="card-body">
-          <div class="card-title">Hourly Production Report</div>
-          <div class="card-sub">Hour-by-hour tracking · production flow · machine health</div>
-          <div class="card-sys">SYSTEM 02 · LIVE FLIGHT DATA</div>
-        </div>
-        <div class="card-right"><span class="card-cadence">HOURLY</span><span class="card-arrow">→</span></div>
+        <div class="card-title">Hourly<br>Production<br>Report</div>
+        <div class="card-sub">Hour-by-hour tracking · production flow · machine health</div>
+        <div class="card-foot"><span class="card-sys">LIVE FLIGHT DATA</span><span class="card-arrow">→</span></div>
     </a>
 
     <a class="card wpr" href="wpr_dashboard.html">
+        <div class="card-top"><span class="card-cadence">WEEKLY</span><span class="card-sysno">03</span></div>
         <div class="card-ic">📅</div>
-        <div class="card-body">
-          <div class="card-title">Weekly Production Report</div>
-          <div class="card-sub">R3 · R4 · BL/BN · IQ8 · IQ9 — weekly yield &amp; failure analysis</div>
-          <div class="card-sys">SYSTEM 03 · WEEKLY MISSION LOG</div>
-        </div>
-        <div class="card-right"><span class="card-cadence">WEEKLY</span><span class="card-arrow">&#8594;</span></div>
+        <div class="card-title">Weekly<br>Production<br>Report</div>
+        <div class="card-sub">R3 · R4 · BL/BN · IQ8 · IQ9 — weekly yield &amp; failure analysis</div>
+        <div class="card-foot"><span class="card-sys">WEEKLY MISSION LOG</span><span class="card-arrow">&#8594;</span></div>
     </a>
+    </div>
     <div class="footer"><span class="sol">☀</span> Powered by solar · Built by V. Shukla · refresh for latest telemetry</div>
 </div>
 <script>
