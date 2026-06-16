@@ -10,7 +10,7 @@
   --bg-0:#05080f; --bg-1s:#0a1120; --bg-2:#0f1828; --line:#1a2942; --line-2:#25395a;
   --ink:#eaf2ff; --ink-dim:#8499b8; --ink-faint:#51637e;
   --accent:#3ad8ff; --accent-2:#2e8bff; --solar:#ffc23a;
-  --good:#2bffb0;
+  --good:#2bffb0; --ict:#a06bff;
   --glass:rgba(10,17,32,.82); --grid:rgba(58,216,255,.045);
   --shadow:0 24px 70px rgba(0,0,0,.6);
   --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
@@ -20,7 +20,7 @@
   --bg-0:#eaf0f7; --bg-1s:#ffffff; --bg-2:#f1f5fb; --line:#d4deeb; --line-2:#c0cfe0;
   --ink:#0a1628; --ink-dim:#4a5a72; --ink-faint:#7d8da3;
   --accent:#0a7ea4; --accent-2:#1565c0; --solar:#d9920a;
-  --good:#0f9b6c;
+  --good:#0f9b6c; --ict:#7c3aed;
   --glass:rgba(255,255,255,.86); --grid:rgba(10,126,164,.05);
   --shadow:0 18px 50px rgba(40,70,110,.16);
 }
@@ -91,7 +91,7 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
 [data-theme="light"] .theme-tog .tknob { transform:translateX(18px); }
 .sec-label { font-family:var(--mono); font-size:10px; letter-spacing:.2em; color:var(--ink-faint);
     text-transform:uppercase; margin:0 0 12px 2px; }
-.bay { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.bay { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; }
 @media(max-width:680px){ .bay{ grid-template-columns:1fr; } }
 .card {
     display:flex; flex-direction:column; gap:12px; position:relative; overflow:hidden;
@@ -104,6 +104,7 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
 .card.dpr { border-top-color:var(--good); }
 .card.hpr { border-top-color:var(--accent); }
 .card.wpr { border-top-color:var(--solar); }
+.card.ict { border-top-color:var(--ict); }
 .card:hover { transform:translateY(-5px); box-shadow:var(--shadow); border-color:var(--line-2); }
 .card:hover::after { opacity:1; }
 .card-top { display:flex; align-items:center; justify-content:space-between; }
@@ -111,6 +112,7 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
 .card.dpr .card-sysno { color:rgba(43,255,176,.3); }
 .card.hpr .card-sysno { color:rgba(58,216,255,.3); }
 .card.wpr .card-sysno { color:rgba(255,194,58,.35); }
+.card.ict .card-sysno { color:rgba(160,107,255,.32); }
 .card-ic { width:52px; height:52px; border-radius:13px; display:flex; align-items:center; justify-content:center;
     font-size:26px; background:var(--bg-2); border:1px solid var(--line); }
 .card-title { font-size:19px; font-weight:700; color:var(--ink); font-family:var(--mono); line-height:1.25; letter-spacing:.01em; }
@@ -121,6 +123,7 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
 .card.dpr .card-cadence { color:var(--good); background:rgba(43,255,176,.12); }
 .card.hpr .card-cadence { color:var(--accent); background:rgba(58,216,255,.12); }
 .card.wpr .card-cadence { color:var(--solar); background:rgba(255,194,58,.14); }
+.card.ict .card-cadence { color:var(--ict); background:rgba(160,107,255,.13); }
 .card-arrow { font-family:var(--mono); font-size:20px; color:var(--ink-faint); transition:.2s; }
 .card:hover .card-arrow { color:var(--accent); transform:translateX(4px); }
 .footer { margin-top: 24px; font-size: 10.5px; color: var(--ink-faint); text-align: center; font-family:var(--mono);
@@ -141,7 +144,7 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
         <span id="ticon">🌙</span><span class="ttrack"><span class="tknob"></span></span>
       </span>
     </div>
-    <div class="sub"><span class="live-dot"></span>Last sync: Monday, June 15, 2026 · 10:08 PM · Arlington, TX</div>
+    <div class="sub"><span class="live-dot"></span>Last sync: Monday, June 15, 2026 · 10:51 PM · Arlington, TX</div>
 
     <div class="telem">
       <div class="telem-cell"><div class="telem-l">UPLINK</div><div class="telem-v ok">● LIVE</div></div>
@@ -175,6 +178,14 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
         <div class="card-title">Weekly<br>Production<br>Report</div>
         <div class="card-sub">R3 · R4 · BL/BN · IQ8 · IQ9 — weekly yield &amp; failure analysis</div>
         <div class="card-foot"><span class="card-sys">WEEKLY MISSION LOG</span><span class="card-arrow">&#8594;</span></div>
+    </a>
+
+    <a class="card ict" href="ict_dashboard.html">
+        <div class="card-top"><span class="card-cadence">LIVE · MES</span><span class="card-sysno">04</span></div>
+        <div class="card-ic">🔬</div>
+        <div class="card-title">ICT Yield<br>by Line</div>
+        <div class="card-sub">ICT &amp; Lead-Height first-pass yield — live from CMES, line by line</div>
+        <div class="card-foot"><span class="card-sys">MES YIELD FEED</span><span class="card-arrow">&#8594;</span></div>
     </a>
     </div>
     <div class="footer"><span class="sol">☀</span> Powered by solar · Built by V. Shukla · refresh for latest telemetry</div>
