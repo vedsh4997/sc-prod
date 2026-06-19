@@ -122,7 +122,7 @@ tr:hover td{background:var(--surface2)}
 
 </div>
 <script>
-const ICT = {"fetched": "2026-06-19T05:08:44", "from_hour": "6", "to_hour": "23", "lines": {"PRDLN-08-R4 ID Cover": {"ICT": [{"product": "CSB_R4", "operation": "EL08.RWK", "op_name": "Switch PCBA LED Testing", "input_qty": "13", "first_pass": "13", "first_fail": "0", "retest_pass": "1", "retest_fail": "0", "fpy": "100", "spy": "100", "output_qty": "14"}], "LH": [{"product": "CSB_R4", "operation": "EL08.RWK", "op_name": "Switch PCBA LED Testing", "input_qty": "13", "first_pass": "13", "first_fail": "0", "retest_pass": "1", "retest_fail": "0", "fpy": "100", "spy": "100", "output_qty": "14"}], "ICT_FAILS": [], "LH_FAILS": []}}};
+const ICT = {"fetched": "2026-06-19T05:17:50", "from_hour": "6", "to_hour": "23", "lines": {"PRDLN-08-R4 ID Cover": {"ICT": [{"product": "CSB_R4", "operation": "EL08.RWK", "op_name": "Switch PCBA LED Testing", "input_qty": "13", "first_pass": "13", "first_fail": "0", "retest_pass": "1", "retest_fail": "0", "fpy": "100", "spy": "100", "output_qty": "14"}], "LH": [{"product": "CSB_R4", "operation": "EL08.RWK", "op_name": "Switch PCBA LED Testing", "input_qty": "13", "first_pass": "13", "first_fail": "0", "retest_pass": "1", "retest_fail": "0", "fpy": "100", "spy": "100", "output_qty": "14"}], "ICT_FAILS": [], "LH_FAILS": []}}};
 
 function lineLabel(raw){ const m=(raw+'').match(/PRDLN-?0*(\d+)/i); return m?('Line '+m[1].padStart(2,'0')):raw; }
 function testerOf(eq){ const m=(eq+'').match(/ICT\s*\d+/i); return m?m[0].replace(/\s+/g,'').toUpperCase():((eq+'').split('.').pop()||'ICT'); }
