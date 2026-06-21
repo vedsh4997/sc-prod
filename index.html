@@ -116,7 +116,7 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
 .card-title { font-size:19px; font-weight:700; color:var(--ink); font-family:var(--mono); line-height:1.25; letter-spacing:.01em; }
 .card-sub { font-size:11.5px; color:var(--ink-dim); line-height:1.5; flex:1; }
 .card-foot { display:flex; align-items:center; justify-content:space-between; padding-top:10px; border-top:1px solid var(--line); }
-.card-sys { font-family:var(--mono); font-size:9px; letter-spacing:.1em; color:var(--ink-faint); }
+.card-sys { font-family:var(--mono); font-size:13.5px; font-weight:700; letter-spacing:.1em; color:var(--ink-dim); }
 .card-cadence { font-family:var(--mono); font-size:9px; letter-spacing:.14em; font-weight:700; padding:4px 9px; border-radius:6px; }
 .card.dpr .card-cadence { color:var(--good); background:rgba(43,255,176,.12); }
 .card.hpr .card-cadence { color:var(--accent); background:rgba(58,216,255,.12); }
@@ -144,7 +144,7 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
         <span id="ticon">🌙</span><span class="ttrack"><span class="tknob"></span></span>
       </span>
     </div>
-    <div class="sub"><span class="live-dot"></span>Last sync: Saturday, June 20, 2026 · 06:19 PM · Arlington, TX</div>
+    <div class="sub"><span class="live-dot"></span>Last sync: Sunday, June 21, 2026 · 12:22 AM · Arlington, TX</div>
 
     <div class="telem">
       <div class="telem-cell"><div class="telem-l">UPLINK</div><div class="telem-v ok">● LIVE</div></div>
@@ -180,13 +180,6 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
         <div class="card-foot"><span class="card-sys">WEEKLY MISSION LOG</span><span class="card-arrow">&#8594;</span></div>
     </a>
 
-    <a class="card ict" href="ict_dashboard.html">
-        <div class="card-top"><span class="card-cadence">HOURLY</span><span class="card-sysno">04</span></div>
-        <div class="card-ic">🔬</div>
-        <div class="card-title">ICT<br>Yield &amp; Failure<br>by Line</div>
-        <div class="card-sub">Per-line ICT &amp; Lead-Height yields · tester-wise failure Pareto (CMES)</div>
-        <div class="card-foot"><span class="card-sys">CMES YIELD REPORT</span><span class="card-arrow">&#8594;</span></div>
-    </a>
     </div>
     <div class="footer"><span class="sol">☀</span> Powered by solar · Built by V. Shukla · refresh for latest telemetry</div>
 </div>
