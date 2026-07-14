@@ -122,7 +122,7 @@ tr:hover td{background:var(--surface2)}
 
 </div>
 <script>
-const ICT = {"fetched": "2026-07-14T00:11:58", "from_date": "2026/07/14", "to_date": "2026/07/14", "from_hour": 6, "to_hour": 23, "source": "direct-api-v6", "lines": {}};
+const ICT = {"fetched": "2026-07-14T02:05:53", "from_date": "2026/07/14", "to_date": "2026/07/14", "from_hour": 6, "to_hour": 23, "source": "direct-api-v6", "lines": {}};
 
 function lineLabel(raw){ const m=(raw+'').match(/PRDLN-?0*(\d+)/i); return m?('Line '+m[1].padStart(2,'0')):raw; }
 function testerOf(eq){ const m=(eq+'').match(/ICT\s*\d+/i); return m?m[0].replace(/\s+/g,'').toUpperCase():((eq+'').split('.').pop()||'ICT'); }
