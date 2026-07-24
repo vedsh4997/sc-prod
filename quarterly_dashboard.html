@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Quarterly Production Report &middot; R3 / R4</title>
+<title>Quarterly Production Report</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -17,48 +17,67 @@
   --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box} html,body{margin:0}
-body{background:var(--bg);color:var(--text);font-family:var(--font);padding:26px clamp(14px,3vw,34px) 60px}
+body{background:var(--bg);color:var(--text);font-family:var(--font);padding:24px clamp(14px,3vw,34px) 60px}
 .wrap{max-width:1360px;margin:0 auto}
-.top{display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;margin-bottom:22px}
+.top{display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;margin-bottom:18px}
 .eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
 h1{font-size:clamp(20px,2.3vw,27px);font-weight:800;margin:3px 0 4px;letter-spacing:-.02em}
 .sub{color:var(--text2);font-size:12.5px}
 .tools{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .btn{font-family:var(--mono);font-size:11px;font-weight:600;padding:6px 12px;border-radius:8px;
-  border:1px solid var(--line2);background:var(--surface);color:var(--text2);cursor:pointer;transition:.15s}
+  border:1px solid var(--line2);background:var(--surface);color:var(--text2);cursor:pointer;
+  text-decoration:none;display:inline-block;transition:.15s}
 .btn:hover{border-color:var(--accent);color:var(--accent)}
-.btn.on{background:var(--accent);border-color:var(--accent);color:#fff}
-.qcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-bottom:22px}
-.qc{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);
-  opacity:0;animation:fin .38s ease-out forwards}
+
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.tab{font-family:var(--mono);font-size:11.5px;font-weight:700;padding:8px 15px;border-radius:9px;
+  border:1px solid var(--line2);background:var(--surface);color:var(--text2);cursor:pointer;
+  display:flex;align-items:center;gap:7px;transition:.15s}
+.tab:hover{border-color:var(--text3);transform:translateY(-1px)}
+.tab .dot{width:8px;height:8px;border-radius:50%;flex:none}
+.tab .sm{font-size:9px;font-weight:400;color:var(--text3);letter-spacing:.03em}
+.tab.on{color:#fff;border-color:transparent}
+.tab.on .sm{color:rgba(255,255,255,.78)}
+.tab.empty{opacity:.55}
+.tab.empty::after{content:"no data";font-size:8.5px;color:var(--text3);border:1px solid var(--line);border-radius:4px;padding:1px 4px}
+
+.mtabs{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+.mtab{font-family:var(--mono);font-size:10.5px;font-weight:600;padding:5px 11px;border-radius:7px;
+  border:1px solid var(--line2);background:var(--surface);color:var(--text2);cursor:pointer;
+  display:flex;align-items:center;gap:6px;transition:.15s}
+.mtab i{width:9px;height:9px;border-radius:2px;display:inline-block}
+.mtab.on{border-color:currentColor}
+
+.qcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:11px;margin-bottom:16px}
+.qc{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:12px 14px;
+  box-shadow:var(--shadow);opacity:0;animation:fin .34s ease-out forwards}
 @keyframes fin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.qc-h{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.qc-dot{width:9px;height:9px;border-radius:50%;flex:none}
-.qc-t{font-weight:800;font-size:13.5px}
-.qc-q{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--text3);
-  border:1px solid var(--line);border-radius:999px;padding:2px 9px}
-.qc-row{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px dashed var(--line)}
-.qc-row:last-child{border-bottom:0}
-.qc-k{font-size:11.5px;color:var(--text2)}
-.qc-v{font-family:var(--mono);font-size:14px;font-weight:700}
-.qc-d{font-family:var(--mono);font-size:10px;margin-left:7px;font-weight:600}
+.qc-l{font-size:10.5px;color:var(--text3);font-family:var(--mono);letter-spacing:.05em;text-transform:uppercase}
+.qc-v{font-family:var(--mono);font-size:23px;font-weight:800;margin-top:5px;letter-spacing:-.02em}
+.qc-d{font-family:var(--mono);font-size:10.5px;font-weight:600;margin-top:3px}
 .up{color:var(--good)} .dn{color:var(--bad)} .flat{color:var(--text3)}
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px 18px;
-  box-shadow:var(--shadow);margin-bottom:16px}
-.panel-h{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:15px 17px 17px;
+  box-shadow:var(--shadow);margin-bottom:14px}
+.panel-h{display:flex;align-items:center;gap:9px;margin-bottom:13px;flex-wrap:wrap}
 .panel-t{font-weight:700;font-size:14px}
 .panel-s{font-size:11px;color:var(--text3)}
-.legend{margin-left:auto;display:flex;gap:12px;flex-wrap:wrap}
-.lg{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2)}
-.lg i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.empty{padding:46px 20px;text-align:center;color:var(--text3);font-size:12.5px;
+  border:1px dashed var(--line2);border-radius:12px;background:var(--bg)}
+.empty b{color:var(--text2);display:block;margin-bottom:6px;font-size:13.5px}
+.empty code{font-family:var(--mono);font-size:11px;background:var(--surface);border:1px solid var(--line);
+  border-radius:5px;padding:2px 7px}
+
 table{width:100%;border-collapse:collapse;font-size:12.5px}
 th,td{padding:7px 9px;text-align:right;border-bottom:1px solid var(--line)}
 th:first-child,td:first-child{text-align:left}
 th{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);font-weight:600}
 tbody tr:hover{background:rgba(47,111,235,.05)}
 td.v{font-family:var(--mono);font-weight:600}
-.qtag{font-family:var(--mono);font-size:9.5px;color:var(--text3);border:1px solid var(--line);border-radius:4px;padding:1px 5px;margin-left:7px}
-.foot{margin-top:24px;font-family:var(--mono);font-size:10.5px;color:var(--text3);
+.qtag{font-family:var(--mono);font-size:9.5px;color:var(--text3);border:1px solid var(--line);
+  border-radius:4px;padding:1px 5px;margin-left:7px}
+tfoot td{font-weight:700;background:rgba(47,111,235,.05)}
+.foot{margin-top:22px;font-family:var(--mono);font-size:10.5px;color:var(--text3);
   border-top:1px solid var(--line);padding-top:12px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
 @media(prefers-reduced-motion:reduce){.qc{animation:none;opacity:1}}
 </style></head><body>
@@ -67,159 +86,200 @@ td.v{font-family:var(--mono);font-weight:600}
     <div>
       <div class="eyebrow">Salcomp &middot; Test Operations</div>
       <h1>Quarterly Production Report</h1>
-      <div class="sub">R3 (BAT-1) &amp; R4 (BAT-2) &middot; HT and BST yield by month and quarter</div>
+      <div class="sub">Monthly yield by quarter &middot; bar chart with trend line</div>
     </div>
     <div class="tools">
-      <button class="btn" id="thBtn" onclick="toggleTheme()">&#9789; Theme</button>
+      <button class="btn" onclick="toggleTheme()">&#9789; Theme</button>
       <a class="btn" href="./">&larr; All reports</a>
     </div>
   </div>
 
+  <div class="tabs" id="tabs"></div>
   <div class="qcards" id="qcards"></div>
 
   <div class="panel">
     <div class="panel-h">
-      <span class="panel-t">Monthly trend</span>
-      <span class="panel-s">first-pass yield by month &middot; hover a point for detail</span>
-      <span class="legend" id="legend"></span>
+      <span class="panel-t" id="chartTitle">Monthly trend</span>
+      <span class="panel-s">bars = monthly value &middot; dashed = least-squares trend</span>
+      <span class="mtabs" id="mtabs"></span>
     </div>
-    <div id="charts"></div>
+    <div id="chart"></div>
   </div>
 
-  <div id="tables"></div>
+  <div id="table"></div>
 
   <div class="foot">
-    <span>Source: monthly yield summary &middot; edit R3_DATA / R4_DATA in quarterly.py to add months</span>
+    <span>Edit the *_DATA lists in quarterly.py to add months or lines</span>
     <span id="gen"></span>
   </div>
 </div>
 <script>
-const DATA = [{"key": "R3", "name": "R3", "area": "BAT-1", "desc": "Encharge R3", "color": "#f5a524", "months": [{"month": "Jan'26", "q": "Q1", "n": 1, "ht_fp": 95.22, "ht_fin": 99.86, "bst_fp": 86.18, "bst_fin": 99.58}, {"month": "Feb'26", "q": "Q1", "n": 2, "ht_fp": 94.78, "ht_fin": 99.78, "bst_fp": 89.31, "bst_fin": 99.46}, {"month": "Mar'26", "q": "Q1", "n": 3, "ht_fp": 94.34, "ht_fin": 99.7, "bst_fp": 90.32, "bst_fin": 99.26}, {"month": "Apr'26", "q": "Q2", "n": 4, "ht_fp": 98.94, "ht_fin": 100.0, "bst_fp": 89.91, "bst_fin": 99.21}, {"month": "May'26", "q": "Q2", "n": 5, "ht_fp": 98.1, "ht_fin": 100.0, "bst_fp": 94.61, "bst_fin": 99.0}, {"month": "Jun'26", "q": "Q2", "n": 6, "ht_fp": 96.67, "ht_fin": 99.91, "bst_fp": 93.87, "bst_fin": 99.91}], "quarters": [{"q": "Q1", "months": 3, "span": "Jan'26 \u2013 Mar'26", "ht_fp": 94.78, "ht_fin": 99.78, "bst_fp": 88.6, "bst_fin": 99.43}, {"q": "Q2", "months": 3, "span": "Apr'26 \u2013 Jun'26", "ht_fp": 97.9, "ht_fin": 99.97, "bst_fp": 92.8, "bst_fin": 99.37}], "deltas": {"ht_fp": 3.12, "ht_fin": 0.19, "bst_fp": 4.2, "bst_fin": -0.06}}, {"key": "R4", "name": "R4", "area": "BAT-2", "desc": "IQ Battery R4", "color": "#17c964", "months": [{"month": "Jan'26", "q": "Q1", "n": 1, "ht_fp": 92.61, "ht_fin": 99.62, "bst_fp": 90.97, "bst_fin": 99.51}, {"month": "Feb'26", "q": "Q1", "n": 2, "ht_fp": 95.21, "ht_fin": 99.8, "bst_fp": 94.2, "bst_fin": 99.71}, {"month": "Mar'26", "q": "Q1", "n": 3, "ht_fp": 97.0, "ht_fin": 99.9, "bst_fp": 95.14, "bst_fin": 99.84}, {"month": "Apr'26", "q": "Q2", "n": 4, "ht_fp": 97.57, "ht_fin": 99.87, "bst_fp": 96.13, "bst_fin": 99.22}, {"month": "May'26", "q": "Q2", "n": 5, "ht_fp": 96.64, "ht_fin": 99.86, "bst_fp": 95.53, "bst_fin": 99.85}, {"month": "Jun'26", "q": "Q2", "n": 6, "ht_fp": 96.6, "ht_fin": 99.95, "bst_fp": 94.95, "bst_fin": 99.86}], "quarters": [{"q": "Q1", "months": 3, "span": "Jan'26 \u2013 Mar'26", "ht_fp": 94.94, "ht_fin": 99.77, "bst_fp": 93.44, "bst_fin": 99.69}, {"q": "Q2", "months": 3, "span": "Apr'26 \u2013 Jun'26", "ht_fp": 96.94, "ht_fin": 99.89, "bst_fp": 95.54, "bst_fin": 99.64}], "deltas": {"ht_fp": 2.0, "ht_fin": 0.12, "bst_fp": 2.1, "bst_fin": -0.05}}];
-const METRICS = [{"k": "ht_fp", "label": "HT First Pass", "short": "HT FP", "idx": 1}, {"k": "ht_fin", "label": "HT Final Pass", "short": "HT Fin", "idx": 2}, {"k": "bst_fp", "label": "BST First Pass", "short": "BST FP", "idx": 3}, {"k": "bst_fin", "label": "BST Final Pass", "short": "BST Fin", "idx": 4}];
-const GEN = "2026-07-23 22:14";
-
+const DATA    = [{"key": "R3", "name": "R3", "area": "BAT-1", "desc": "Encharge R3", "color": "#f5a524", "months": [{"month": "Jan'26", "q": "Q1", "n": 1, "ht_fp": 95.22, "ht_fin": 99.86, "bst_fp": 86.18, "bst_fin": 99.58}, {"month": "Feb'26", "q": "Q1", "n": 2, "ht_fp": 94.78, "ht_fin": 99.78, "bst_fp": 89.31, "bst_fin": 99.46}, {"month": "Mar'26", "q": "Q1", "n": 3, "ht_fp": 94.34, "ht_fin": 99.7, "bst_fp": 90.32, "bst_fin": 99.26}, {"month": "Apr'26", "q": "Q2", "n": 4, "ht_fp": 98.94, "ht_fin": 100.0, "bst_fp": 89.91, "bst_fin": 99.21}, {"month": "May'26", "q": "Q2", "n": 5, "ht_fp": 98.1, "ht_fin": 100.0, "bst_fp": 94.61, "bst_fin": 99.0}, {"month": "Jun'26", "q": "Q2", "n": 6, "ht_fp": 96.67, "ht_fin": 99.91, "bst_fp": 93.87, "bst_fin": 99.91}], "quarters": [{"q": "Q1", "months": 3, "span": "Jan'26 \u2013 Mar'26", "ht_fp": 94.78, "ht_fin": 99.78, "bst_fp": 88.6, "bst_fin": 99.43}, {"q": "Q2", "months": 3, "span": "Apr'26 \u2013 Jun'26", "ht_fp": 97.9, "ht_fin": 99.97, "bst_fp": 92.8, "bst_fin": 99.37}], "deltas": {"ht_fp": 3.12, "ht_fin": 0.19, "bst_fp": 4.2, "bst_fin": -0.06}, "has": true}, {"key": "R4", "name": "R4", "area": "BAT-2", "desc": "IQ Battery R4", "color": "#17c964", "months": [{"month": "Jan'26", "q": "Q1", "n": 1, "ht_fp": 92.61, "ht_fin": 99.62, "bst_fp": 90.97, "bst_fin": 99.51}, {"month": "Feb'26", "q": "Q1", "n": 2, "ht_fp": 95.21, "ht_fin": 99.8, "bst_fp": 94.2, "bst_fin": 99.71}, {"month": "Mar'26", "q": "Q1", "n": 3, "ht_fp": 97.0, "ht_fin": 99.9, "bst_fp": 95.14, "bst_fin": 99.84}, {"month": "Apr'26", "q": "Q2", "n": 4, "ht_fp": 97.57, "ht_fin": 99.87, "bst_fp": 96.13, "bst_fin": 99.22}, {"month": "May'26", "q": "Q2", "n": 5, "ht_fp": 96.64, "ht_fin": 99.86, "bst_fp": 95.53, "bst_fin": 99.85}, {"month": "Jun'26", "q": "Q2", "n": 6, "ht_fp": 96.6, "ht_fin": 99.95, "bst_fp": 94.95, "bst_fin": 99.86}], "quarters": [{"q": "Q1", "months": 3, "span": "Jan'26 \u2013 Mar'26", "ht_fp": 94.94, "ht_fin": 99.77, "bst_fp": 93.44, "bst_fin": 99.69}, {"q": "Q2", "months": 3, "span": "Apr'26 \u2013 Jun'26", "ht_fp": 96.94, "ht_fin": 99.89, "bst_fp": 95.54, "bst_fin": 99.64}], "deltas": {"ht_fp": 2.0, "ht_fin": 0.12, "bst_fp": 2.1, "bst_fin": -0.05}, "has": true}, {"key": "BLBN", "name": "IQ8 BL/BN", "area": "Line 7", "desc": "IQ8 BL/BN Inverters", "color": "#2f6feb", "months": [], "quarters": [], "deltas": {}, "has": false}, {"key": "IQ8", "name": "IQ8", "area": "", "desc": "IQ8 Microinverters", "color": "#06b6d4", "months": [], "quarters": [], "deltas": {}, "has": false}, {"key": "IQ9", "name": "IQ9", "area": "Line 6/7", "desc": "IQ9 PCU", "color": "#a855f7", "months": [], "quarters": [], "deltas": {}, "has": false}];
+const METRICS = [{"k": "ht_fp", "label": "HT First Pass", "short": "HT FP", "idx": 1, "color": "#2f6feb"}, {"k": "ht_fin", "label": "HT Final Pass", "short": "HT Fin", "idx": 2, "color": "#17a34a"}, {"k": "bst_fp", "label": "BST First Pass", "short": "BST FP", "idx": 3, "color": "#e8a33d"}, {"k": "bst_fin", "label": "BST Final Pass", "short": "BST Fin", "idx": 4, "color": "#8b5cf6"}];
+const GEN     = "2026-07-23 22:24";
 document.getElementById('gen').textContent = 'generated ' + GEN;
 
-function cls(v, metric){
-  // final-pass sits near 100 so it needs a tighter band than first-pass
-  const fin = metric.indexOf('fin') > -1;
-  if (fin)  return v >= 99.8 ? 'up' : (v >= 99.4 ? 'flat' : 'dn');
+let curLine = (DATA.find(d => d.has) || DATA[0]).key;
+let curMetric = METRICS[0].k;
+
+const L = () => DATA.find(d => d.key === curLine);
+const M = () => METRICS.find(m => m.k === curMetric);
+
+function cls(v, k){
+  const fin = k.indexOf('fin') > -1;
+  if (fin) return v >= 99.8 ? 'up' : (v >= 99.4 ? 'flat' : 'dn');
   return v >= 97 ? 'up' : (v >= 94 ? 'flat' : 'dn');
 }
-function dtxt(d){
-  if (d === undefined || d === null) return '';
-  const s = d > 0 ? '+' : '';
-  return `<span class="qc-d ${d > 0.05 ? 'up' : (d < -0.05 ? 'dn' : 'flat')}">${s}${d.toFixed(2)}</span>`;
+function dsign(d){
+  if (d === undefined || d === null) return '<span class="qc-d flat">&mdash;</span>';
+  const c = d > 0.05 ? 'up' : (d < -0.05 ? 'dn' : 'flat');
+  return `<span class="qc-d ${c}">${d > 0 ? '+' : ''}${d.toFixed(2)} vs prev Q</span>`;
 }
 
-// ---- quarter summary cards ----
-document.getElementById('qcards').innerHTML = DATA.map((L, i) => {
-  const last = L.quarters[L.quarters.length - 1];
-  if (!last) return '';
-  const rows = METRICS.map(M => `
-    <div class="qc-row">
-      <span class="qc-k">${M.label}</span>
-      <span><span class="qc-v ${cls(last[M.k], M.k)}">${last[M.k].toFixed(2)}%</span>${dtxt(L.deltas[M.k])}</span>
+function drawTabs(){
+  document.getElementById('tabs').innerHTML = DATA.map(d => {
+    const on = d.key === curLine;
+    return `<button class="tab ${on ? 'on' : ''} ${d.has ? '' : 'empty'}"
+      style="${on ? 'background:' + d.color + ';' : ''}" onclick="pickLine('${d.key}')">
+      ${on ? '' : '<span class="dot" style="background:' + d.color + '"></span>'}
+      ${d.name}${d.area ? '<span class="sm">' + d.area + '</span>' : ''}</button>`;
+  }).join('');
+
+  document.getElementById('mtabs').innerHTML = METRICS.map(m => {
+    const on = m.k === curMetric;
+    return `<button class="mtab ${on ? 'on' : ''}" style="${on ? 'color:' + m.color : ''}"
+      onclick="pickMetric('${m.k}')"><i style="background:${m.color}"></i>${m.short}</button>`;
+  }).join('');
+}
+function pickLine(k){ curLine = k; render(); }
+function pickMetric(k){ curMetric = k; render(); }
+
+function drawCards(){
+  const d = L(), box = document.getElementById('qcards');
+  if (!d.has){ box.innerHTML = ''; return; }
+  const last = d.quarters[d.quarters.length - 1];
+  box.innerHTML = METRICS.map((m, i) =>
+    `<div class="qc" style="animation-delay:${i*70}ms">
+      <div class="qc-l">${m.label}</div>
+      <div class="qc-v ${cls(last[m.k], m.k)}">${last[m.k].toFixed(2)}%</div>
+      ${dsign(d.deltas[m.k])}
+      <div class="qc-l" style="margin-top:6px;font-size:9.5px;text-transform:none">${last.q} avg &middot; ${last.span}</div>
     </div>`).join('');
-  return `<div class="qc" style="animation-delay:${i*80}ms">
-    <div class="qc-h"><span class="qc-dot" style="background:${L.color}"></span>
-      <span class="qc-t">${L.name} &middot; ${L.area}</span>
-      <span class="qc-q">${last.q} &middot; ${last.span}</span></div>
-    ${rows}
-    <div class="qc-row" style="border-top:1px solid var(--line);margin-top:4px;padding-top:7px">
-      <span class="qc-k" style="color:var(--text3);font-size:10.5px">vs previous quarter</span></div>
-  </div>`;
-}).join('');
+}
 
-// ---- legend ----
-const COLS = ['#2f6feb','#17a34a','#e8a33d','#8b5cf6'];
-document.getElementById('legend').innerHTML = METRICS.map((M,i) =>
-  `<span class="lg"><i style="background:${COLS[i]}"></i>${M.short}</span>`).join('');
+function drawChart(){
+  const d = L(), m = M(), host = document.getElementById('chart');
+  document.getElementById('chartTitle').textContent =
+      d.name + (d.area ? ' \u00b7 ' + d.area : '') + ' \u2014 ' + m.label;
 
-// ---- line charts (inline SVG, no libs) ----
-function chart(L){
-  const W = 1080, H = 210, padL = 46, padR = 14, padT = 14, padB = 30;
-  const ms = L.months;
-  if (!ms.length) return '';
-  let lo = 100, hi = 0;
-  ms.forEach(m => METRICS.forEach(M => { lo = Math.min(lo, m[M.k]); hi = Math.max(hi, m[M.k]); }));
-  lo = Math.floor(lo - 1); hi = Math.ceil(hi + 0.5);
-  if (hi - lo < 4) { hi = lo + 4; }
-  const x = i => padL + (W - padL - padR) * (ms.length === 1 ? 0.5 : i / (ms.length - 1));
-  const y = v => padT + (H - padT - padB) * (1 - (v - lo) / (hi - lo));
+  if (!d.has){
+    host.innerHTML = `<div class="empty"><b>No data for ${d.name} yet</b>
+      Add its monthly rows to <code>${d.key}_DATA</code> in <code>quarterly.py</code> and re-run.
+      <br><br>Format: <code>("Jul'26", HT_first, HT_final, BST_first, BST_final)</code></div>`;
+    return;
+  }
+
+  const ms = d.months, n = ms.length;
+  const W = 1080, H = 300, padL = 52, padR = 18, padT = 18, padB = 46;
+  const vals = ms.map(r => r[m.k]);
+  let lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
+  const pad = Math.max(0.6, (hi - lo) * 0.25);
+  lo = Math.max(0, lo - pad); hi = Math.min(100.4, hi + pad);
+  if (hi - lo < 2){ lo = Math.max(0, lo - 1); hi = Math.min(100.4, hi + 1); }
+
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const slot = plotW / n;
+  const bw = Math.min(64, slot * 0.56);
+  const cx = i => padL + slot * i + slot / 2;
+  const y  = v => padT + plotH * (1 - (v - lo) / (hi - lo));
 
   let g = '';
   for (let t = 0; t <= 4; t++){
     const v = lo + (hi - lo) * t / 4, yy = y(v);
     g += `<line x1="${padL}" y1="${yy}" x2="${W-padR}" y2="${yy}" stroke="var(--line)" stroke-width="1"/>
-          <text x="${padL-7}" y="${yy+3.5}" text-anchor="end" font-size="9.5" fill="var(--text3)" font-family="var(--mono)">${v.toFixed(1)}</text>`;
+          <text x="${padL-8}" y="${yy+3.5}" text-anchor="end" font-size="9.5" fill="var(--text3)"
+                font-family="var(--mono)">${v.toFixed(1)}</text>`;
   }
-  ms.forEach((m,i) => {
-    g += `<text x="${x(i)}" y="${H-10}" text-anchor="middle" font-size="10" fill="var(--text3)">${m.month}</text>`;
-  });
-  // quarter separators
-  for (let i = 1; i < ms.length; i++){
+  for (let i = 1; i < n; i++){
     if (ms[i].q !== ms[i-1].q){
-      const xm = (x(i) + x(i-1)) / 2;
-      g += `<line x1="${xm}" y1="${padT}" x2="${xm}" y2="${H-padB}" stroke="var(--line2)" stroke-width="1" stroke-dasharray="3 3"/>
-            <text x="${xm+4}" y="${padT+10}" font-size="9" fill="var(--text3)" font-family="var(--mono)">${ms[i].q}</text>`;
+      const xm = padL + slot * i;
+      g += `<line x1="${xm}" y1="${padT}" x2="${xm}" y2="${padT+plotH}" stroke="var(--line2)"
+                  stroke-width="1" stroke-dasharray="3 3"/>`;
     }
   }
-  METRICS.forEach((M, mi) => {
-    const pts = ms.map((m,i) => `${x(i)},${y(m[M.k])}`).join(' ');
-    const len = ms.length * 180;
-    g += `<polyline points="${pts}" fill="none" stroke="${COLS[mi]}" stroke-width="2"
-            stroke-linejoin="round" stroke-linecap="round"
-            stroke-dasharray="${len}" stroke-dashoffset="${len}">
-            <animate attributeName="stroke-dashoffset" from="${len}" to="0" dur="0.9s"
-                     begin="${mi*0.12}s" fill="freeze" calcMode="spline"
-                     keySplines="0.22 1 0.36 1" keyTimes="0;1"/></polyline>`;
-    ms.forEach((m,i) => {
-      g += `<circle cx="${x(i)}" cy="${y(m[M.k])}" r="3.4" fill="${COLS[mi]}" opacity="0">
-              <animate attributeName="opacity" from="0" to="1" dur="0.25s" begin="${mi*0.12+0.5}s" fill="freeze"/>
-              <title>${L.name} ${m.month} (${m.q}) — ${M.label}: ${m[M.k].toFixed(2)}%</title></circle>`;
-    });
+  const qseen = {};
+  ms.forEach((r, i) => { (qseen[r.q] = qseen[r.q] || []).push(i); });
+  Object.keys(qseen).forEach(q => {
+    const idx = qseen[q], mid = (cx(idx[0]) + cx(idx[idx.length-1])) / 2;
+    g += `<text x="${mid}" y="${H-8}" text-anchor="middle" font-size="10" font-weight="700"
+                fill="var(--text3)" font-family="var(--mono)">${q}</text>`;
   });
-  return `<div style="margin-bottom:6px;font-size:12px;font-weight:700;color:var(--text2)">
-            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${L.color};margin-right:7px"></span>
-            ${L.name} · ${L.area} <span style="font-weight:400;color:var(--text3)">${L.desc}</span></div>
-          <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;margin-bottom:16px">${g}</svg>`;
+
+  ms.forEach((r, i) => {
+    const v = r[m.k], yy = y(v), h = padT + plotH - yy;
+    g += `<rect x="${cx(i)-bw/2}" y="${padT+plotH}" width="${bw}" height="0" rx="4" fill="${m.color}" opacity=".88">
+            <animate attributeName="y" from="${padT+plotH}" to="${yy}" dur=".55s" begin="${i*60}ms"
+                     fill="freeze" calcMode="spline" keySplines="0.22 1 0.36 1" keyTimes="0;1"/>
+            <animate attributeName="height" from="0" to="${h}" dur=".55s" begin="${i*60}ms"
+                     fill="freeze" calcMode="spline" keySplines="0.22 1 0.36 1" keyTimes="0;1"/>
+            <title>${d.name} ${r.month} (${r.q}) \u2014 ${m.label}: ${v.toFixed(2)}%</title></rect>
+          <text x="${cx(i)}" y="${yy-6}" text-anchor="middle" font-size="10.5" font-weight="700"
+                fill="var(--text2)" font-family="var(--mono)" opacity="0">${v.toFixed(2)}
+            <animate attributeName="opacity" from="0" to="1" dur=".3s" begin="${i*60+400}ms" fill="freeze"/></text>
+          <text x="${cx(i)}" y="${padT+plotH+16}" text-anchor="middle" font-size="10"
+                fill="var(--text3)">${r.month}</text>`;
+  });
+
+  if (n >= 2){
+    let sx = 0, sy = 0, sxy = 0, sxx = 0;
+    vals.forEach((v, i) => { sx += i; sy += v; sxy += i*v; sxx += i*i; });
+    const den = n*sxx - sx*sx;
+    if (den !== 0){
+      const slope = (n*sxy - sx*sy) / den, icpt = (sy - slope*sx) / n;
+      const x0 = cx(0), y0 = y(icpt), x1 = cx(n-1), y1 = y(icpt + slope*(n-1));
+      const dcol = slope > 0.02 ? 'var(--good)' : (slope < -0.02 ? 'var(--bad)' : 'var(--text3)');
+      const arrow = slope > 0.02 ? '\u25b2' : (slope < -0.02 ? '\u25bc' : '\u25ac');
+      g += `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${dcol}" stroke-width="2.2"
+                  stroke-dasharray="7 5" stroke-linecap="round" opacity="0">
+              <animate attributeName="opacity" from="0" to=".95" dur=".4s" begin="${n*60+300}ms" fill="freeze"/></line>
+            <circle cx="${x1}" cy="${y1}" r="4" fill="${dcol}" opacity="0">
+              <animate attributeName="opacity" from="0" to="1" dur=".3s" begin="${n*60+500}ms" fill="freeze"/>
+              <title>Trend: ${slope>0?'+':''}${slope.toFixed(3)} points per month</title></circle>
+            <text x="${x1-6}" y="${y1-11}" text-anchor="end" font-size="10.5" font-weight="700"
+                  fill="${dcol}" font-family="var(--mono)" opacity="0">${arrow} ${slope>0?'+':''}${slope.toFixed(2)}/mo
+              <animate attributeName="opacity" from="0" to="1" dur=".3s" begin="${n*60+500}ms" fill="freeze"/></text>`;
+    }
+  }
+  host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">${g}</svg>`;
 }
-document.getElementById('charts').innerHTML = DATA.map(chart).join('');
 
-// ---- data tables ----
-document.getElementById('tables').innerHTML = DATA.map(L => `
-  <div class="panel">
-    <div class="panel-h">
-      <span class="qc-dot" style="background:${L.color}"></span>
-      <span class="panel-t">${L.name} · ${L.area}</span>
-      <span class="panel-s">${L.desc} — monthly detail</span>
-    </div>
-    <table><thead><tr><th>Month</th>
-      ${METRICS.map(M => `<th>${M.label}</th>`).join('')}</tr></thead>
-    <tbody>
-      ${L.months.map(m => `<tr><td>${m.month}<span class="qtag">${m.q}</span></td>
-        ${METRICS.map(M => `<td class="v ${cls(m[M.k], M.k)}">${m[M.k].toFixed(2)}%</td>`).join('')}</tr>`).join('')}
-    </tbody>
-    <tfoot>
-      ${L.quarters.map(q => `<tr style="background:rgba(47,111,235,.05)">
-        <td style="font-weight:700">${q.q} average</td>
-        ${METRICS.map(M => `<td class="v" style="font-weight:700">${q[M.k].toFixed(2)}%</td>`).join('')}</tr>`).join('')}
-    </tfoot>
-    </table>
-  </div>`).join('');
+function drawTable(){
+  const d = L(), host = document.getElementById('table');
+  if (!d.has){ host.innerHTML = ''; return; }
+  host.innerHTML = `<div class="panel">
+    <div class="panel-h"><span class="panel-t">${d.name}${d.area ? ' \u00b7 ' + d.area : ''}</span>
+      <span class="panel-s">${d.desc} \u2014 monthly detail</span></div>
+    <table><thead><tr><th>Month</th>${METRICS.map(m => '<th>' + m.label + '</th>').join('')}</tr></thead>
+    <tbody>${d.months.map(r => `<tr><td>${r.month}<span class="qtag">${r.q}</span></td>
+      ${METRICS.map(m => `<td class="v ${cls(r[m.k], m.k)}">${r[m.k].toFixed(2)}%</td>`).join('')}</tr>`).join('')}</tbody>
+    <tfoot>${d.quarters.map(q => `<tr><td>${q.q} average</td>
+      ${METRICS.map(m => `<td class="v">${q[m.k].toFixed(2)}%</td>`).join('')}</tr>`).join('')}</tfoot>
+    </table></div>`;
+}
 
-// ---- theme ----
+function render(){ drawTabs(); drawCards(); drawChart(); drawTable(); }
+
 function applyTheme(t){
   document.documentElement.setAttribute('data-theme', t);
   try { localStorage.setItem('sc_theme', t); } catch(e){}
 }
 function toggleTheme(){
-  const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  applyTheme(cur);
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
 }
 try {
-  const saved = localStorage.getItem('sc_theme');
-  applyTheme(saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+  const s = localStorage.getItem('sc_theme');
+  applyTheme(s || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
 } catch(e){ applyTheme('light'); }
+
+render();
 </script></body></html>
