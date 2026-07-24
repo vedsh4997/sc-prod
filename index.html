@@ -104,6 +104,7 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
 .card.dpr { border-top-color:var(--good); }
 .card.hpr { border-top-color:var(--accent); }
 .card.wpr { border-top-color:var(--solar); }
+.card.qtr { border-top-color:#a855f7; }
 .card:hover { transform:translateY(-5px); box-shadow:var(--shadow); border-color:var(--line-2); }
 .card:hover::after { opacity:1; }
 .card-top { display:flex; align-items:center; justify-content:space-between; }
@@ -111,6 +112,7 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
 .card.dpr .card-sysno { color:rgba(43,255,176,.3); }
 .card.hpr .card-sysno { color:rgba(58,216,255,.3); }
 .card.wpr .card-sysno { color:rgba(255,194,58,.35); }
+.card.qtr .card-sysno { color:rgba(168,85,247,.35); }
 .card-ic { width:52px; height:52px; border-radius:13px; display:flex; align-items:center; justify-content:center;
     font-size:26px; background:var(--bg-2); border:1px solid var(--line); }
 .card-title { font-size:19px; font-weight:700; color:var(--ink); font-family:var(--mono); line-height:1.25; letter-spacing:.01em; }
@@ -121,6 +123,7 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
 .card.dpr .card-cadence { color:var(--good); background:rgba(43,255,176,.12); }
 .card.hpr .card-cadence { color:var(--accent); background:rgba(58,216,255,.12); }
 .card.wpr .card-cadence { color:var(--solar); background:rgba(255,194,58,.14); }
+.card.qtr .card-cadence { color:#a855f7; background:rgba(168,85,247,.14); }
 .card.ict { border-top-color:#a06bff; }
 .card.ict .card-sysno { color:rgba(160,107,255,.32); }
 .card.ict .card-cadence { color:#a06bff; background:rgba(160,107,255,.13); }
@@ -144,7 +147,7 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
         <span id="ticon">🌙</span><span class="ttrack"><span class="tknob"></span></span>
       </span>
     </div>
-    <div class="sub"><span class="live-dot"></span>Last sync: Thursday, July 23, 2026 · 08:28 PM · Arlington, TX</div>
+    <div class="sub"><span class="live-dot"></span>Last sync: Thursday, July 23, 2026 · 08:52 PM · Arlington, TX</div>
 
     <div class="telem">
       <div class="telem-cell"><div class="telem-l">UPLINK</div><div class="telem-v ok">● LIVE</div></div>
@@ -178,6 +181,14 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
         <div class="card-title">Weekly<br>Production<br>Report</div>
         <div class="card-sub">R3 · R4 · BL/BN · IQ8 · IQ9 — weekly yield &amp; failure analysis</div>
         <div class="card-foot"><span class="card-sys">WEEKLY MISSION LOG</span><span class="card-arrow">&#8594;</span></div>
+    </a>
+
+    <a class="card qtr" href="quarterly_dashboard.html">
+        <div class="card-top"><span class="card-cadence">QUARTERLY</span><span class="card-sysno">04</span></div>
+        <div class="card-ic">&#128200;</div>
+        <div class="card-title">Quarterly<br>Production<br>Report</div>
+        <div class="card-sub">R3 &middot; R4 &mdash; HT &amp; BST yield trends by month and quarter</div>
+        <div class="card-foot"><span class="card-sys">QUARTERLY TRAJECTORY</span><span class="card-arrow">&#8594;</span></div>
     </a>
 
     </div>
