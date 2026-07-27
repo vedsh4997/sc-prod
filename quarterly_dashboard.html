@@ -1,22 +1,15 @@
-<!doctype html>
-<html lang="en"><head>
+<!doctype html><html lang="en"><head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Quarterly Production Report</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#f6f8fb; --surface:#fff; --line:#e3e9f0; --line2:#cfd8e3;
-  --text:#0f1b2d; --text2:#4a5a6e; --text3:#8494a7;
-  --good:#17a34a; --warn:#e8a33d; --bad:#e5484d; --accent:#2f6feb;
-  --mono:"IBM Plex Mono",monospace; --font:"Inter",system-ui,sans-serif;
-  --shadow:0 1px 2px rgba(16,32,56,.05),0 8px 24px rgba(16,32,56,.06);
-}
-[data-theme="dark"]{
-  --bg:#0d131c; --surface:#141d29; --line:#1f2b3a; --line2:#2c3b4e;
-  --text:#e8eef6; --text2:#9fb0c4; --text3:#6b7d94;
-  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
-}
-*{box-sizing:border-box} html,body{margin:0}
+:root{--bg:#f6f8fb;--surface:#fff;--line:#e3e9f0;--line2:#cfd8e3;--text:#0f1b2d;--text2:#4a5a6e;
+--text3:#8494a7;--good:#17a34a;--warn:#e8a33d;--bad:#e5484d;--accent:#2f6feb;
+--mono:"IBM Plex Mono",monospace;--font:"Inter",system-ui,sans-serif;
+--shadow:0 1px 2px rgba(16,32,56,.05),0 8px 24px rgba(16,32,56,.06)}
+[data-theme="dark"]{--bg:#0d131c;--surface:#141d29;--line:#1f2b3a;--line2:#2c3b4e;
+--text:#e8eef6;--text2:#9fb0c4;--text3:#6b7d94;--shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35)}
+*{box-sizing:border-box}html,body{margin:0}
 body{background:var(--bg);color:var(--text);font-family:var(--font);padding:24px clamp(14px,3vw,34px) 60px}
 .wrap{max-width:1360px;margin:0 auto}
 .top{display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;margin-bottom:18px}
@@ -25,270 +18,181 @@ h1{font-size:clamp(20px,2.3vw,27px);font-weight:800;margin:3px 0 4px;letter-spac
 .sub{color:var(--text2);font-size:12.5px}
 .tools{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .btn{font-family:var(--mono);font-size:11px;font-weight:600;padding:6px 12px;border-radius:8px;
-  border:1px solid var(--line2);background:var(--surface);color:var(--text2);cursor:pointer;
-  text-decoration:none;display:inline-block;transition:.15s}
+border:1px solid var(--line2);background:var(--surface);color:var(--text2);cursor:pointer;text-decoration:none}
 .btn:hover{border-color:var(--accent);color:var(--accent)}
-
 .tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
 .tab{font-family:var(--mono);font-size:11.5px;font-weight:700;padding:8px 15px;border-radius:9px;
-  border:1px solid var(--line2);background:var(--surface);color:var(--text2);cursor:pointer;
-  display:flex;align-items:center;gap:7px;transition:.15s}
+border:1px solid var(--line2);background:var(--surface);color:var(--text2);cursor:pointer;
+display:flex;align-items:center;gap:7px;transition:.15s}
 .tab:hover{border-color:var(--text3);transform:translateY(-1px)}
 .tab .dot{width:8px;height:8px;border-radius:50%;flex:none}
-.tab .sm{font-size:9px;font-weight:400;color:var(--text3);letter-spacing:.03em}
+.tab .sm{font-size:9px;font-weight:400;color:var(--text3)}
 .tab.on{color:#fff;border-color:transparent}
 .tab.on .sm{color:rgba(255,255,255,.78)}
-.tab.empty{opacity:.55}
-.tab.empty::after{content:"no data";font-size:8.5px;color:var(--text3);border:1px solid var(--line);border-radius:4px;padding:1px 4px}
-
 .mtabs{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
 .mtab{font-family:var(--mono);font-size:10.5px;font-weight:600;padding:5px 11px;border-radius:7px;
-  border:1px solid var(--line2);background:var(--surface);color:var(--text2);cursor:pointer;
-  display:flex;align-items:center;gap:6px;transition:.15s}
+border:1px solid var(--line2);background:var(--surface);color:var(--text2);cursor:pointer;
+display:flex;align-items:center;gap:6px}
 .mtab i{width:9px;height:9px;border-radius:2px;display:inline-block}
 .mtab.on{border-color:currentColor}
-
-.qcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:11px;margin-bottom:16px}
-.qc{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:12px 14px;
-  box-shadow:var(--shadow);opacity:0;animation:fin .34s ease-out forwards}
-@keyframes fin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:7px;overflow:hidden;margin-left:10px}
+.seg button{font-family:var(--mono);font-size:10.5px;font-weight:600;padding:5px 12px;border:0;
+background:var(--surface);color:var(--text2);cursor:pointer}
+.seg button.on{background:var(--accent);color:#fff}
+.charts2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.stagesec{margin-bottom:22px}
+.stagelbl{font-family:var(--mono);font-size:13px;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.stagedot{width:11px;height:11px;border-radius:3px;display:inline-block}
+.stagedesc{font-weight:400;font-size:11px;color:var(--text3)}
+@media(max-width:820px){.charts2{grid-template-columns:1fr}}
+.chwrap{min-height:280px;border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--bg)}
+.chttl{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+color:var(--text2);margin-bottom:6px;text-align:center}
+.chleg{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:6px;
+font-family:var(--mono);font-size:10px;color:var(--text3)}
+.chleg span{display:inline-flex;align-items:center;gap:5px}
+.chleg i{width:12px;height:3px;border-radius:2px;display:inline-block}
+.chleg b{width:9px;height:9px;border-radius:2px;display:inline-block}
+.qcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:11px;margin-bottom:16px}
+.qc{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:12px 14px;box-shadow:var(--shadow)}
 .qc-l{font-size:10.5px;color:var(--text3);font-family:var(--mono);letter-spacing:.05em;text-transform:uppercase}
-.qc-v{font-family:var(--mono);font-size:23px;font-weight:800;margin-top:5px;letter-spacing:-.02em}
+.qc-v{font-family:var(--mono);font-size:22px;font-weight:800;margin-top:5px}
 .qc-d{font-family:var(--mono);font-size:10.5px;font-weight:600;margin-top:3px}
-.up{color:var(--good)} .dn{color:var(--bad)} .flat{color:var(--text3)}
-
+.up{color:var(--good)}.dn{color:var(--bad)}.flat{color:var(--text3)}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:15px 17px 17px;
-  box-shadow:var(--shadow);margin-bottom:14px}
+box-shadow:var(--shadow);margin-bottom:14px}
 .panel-h{display:flex;align-items:center;gap:9px;margin-bottom:13px;flex-wrap:wrap}
-.panel-t{font-weight:700;font-size:14px}
-.panel-s{font-size:11px;color:var(--text3)}
-.empty{padding:46px 20px;text-align:center;color:var(--text3);font-size:12.5px;
-  border:1px dashed var(--line2);border-radius:12px;background:var(--bg)}
-.empty b{color:var(--text2);display:block;margin-bottom:6px;font-size:13.5px}
-.empty code{font-family:var(--mono);font-size:11px;background:var(--surface);border:1px solid var(--line);
-  border-radius:5px;padding:2px 7px}
-
+.panel-t{font-weight:700;font-size:14px}.panel-s{font-size:11px;color:var(--text3)}
 table{width:100%;border-collapse:collapse;font-size:12.5px}
 th,td{padding:7px 9px;text-align:right;border-bottom:1px solid var(--line)}
 th:first-child,td:first-child{text-align:left}
 th{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);font-weight:600}
-tbody tr:hover{background:rgba(47,111,235,.05)}
 td.v{font-family:var(--mono);font-weight:600}
-.qtag{font-family:var(--mono);font-size:9.5px;color:var(--text3);border:1px solid var(--line);
-  border-radius:4px;padding:1px 5px;margin-left:7px}
+.qtag{font-family:var(--mono);font-size:9.5px;color:var(--text3);border:1px solid var(--line);border-radius:4px;padding:1px 5px;margin-left:7px}
 tfoot td{font-weight:700;background:rgba(47,111,235,.05)}
+.na{color:var(--text3)}
 .foot{margin-top:22px;font-family:var(--mono);font-size:10.5px;color:var(--text3);
-  border-top:1px solid var(--line);padding-top:12px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
-@media(prefers-reduced-motion:reduce){.qc{animation:none;opacity:1}}
-</style></head><body>
-<div class="wrap">
-  <div class="top">
-    <div>
-      <div class="eyebrow">Salcomp &middot; Test Operations</div>
-      <h1>Quarterly Production Report</h1>
-      <div class="sub">Monthly yield by quarter &middot; bar chart with trend line</div>
-    </div>
-    <div class="tools">
-      <button class="btn" onclick="toggleTheme()">&#9789; Theme</button>
-      <a class="btn" href="./">&larr; All reports</a>
-    </div>
-  </div>
-
-  <div class="tabs" id="tabs"></div>
-  <div class="qcards" id="qcards"></div>
-
-  <div class="panel">
-    <div class="panel-h">
-      <span class="panel-t" id="chartTitle">Monthly trend</span>
-      <span class="panel-s">bars = monthly value &middot; dashed = least-squares trend</span>
-      <span class="mtabs" id="mtabs"></span>
-    </div>
-    <div id="chart"></div>
-  </div>
-
-  <div id="table"></div>
-
-  <div class="foot">
-    <span>Edit the *_DATA lists in quarterly.py to add months or lines</span>
-    <span id="gen"></span>
-  </div>
+border-top:1px solid var(--line);padding-top:12px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+</style></head><body><div class="wrap">
+<div class="top">
+  <div><div class="eyebrow">Salcomp &middot; Test Operations</div>
+    <h1>Quarterly Production Report</h1>
+    <div class="sub">Q1&ndash;Q2 2026 monthly yield by product &middot; bar chart with trend line</div></div>
+  <div class="tools"><button class="btn" onclick="toggleTheme()">&#9789; Theme</button>
+    <a class="btn" href="./">&larr; All reports</a></div>
 </div>
-<script>
-const DATA    = [{"key": "R3", "name": "R3", "area": "BAT-1", "desc": "Encharge R3", "color": "#f5a524", "months": [{"month": "Jan'26", "q": "Q1", "n": 1, "ht_fp": 95.22, "ht_fin": 99.86, "bst_fp": 86.18, "bst_fin": 99.58}, {"month": "Feb'26", "q": "Q1", "n": 2, "ht_fp": 94.78, "ht_fin": 99.78, "bst_fp": 89.31, "bst_fin": 99.46}, {"month": "Mar'26", "q": "Q1", "n": 3, "ht_fp": 94.34, "ht_fin": 99.7, "bst_fp": 90.32, "bst_fin": 99.26}, {"month": "Apr'26", "q": "Q2", "n": 4, "ht_fp": 98.94, "ht_fin": 100.0, "bst_fp": 89.91, "bst_fin": 99.21}, {"month": "May'26", "q": "Q2", "n": 5, "ht_fp": 98.1, "ht_fin": 100.0, "bst_fp": 94.61, "bst_fin": 99.0}, {"month": "Jun'26", "q": "Q2", "n": 6, "ht_fp": 96.67, "ht_fin": 99.91, "bst_fp": 93.87, "bst_fin": 99.91}], "quarters": [{"q": "Q1", "months": 3, "span": "Jan'26 \u2013 Mar'26", "ht_fp": 94.78, "ht_fin": 99.78, "bst_fp": 88.6, "bst_fin": 99.43}, {"q": "Q2", "months": 3, "span": "Apr'26 \u2013 Jun'26", "ht_fp": 97.9, "ht_fin": 99.97, "bst_fp": 92.8, "bst_fin": 99.37}], "deltas": {"ht_fp": 3.12, "ht_fin": 0.19, "bst_fp": 4.2, "bst_fin": -0.06}, "has": true}, {"key": "R4", "name": "R4", "area": "BAT-2", "desc": "IQ Battery R4", "color": "#17c964", "months": [{"month": "Jan'26", "q": "Q1", "n": 1, "ht_fp": 92.61, "ht_fin": 99.62, "bst_fp": 90.97, "bst_fin": 99.51}, {"month": "Feb'26", "q": "Q1", "n": 2, "ht_fp": 95.21, "ht_fin": 99.8, "bst_fp": 94.2, "bst_fin": 99.71}, {"month": "Mar'26", "q": "Q1", "n": 3, "ht_fp": 97.0, "ht_fin": 99.9, "bst_fp": 95.14, "bst_fin": 99.84}, {"month": "Apr'26", "q": "Q2", "n": 4, "ht_fp": 97.57, "ht_fin": 99.87, "bst_fp": 96.13, "bst_fin": 99.22}, {"month": "May'26", "q": "Q2", "n": 5, "ht_fp": 96.64, "ht_fin": 99.86, "bst_fp": 95.53, "bst_fin": 99.85}, {"month": "Jun'26", "q": "Q2", "n": 6, "ht_fp": 96.6, "ht_fin": 99.95, "bst_fp": 94.95, "bst_fin": 99.86}], "quarters": [{"q": "Q1", "months": 3, "span": "Jan'26 \u2013 Mar'26", "ht_fp": 94.94, "ht_fin": 99.77, "bst_fp": 93.44, "bst_fin": 99.69}, {"q": "Q2", "months": 3, "span": "Apr'26 \u2013 Jun'26", "ht_fp": 96.94, "ht_fin": 99.89, "bst_fp": 95.54, "bst_fin": 99.64}], "deltas": {"ht_fp": 2.0, "ht_fin": 0.12, "bst_fp": 2.1, "bst_fin": -0.05}, "has": true}, {"key": "BLBN", "name": "IQ8 BL/BN", "area": "Line 7", "desc": "IQ8 BL/BN Inverters", "color": "#2f6feb", "months": [], "quarters": [], "deltas": {}, "has": false}, {"key": "IQ8", "name": "IQ8", "area": "", "desc": "IQ8 Microinverters", "color": "#06b6d4", "months": [], "quarters": [], "deltas": {}, "has": false}, {"key": "IQ9", "name": "IQ9", "area": "Line 6/7", "desc": "IQ9 PCU", "color": "#a855f7", "months": [], "quarters": [], "deltas": {}, "has": false}];
-const METRICS = [{"k": "ht_fp", "label": "HT First Pass", "short": "HT FP", "idx": 1, "color": "#2f6feb"}, {"k": "ht_fin", "label": "HT Final Pass", "short": "HT Fin", "idx": 2, "color": "#17a34a"}, {"k": "bst_fp", "label": "BST First Pass", "short": "BST FP", "idx": 3, "color": "#e8a33d"}, {"k": "bst_fin", "label": "BST Final Pass", "short": "BST Fin", "idx": 4, "color": "#8b5cf6"}];
-const GEN     = "2026-07-27 11:19";
-document.getElementById('gen').textContent = 'generated ' + GEN;
-
-let curLine = (DATA.find(d => d.has) || DATA[0]).key;
-let curMetric = METRICS[0].k;
-
-const L = () => DATA.find(d => d.key === curLine);
-const M = () => METRICS.find(m => m.k === curMetric);
-
-function cls(v, k){
-  const fin = k.indexOf('fin') > -1;
-  if (fin) return v >= 99.8 ? 'up' : (v >= 99.4 ? 'flat' : 'dn');
-  return v >= 97 ? 'up' : (v >= 94 ? 'flat' : 'dn');
-}
-function dsign(d){
-  if (d === undefined || d === null) return '<span class="qc-d flat">&mdash;</span>';
-  const c = d > 0.05 ? 'up' : (d < -0.05 ? 'dn' : 'flat');
-  return `<span class="qc-d ${c}">${d > 0 ? '+' : ''}${d.toFixed(2)} vs prev Q</span>`;
-}
+<div class="tabs" id="tabs"></div>
+<div class="qcards" id="qcards"></div>
+<div class="panel">
+  <div class="panel-h"><span class="panel-t" id="chartTitle">Quarterly Yield</span>
+    <span class="panel-s">every stage &middot; First Pass &amp; Final Pass &middot; bars = monthly, line = trend</span></div>
+  <div id="charts"></div>
+</div>
+<div id="table"></div>
+<div class="foot"><span>Data transcribed from the Q1&ndash;Q2 FPY presentation</span><span id="gen"></span></div>
+</div><script>
+const DATA=[{"key": "R4", "name": "R4", "area": "BAT-2", "desc": "IQ Battery R4", "color": "#17c964", "metrics": [{"stage": "HT", "color": "#2f6feb", "months": [{"month": "Jan", "q": "Q1", "fp": 92.61, "fin": 99.62}, {"month": "Feb", "q": "Q1", "fp": 95.21, "fin": 99.8}, {"month": "Mar", "q": "Q1", "fp": 97.0, "fin": 99.9}, {"month": "Apr", "q": "Q2", "fp": 97.57, "fin": 99.87}, {"month": "May", "q": "Q2", "fp": 96.64, "fin": 99.86}, {"month": "Jun", "q": "Q2", "fp": 96.6, "fin": 99.95}], "quarters": [{"q": "Q1", "fp": 94.94, "fin": 99.77}, {"q": "Q2", "fp": 96.94, "fin": 99.89}], "has_fin": true}, {"stage": "BST", "color": "#8b5cf6", "months": [{"month": "Jan", "q": "Q1", "fp": 90.97, "fin": 99.51}, {"month": "Feb", "q": "Q1", "fp": 94.2, "fin": 99.71}, {"month": "Mar", "q": "Q1", "fp": 95.14, "fin": 99.84}, {"month": "Apr", "q": "Q2", "fp": 96.13, "fin": 99.22}, {"month": "May", "q": "Q2", "fp": 95.53, "fin": 99.85}, {"month": "Jun", "q": "Q2", "fp": 94.95, "fin": 99.86}], "quarters": [{"q": "Q1", "fp": 93.44, "fin": 99.69}, {"q": "Q2", "fp": 95.54, "fin": 99.64}], "has_fin": true}]}, {"key": "R3", "name": "R3", "area": "BAT-1", "desc": "Encharge R3", "color": "#f5a524", "metrics": [{"stage": "HT", "color": "#2f6feb", "months": [{"month": "Jan", "q": "Q1", "fp": 95.22, "fin": 99.86}, {"month": "Feb", "q": "Q1", "fp": 94.78, "fin": 99.78}, {"month": "Mar", "q": "Q1", "fp": 94.34, "fin": 99.7}, {"month": "Apr", "q": "Q2", "fp": 98.94, "fin": 100.0}, {"month": "May", "q": "Q2", "fp": 98.1, "fin": 100.0}, {"month": "Jun", "q": "Q2", "fp": 96.67, "fin": 99.91}], "quarters": [{"q": "Q1", "fp": 94.78, "fin": 99.78}, {"q": "Q2", "fp": 97.9, "fin": 99.97}], "has_fin": true}, {"stage": "BST", "color": "#8b5cf6", "months": [{"month": "Jan", "q": "Q1", "fp": 86.18, "fin": 99.58}, {"month": "Feb", "q": "Q1", "fp": 89.31, "fin": 99.46}, {"month": "Mar", "q": "Q1", "fp": 90.32, "fin": 99.26}, {"month": "Apr", "q": "Q2", "fp": 89.91, "fin": 99.21}, {"month": "May", "q": "Q2", "fp": 94.61, "fin": 99.0}, {"month": "Jun", "q": "Q2", "fp": 93.87, "fin": 99.91}], "quarters": [{"q": "Q1", "fp": 88.6, "fin": 99.43}, {"q": "Q2", "fp": 92.8, "fin": 99.37}], "has_fin": true}]}, {"key": "IQ8PV", "name": "IQ8PV", "area": "", "desc": "IQ8 PV Microinverter", "color": "#06b6d4", "metrics": [{"stage": "LH", "color": "#e8a33d", "months": [{"month": "Jan", "q": "Q1", "fp": 96.3, "fin": null}, {"month": "Feb", "q": "Q1", "fp": 96.95, "fin": null}, {"month": "Mar", "q": "Q1", "fp": 96.84, "fin": null}, {"month": "Apr", "q": "Q2", "fp": 98.86, "fin": null}, {"month": "May", "q": "Q2", "fp": 96.08, "fin": null}, {"month": "Jun", "q": "Q2", "fp": 93.11, "fin": null}], "quarters": [{"q": "Q1", "fp": 96.7, "fin": null}, {"q": "Q2", "fp": 96.02, "fin": null}], "has_fin": false}, {"stage": "ICT", "color": "#17a34a", "months": [{"month": "Jan", "q": "Q1", "fp": 98.07, "fin": 99.72}, {"month": "Feb", "q": "Q1", "fp": 98.3, "fin": 99.77}, {"month": "Mar", "q": "Q1", "fp": 97.96, "fin": 99.69}, {"month": "Apr", "q": "Q2", "fp": 97.85, "fin": 99.58}, {"month": "May", "q": "Q2", "fp": 97.7, "fin": 99.42}, {"month": "Jun", "q": "Q2", "fp": 94.85, "fin": 98.11}], "quarters": [{"q": "Q1", "fp": 98.11, "fin": 99.73}, {"q": "Q2", "fp": 96.8, "fin": 99.04}], "has_fin": true}, {"stage": "FT", "color": "#06b6d4", "months": [{"month": "Jan", "q": "Q1", "fp": 98.26, "fin": 99.78}, {"month": "Feb", "q": "Q1", "fp": 98.05, "fin": 99.67}, {"month": "Mar", "q": "Q1", "fp": 97.57, "fin": 99.77}, {"month": "Apr", "q": "Q2", "fp": 98.09, "fin": 99.72}, {"month": "May", "q": "Q2", "fp": 98.46, "fin": 99.63}, {"month": "Jun", "q": "Q2", "fp": 97.78, "fin": 99.12}], "quarters": [{"q": "Q1", "fp": 97.96, "fin": 99.74}, {"q": "Q2", "fp": 98.11, "fin": 99.49}], "has_fin": true}]}, {"key": "IQ9RES", "name": "IQ9 Residential", "area": "Line 2/6", "desc": "IQ9 Residential PCU", "color": "#a855f7", "metrics": [{"stage": "LH", "color": "#e8a33d", "months": [{"month": "Jan", "q": "Q1", "fp": null, "fin": null}, {"month": "Feb", "q": "Q1", "fp": 92.98, "fin": null}, {"month": "Mar", "q": "Q1", "fp": 93.33, "fin": null}, {"month": "Apr", "q": "Q2", "fp": 94.22, "fin": null}, {"month": "May", "q": "Q2", "fp": 95.67, "fin": null}, {"month": "Jun", "q": "Q2", "fp": 95.4, "fin": null}], "quarters": [{"q": "Q1", "fp": 93.16, "fin": null}, {"q": "Q2", "fp": 95.1, "fin": null}], "has_fin": false}, {"stage": "ICT", "color": "#17a34a", "months": [{"month": "Jan", "q": "Q1", "fp": 97.94, "fin": 99.26}, {"month": "Feb", "q": "Q1", "fp": 97.88, "fin": 98.9}, {"month": "Mar", "q": "Q1", "fp": 97.33, "fin": 98.97}, {"month": "Apr", "q": "Q2", "fp": 97.7, "fin": 99.03}, {"month": "May", "q": "Q2", "fp": 96.87, "fin": 98.96}, {"month": "Jun", "q": "Q2", "fp": 97.43, "fin": 99.07}], "quarters": [{"q": "Q1", "fp": 97.72, "fin": 99.04}, {"q": "Q2", "fp": 97.33, "fin": 99.02}], "has_fin": true}, {"stage": "FT", "color": "#06b6d4", "months": [{"month": "Jan", "q": "Q1", "fp": 96.91, "fin": 99.36}, {"month": "Feb", "q": "Q1", "fp": 98.4, "fin": 99.81}, {"month": "Mar", "q": "Q1", "fp": 98.78, "fin": 99.8}, {"month": "Apr", "q": "Q2", "fp": 98.81, "fin": 99.85}, {"month": "May", "q": "Q2", "fp": 98.97, "fin": 99.78}, {"month": "Jun", "q": "Q2", "fp": 98.78, "fin": 99.73}], "quarters": [{"q": "Q1", "fp": 98.03, "fin": 99.66}, {"q": "Q2", "fp": 98.85, "fin": 99.79}], "has_fin": true}]}, {"key": "IQ9COM", "name": "IQ9 Commercial", "area": "Line 2/6", "desc": "IQ9 Commercial PCU", "color": "#ec4899", "metrics": [{"stage": "LH", "color": "#e8a33d", "months": [{"month": "Jan", "q": "Q1", "fp": null, "fin": null}, {"month": "Feb", "q": "Q1", "fp": 18.75, "fin": null}, {"month": "Mar", "q": "Q1", "fp": 90.29, "fin": null}, {"month": "Apr", "q": "Q2", "fp": 91.12, "fin": null}, {"month": "May", "q": "Q2", "fp": 90.03, "fin": null}, {"month": "Jun", "q": "Q2", "fp": 90.63, "fin": null}], "quarters": [{"q": "Q1", "fp": 54.52, "fin": null}, {"q": "Q2", "fp": 90.59, "fin": null}], "has_fin": false}, {"stage": "ICT", "color": "#17a34a", "months": [{"month": "Jan", "q": "Q1", "fp": 98.43, "fin": 99.18}, {"month": "Feb", "q": "Q1", "fp": 98.81, "fin": 99.39}, {"month": "Mar", "q": "Q1", "fp": 95.79, "fin": 98.36}, {"month": "Apr", "q": "Q2", "fp": 95.4, "fin": 98.21}, {"month": "May", "q": "Q2", "fp": 96.17, "fin": 98.15}, {"month": "Jun", "q": "Q2", "fp": 95.78, "fin": 97.34}], "quarters": [{"q": "Q1", "fp": 97.68, "fin": 98.98}, {"q": "Q2", "fp": 95.78, "fin": 97.9}], "has_fin": true}, {"stage": "FT", "color": "#06b6d4", "months": [{"month": "Jan", "q": "Q1", "fp": 97.26, "fin": 99.81}, {"month": "Feb", "q": "Q1", "fp": 95.95, "fin": 99.5}, {"month": "Mar", "q": "Q1", "fp": 96.62, "fin": 99.35}, {"month": "Apr", "q": "Q2", "fp": 97.39, "fin": 99.47}, {"month": "May", "q": "Q2", "fp": 98.09, "fin": 99.65}, {"month": "Jun", "q": "Q2", "fp": 97.41, "fin": 99.08}], "quarters": [{"q": "Q1", "fp": 96.61, "fin": 99.55}, {"q": "Q2", "fp": 97.63, "fin": 99.4}], "has_fin": true}]}]; const GEN="2026-07-27 11:23";
+document.getElementById('gen').textContent='generated '+GEN;
+let curP=DATA[0].key;
+const P=()=>DATA.find(d=>d.key===curP);
+const M=()=>P().metrics[0];
+function cls(v,kind){if(v==null)return 'flat';if(kind==='fin')return v>=99.8?'up':v>=99.4?'flat':'dn';return v>=97?'up':v>=94?'flat':'dn';}
 
 function drawTabs(){
-  document.getElementById('tabs').innerHTML = DATA.map(d => {
-    const on = d.key === curLine;
-    return `<button class="tab ${on ? 'on' : ''} ${d.has ? '' : 'empty'}"
-      style="${on ? 'background:' + d.color + ';' : ''}" onclick="pickLine('${d.key}')">
-      ${on ? '' : '<span class="dot" style="background:' + d.color + '"></span>'}
-      ${d.name}${d.area ? '<span class="sm">' + d.area + '</span>' : ''}</button>`;
-  }).join('');
-
-  document.getElementById('mtabs').innerHTML = METRICS.map(m => {
-    const on = m.k === curMetric;
-    return `<button class="mtab ${on ? 'on' : ''}" style="${on ? 'color:' + m.color : ''}"
-      onclick="pickMetric('${m.k}')"><i style="background:${m.color}"></i>${m.short}</button>`;
+  document.getElementById('tabs').innerHTML=DATA.map(d=>{const on=d.key===curP;
+    return `<button class="tab ${on?'on':''}" style="${on?'background:'+d.color+';':''}" onclick="pickP('${d.key}')">
+      ${on?'':'<span class="dot" style="background:'+d.color+'"></span>'}${d.name}${d.area?'<span class="sm">'+d.area+'</span>':''}</button>`;
   }).join('');
 }
-function pickLine(k){ curLine = k; render(); }
-function pickMetric(k){ curMetric = k; render(); }
+function pickP(k){curP=k;render();}
 
 function drawCards(){
-  const d = L(), box = document.getElementById('qcards');
-  if (!d.has){ box.innerHTML = ''; return; }
-  const last = d.quarters[d.quarters.length - 1];
-  box.innerHTML = METRICS.map((m, i) =>
-    `<div class="qc" style="animation-delay:${i*70}ms">
-      <div class="qc-l">${m.label}</div>
-      <div class="qc-v ${cls(last[m.k], m.k)}">${last[m.k].toFixed(2)}%</div>
-      ${dsign(d.deltas[m.k])}
-      <div class="qc-l" style="margin-top:6px;font-size:9.5px;text-transform:none">${last.q} avg &middot; ${last.span}</div>
-    </div>`).join('');
+  const p=P(),box=document.getElementById('qcards');
+  box.innerHTML=p.metrics.map(m=>{
+    const q2=m.quarters.find(x=>x.q==='Q2')||m.quarters[m.quarters.length-1];
+    const q1=m.quarters.find(x=>x.q==='Q1');
+    function line(kind,lab){
+      const val=q2?q2[kind]:null;let d=null;
+      if(q1&&q2&&q1[kind]!=null&&q2[kind]!=null)d=+(q2[kind]-q1[kind]).toFixed(2);
+      const dtxt=d==null?'':`<span class="qc-d ${d>0.05?'up':d<-0.05?'dn':'flat'}">${d>0?'+':''}${d.toFixed(2)} Q1\u2192Q2</span>`;
+      return `<div class="qc-l" style="margin-top:6px">${lab}</div>
+        <div class="qc-v ${cls(val,kind)}" style="font-size:18px">${val==null?'\u2014':val.toFixed(2)+'%'}</div>${dtxt}`;
+    }
+    return `<div class="qc"><div class="qc-l" style="color:${m.color};font-weight:700">${m.stage}</div>
+      ${line('fp','First Pass')}${m.has_fin?line('fin','Final Pass'):''}</div>`;
+  }).join('');
 }
-
+function oneChart(p,m,kind){
+  const ms=m.months.map(r=>({mon:r.month,q:r.q,v:r[kind]}));
+  const idx=ms.map((r,i)=>({...r,i})).filter(r=>r.v!=null);
+  const title=(kind==='fp'?'First Pass Yield':'Final Pass Yield');
+  if(!idx.length) return `<div class="chwrap"><div class="chttl">${title}</div>
+    <div class="na" style="padding:40px;text-align:center">No data</div></div>`;
+  const W=520,H=260,padL=44,padR=14,padT=16,padB=40;
+  const vals=idx.map(r=>r.v);let lo=Math.min(...vals),hi=Math.max(...vals);
+  const pad=Math.max(0.6,(hi-lo)*0.3);lo=Math.max(0,lo-pad);hi=Math.min(100.4,hi+pad);
+  if(hi-lo<2){lo=Math.max(0,lo-1);hi=Math.min(100.4,hi+1);}
+  const rawStep=(hi-lo)/4,mag=Math.pow(10,Math.floor(Math.log10(rawStep)));let step=5*mag;
+  for(const s of[0.5,1,2,2.5,5]){if(rawStep<=s*mag){step=s*mag;break;}}
+  lo=Math.floor(lo/step)*step;hi=Math.min(100+step*0.4,Math.ceil(hi/step)*step);
+  const plotW=W-padL-padR,plotH=H-padT-padB,n=ms.length,slot=plotW/n,bw=Math.min(40,slot*0.5);
+  const cx=i=>padL+slot*i+slot/2,y=v=>padT+plotH*(1-(v-lo)/(hi-lo));
+  let g='';
+  for(let v=lo;v<=hi+step*0.01;v+=step){const yy=y(v);const lab=step>=1?v.toFixed(0):v.toFixed(1);
+    g+=`<line x1="${padL}" y1="${yy}" x2="${W-padR}" y2="${yy}" stroke="var(--line)"/>
+    <text x="${padL-7}" y="${yy+3.5}" text-anchor="end" font-size="9" fill="var(--text3)" font-family="var(--mono)">${lab}</text>`;}
+  for(let i=1;i<n;i++)if(ms[i].q!==ms[i-1].q){const xm=padL+slot*i;
+    g+=`<line x1="${xm}" y1="${padT}" x2="${xm}" y2="${padT+plotH}" stroke="var(--line2)" stroke-dasharray="3 3"/>`;}
+  ms.forEach((r,i)=>{
+    if(r.v==null){g+=`<text x="${cx(i)}" y="${padT+plotH+15}" text-anchor="middle" font-size="9" fill="var(--text3)">${r.mon}</text>`;return;}
+    const yy=y(r.v),h=padT+plotH-yy;
+    g+=`<rect x="${cx(i)-bw/2}" y="${yy}" width="${bw}" height="${h}" rx="3" fill="${m.color}" opacity=".82">
+      <animate attributeName="y" from="${padT+plotH}" to="${yy}" dur=".5s" begin="${i*50}ms" fill="freeze"/>
+      <animate attributeName="height" from="0" to="${h}" dur=".5s" begin="${i*50}ms" fill="freeze"/>
+      <title>${p.name} ${r.mon} ${m.stage} ${title}: ${r.v.toFixed(2)}%</title></rect>
+      <text x="${cx(i)}" y="${yy-5}" text-anchor="middle" font-size="9" font-weight="700" fill="var(--text2)" font-family="var(--mono)">${r.v.toFixed(1)}</text>
+      <text x="${cx(i)}" y="${padT+plotH+15}" text-anchor="middle" font-size="9" fill="var(--text3)">${r.mon}</text>`;});
+  const pts=idx.map(r=>`${cx(r.i)},${y(r.v)}`).join(' ');
+  const tcol='#e5484d';
+  g+=`<polyline points="${pts}" fill="none" stroke="${tcol}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity=".95"/>`;
+  idx.forEach(r=>{g+=`<circle cx="${cx(r.i)}" cy="${y(r.v)}" r="3.2" fill="${tcol}"/>`;});
+  return `<div class="chwrap"><div class="chttl">${title}</div>
+    <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">${g}</svg>
+    <div class="chleg"><span><b style="background:${m.color};opacity:.82"></b>${m.stage} monthly</span>
+      <span><i style="background:${tcol}"></i>trend</span></div></div>`;
+}
 function drawChart(){
-  const d = L(), m = M(), host = document.getElementById('chart');
-  document.getElementById('chartTitle').textContent =
-      d.name + (d.area ? ' \u00b7 ' + d.area : '') + ' \u2014 ' + m.label;
-
-  if (!d.has){
-    host.innerHTML = `<div class="empty"><b>No data for ${d.name} yet</b>
-      Add its monthly rows to <code>${d.key}_DATA</code> in <code>quarterly.py</code> and re-run.
-      <br><br>Format: <code>("Jul'26", HT_first, HT_final, BST_first, BST_final)</code></div>`;
-    return;
-  }
-
-  const ms = d.months, n = ms.length;
-  const W = 1080, H = 300, padL = 52, padR = 18, padT = 18, padB = 46;
-  const vals = ms.map(r => r[m.k]);
-  let lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
-  const pad = Math.max(0.6, (hi - lo) * 0.25);
-  lo = Math.max(0, lo - pad); hi = Math.min(100.4, hi + pad);
-  if (hi - lo < 2){ lo = Math.max(0, lo - 1); hi = Math.min(100.4, hi + 1); }
-
-  // ---- nice round ticks (0.5 / 1 / 2 / 5 steps), axis snapped to them ----
-  const rawStep = (hi - lo) / 4;
-  const mag = Math.pow(10, Math.floor(Math.log10(rawStep)));
-  let step = 5 * mag;
-  for (const s of [0.5, 1, 2, 2.5, 5]) { if (rawStep <= s * mag) { step = s * mag; break; } }
-  lo = Math.floor(lo / step) * step;
-  hi = Math.min(100 + step * 0.4, Math.ceil(hi / step) * step);
-
-  const plotW = W - padL - padR, plotH = H - padT - padB;
-  const slot = plotW / n;
-  const bw = Math.min(64, slot * 0.56);
-  const cx = i => padL + slot * i + slot / 2;
-  const y  = v => padT + plotH * (1 - (v - lo) / (hi - lo));
-
-  let g = '';
-  for (let v = lo; v <= hi + step * 0.01; v += step){
-    const yy = y(v);
-    const lab = (step >= 1 ? v.toFixed(0) : v.toFixed(1));
-    g += `<line x1="${padL}" y1="${yy}" x2="${W-padR}" y2="${yy}" stroke="var(--line)" stroke-width="1"/>
-          <text x="${padL-8}" y="${yy+3.5}" text-anchor="end" font-size="9.5" fill="var(--text3)"
-                font-family="var(--mono)">${lab}</text>`;
-  }
-  for (let i = 1; i < n; i++){
-    if (ms[i].q !== ms[i-1].q){
-      const xm = padL + slot * i;
-      g += `<line x1="${xm}" y1="${padT}" x2="${xm}" y2="${padT+plotH}" stroke="var(--line2)"
-                  stroke-width="1" stroke-dasharray="3 3"/>`;
-    }
-  }
-  const qseen = {};
-  ms.forEach((r, i) => { (qseen[r.q] = qseen[r.q] || []).push(i); });
-  Object.keys(qseen).forEach(q => {
-    const idx = qseen[q], mid = (cx(idx[0]) + cx(idx[idx.length-1])) / 2;
-    g += `<text x="${mid}" y="${H-8}" text-anchor="middle" font-size="10" font-weight="700"
-                fill="var(--text3)" font-family="var(--mono)">${q}</text>`;
-  });
-
-  ms.forEach((r, i) => {
-    const v = r[m.k], yy = y(v), h = padT + plotH - yy;
-    g += `<rect x="${cx(i)-bw/2}" y="${padT+plotH}" width="${bw}" height="0" rx="4" fill="${m.color}" opacity=".88">
-            <animate attributeName="y" from="${padT+plotH}" to="${yy}" dur=".55s" begin="${i*60}ms"
-                     fill="freeze" calcMode="spline" keySplines="0.22 1 0.36 1" keyTimes="0;1"/>
-            <animate attributeName="height" from="0" to="${h}" dur=".55s" begin="${i*60}ms"
-                     fill="freeze" calcMode="spline" keySplines="0.22 1 0.36 1" keyTimes="0;1"/>
-            <title>${d.name} ${r.month} (${r.q}) \u2014 ${m.label}: ${v.toFixed(2)}%</title></rect>
-          <text x="${cx(i)}" y="${yy-6}" text-anchor="middle" font-size="10.5" font-weight="700"
-                fill="var(--text2)" font-family="var(--mono)" opacity="0">${v.toFixed(2)}
-            <animate attributeName="opacity" from="0" to="1" dur=".3s" begin="${i*60+400}ms" fill="freeze"/></text>
-          <text x="${cx(i)}" y="${padT+plotH+16}" text-anchor="middle" font-size="10"
-                fill="var(--text3)">${r.month}</text>`;
-  });
-
-  if (n >= 2){
-    let sx = 0, sy = 0, sxy = 0, sxx = 0;
-    vals.forEach((v, i) => { sx += i; sy += v; sxy += i*v; sxx += i*i; });
-    const den = n*sxx - sx*sx;
-    if (den !== 0){
-      const slope = (n*sxy - sx*sy) / den, icpt = (sy - slope*sx) / n;
-      const x0 = cx(0), y0 = y(icpt), x1 = cx(n-1), y1 = y(icpt + slope*(n-1));
-      const dcol = slope > 0.02 ? 'var(--good)' : (slope < -0.02 ? 'var(--bad)' : 'var(--text3)');
-      const arrow = slope > 0.02 ? '\u25b2' : (slope < -0.02 ? '\u25bc' : '\u25ac');
-      g += `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${dcol}" stroke-width="2.2"
-                  stroke-dasharray="7 5" stroke-linecap="round" opacity="0">
-              <animate attributeName="opacity" from="0" to=".95" dur=".4s" begin="${n*60+300}ms" fill="freeze"/></line>
-            <circle cx="${x1}" cy="${y1}" r="4" fill="${dcol}" opacity="0">
-              <animate attributeName="opacity" from="0" to="1" dur=".3s" begin="${n*60+500}ms" fill="freeze"/>
-              <title>Trend: ${slope>0?'+':''}${slope.toFixed(3)} points per month</title></circle>
-            <text x="${x1-6}" y="${y1-11}" text-anchor="end" font-size="10.5" font-weight="700"
-                  fill="${dcol}" font-family="var(--mono)" opacity="0">${arrow} ${slope>0?'+':''}${slope.toFixed(2)}/mo
-              <animate attributeName="opacity" from="0" to="1" dur=".3s" begin="${n*60+500}ms" fill="freeze"/></text>`;
-    }
-  }
-  host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">${g}</svg>`;
+  const p=P();
+  document.getElementById('chartTitle').textContent=`${p.name} \u2014 Quarterly Yield`;
+  const host=document.getElementById('charts');
+  host.innerHTML=p.metrics.map(m=>{
+    const fin = m.has_fin
+      ? oneChart(p,m,'fin')
+      : '<div class="chwrap"><div class="chttl">Final Pass Yield</div><div class="na" style="padding:60px 20px;text-align:center">Not tracked for '+m.stage+'</div></div>';
+    return `<div class="stagesec">
+      <div class="stagelbl"><span class="stagedot" style="background:${m.color}"></span>${m.stage} <span class="stagedesc">${p.desc}</span></div>
+      <div class="charts2">${oneChart(p,m,'fp')}${fin}</div>
+    </div>`;
+  }).join('');
 }
-
 function drawTable(){
-  const d = L(), host = document.getElementById('table');
-  if (!d.has){ host.innerHTML = ''; return; }
-  host.innerHTML = `<div class="panel">
-    <div class="panel-h"><span class="panel-t">${d.name}${d.area ? ' \u00b7 ' + d.area : ''}</span>
-      <span class="panel-s">${d.desc} \u2014 monthly detail</span></div>
-    <table><thead><tr><th>Month</th>${METRICS.map(m => '<th>' + m.label + '</th>').join('')}</tr></thead>
-    <tbody>${d.months.map(r => `<tr><td>${r.month}<span class="qtag">${r.q}</span></td>
-      ${METRICS.map(m => `<td class="v ${cls(r[m.k], m.k)}">${r[m.k].toFixed(2)}%</td>`).join('')}</tr>`).join('')}</tbody>
-    <tfoot>${d.quarters.map(q => `<tr><td>${q.q} average</td>
-      ${METRICS.map(m => `<td class="v">${q[m.k].toFixed(2)}%</td>`).join('')}</tr>`).join('')}</tfoot>
-    </table></div>`;
+  const p=P(),host=document.getElementById('table');
+  function block(kind,label){
+    const rows=p.metrics.map(m=>{
+      if(kind==='fin'&&!m.has_fin) return '';
+      const cells=m.months.map(r=>{const v=r[kind];
+        return `<td class="v ${cls(v,kind)}">${v==null?'<span class="na">\u2014</span>':v.toFixed(2)+'%'}</td>`;}).join('');
+      return `<tr><td><b>${m.stage}</b></td>${cells}</tr>`;}).join('');
+    if(!rows) return '';
+    return `<div class="panel"><div class="panel-h"><span class="panel-t">${p.name} \u2014 ${label}</span></div>
+      <table><thead><tr><th>Stage</th>${["Jan","Feb","Mar","Apr","May","Jun"].map(x=>'<th>'+x+'</th>').join('')}</tr></thead>
+      <tbody>${rows}</tbody></table></div>`;
+  }
+  host.innerHTML=block('fp','First Pass Yield')+block('fin','Final Pass Yield');
 }
-
-function render(){ drawTabs(); drawCards(); drawChart(); drawTable(); }
-
-function applyTheme(t){
-  document.documentElement.setAttribute('data-theme', t);
-  try { localStorage.setItem('sc_theme', t); } catch(e){}
-}
-function toggleTheme(){
-  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-}
-try {
-  const s = localStorage.getItem('sc_theme');
-  applyTheme(s || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
-} catch(e){ applyTheme('light'); }
-
+function render(){drawTabs();drawCards();drawChart();drawTable();}
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);try{localStorage.setItem('sc_theme',t);}catch(e){}}
+function toggleTheme(){applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');}
+try{const s=localStorage.getItem('sc_theme');applyTheme(s||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));}catch(e){applyTheme('light');}
 render();
 </script></body></html>
