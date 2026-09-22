@@ -105,12 +105,14 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
 .card.hpr { border-top-color:var(--accent); }
 .card.wpr { border-top-color:var(--solar); }
 .card.qtr { border-top-color:#a855f7; }
+.card.npi { border-top-color:#14b8a6; }
 .card:hover { transform:translateY(-5px); box-shadow:var(--shadow); border-color:var(--line-2); }
 .card:hover::after { opacity:1; }
 .card-top { display:flex; align-items:center; justify-content:space-between; }
 .card-sysno { font-family:var(--mono); font-size:26px; font-weight:800; color:var(--line-2); line-height:1; opacity:.7; }
 .card.dpr .card-sysno { color:rgba(43,255,176,.3); }
 .card.hpr .card-sysno { color:rgba(58,216,255,.3); }
+.card.npi .card-sysno { color:rgba(20,184,166,.3); }
 .card.wpr .card-sysno { color:rgba(255,194,58,.35); }
 .card.qtr .card-sysno { color:rgba(168,85,247,.35); }
 .card-ic { width:52px; height:52px; border-radius:13px; display:flex; align-items:center; justify-content:center;
@@ -147,7 +149,7 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
         <span id="ticon">🌙</span><span class="ttrack"><span class="tknob"></span></span>
       </span>
     </div>
-    <div class="sub"><span class="live-dot"></span>Last sync: Tuesday, September 22, 2026 · 02:13 PM · Arlington, TX</div>
+    <div class="sub"><span class="live-dot"></span>Last sync: Tuesday, September 22, 2026 · 03:04 PM · Arlington, TX</div>
 
     <div class="telem">
       <div class="telem-cell"><div class="telem-l">UPLINK</div><div class="telem-v ok">● LIVE</div></div>
@@ -190,9 +192,16 @@ body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index
         <div class="card-sub">R3 &middot; R4 &mdash; HT &amp; BST yield trends by month and quarter</div>
         <div class="card-foot"><span class="card-sys">QUARTERLY TRAJECTORY</span><span class="card-arrow">&#8594;</span></div>
     </a>
+    <a class="card npi" href="npi_dashboard.html">
+        <div class="card-top"><span class="card-cadence">NPI</span><span class="card-sysno">05</span></div>
+        <div class="card-ic">&#129514;</div>
+        <div class="card-title">New Product<br>Introduction</div>
+        <div class="card-sub">IQ10B &middot; IQ10EV &middot; SST &mdash; dedicated testers, ramp yield &amp; serial history</div>
+        <div class="card-foot"><span class="card-sys">RAMP STATUS</span><span class="card-arrow">&#8594;</span></div>
+    </a>
 
     </div>
-    <div class="footer"><span class="sol">☀</span> Powered by solar · Built by V. Shukla · refresh for latest telemetry</div>
+    <div class="footer">Built by Vedant Shukla · refresh for latest telemetry</div>
 </div>
 <script>
 function applyTheme(t){

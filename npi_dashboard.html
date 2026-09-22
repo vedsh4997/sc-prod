@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NPI · New Product Introduction</title>
+<style>
+:root{
+  --bg:#f7f6ef; --surface:#ffffff; --surface-2:#f1efe4; --border:#e0dccb;
+  --border-2:#c9c4ae; --text-0:#14140f; --text-1:#2b2b24; --text-2:#6b6a5c;
+  --text-3:#9b9a8a; --good:#1a7f37; --warn:#9a6a00; --bad:#b3261e;
+  --accent:#14b8a6; --bg-0:#ffffff;
+}
+[data-theme="dark"]{
+  --bg:#0e1b2a; --surface:#16293d; --surface-2:#1e3a54; --border:#27405a;
+  --border-2:#365madd; --text-0:#e8eef4; --text-1:#d3dde7; --text-2:#8fa6bc;
+  --text-3:#6d8094; --good:#3dd68c; --warn:#f5a623; --bad:#ef6461;
+  --accent:#2dd4bf; --bg-0:#0e1b2a;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text-1);
+ font-family:'Segoe UI',Calibri,Arial,sans-serif;font-size:14px}
+.wrap{max-width:1180px;margin:0 auto;padding:26px 22px 60px}
+h1{font-size:25px;margin:0 0 2px;color:var(--text-0);letter-spacing:-.01em}
+.sub{color:var(--text-2);font-size:12.5px;margin-bottom:20px}
+.top{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.thm{margin-left:auto;font-size:11px;color:var(--accent);cursor:pointer;
+ border:1px solid var(--border);border-radius:16px;padding:4px 12px;background:var(--surface)}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.btn{padding:11px 18px;border-radius:11px;cursor:pointer;background:var(--surface);
+ border:1px solid var(--border);min-width:150px}
+.btn:hover{border-color:var(--accent)}
+.btn.on{background:var(--accent);border-color:var(--accent)}
+.btn-n{font-size:16px;font-weight:800;color:var(--text-0)}
+.btn.on .btn-n{color:var(--bg-0)}
+.btn-s{font-size:10.5px;color:var(--text-2);margin-top:2px}
+.btn.on .btn-s{color:var(--bg-0);opacity:.8}
+.k{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:11px;margin-bottom:16px}
+.kc{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:12px 14px}
+.kv{font-size:23px;font-weight:800;line-height:1.1;color:var(--text-0)}
+.kl{font-size:9.5px;color:var(--text-3);text-transform:uppercase;letter-spacing:.07em;margin-top:3px}
+.lbl{font-size:9.5px;color:var(--text-3);text-transform:uppercase;
+ letter-spacing:.07em;margin:22px 0 6px}
+table{width:100%;border-collapse:collapse;font-size:12.5px;background:var(--surface);
+ border:1px solid var(--border);border-radius:11px;overflow:hidden;table-layout:fixed}
+th{text-align:left;font-size:9px;text-transform:uppercase;letter-spacing:.5px;
+ color:var(--text-3);padding:9px 12px;background:var(--surface-2);font-weight:700}
+td{padding:8px 12px;border-top:1px solid var(--border)}
+.n{text-align:right;font-variant-numeric:tabular-nums}
+.tot td{background:var(--surface-2);font-weight:800;border-top:2px solid var(--border-2)}
+.pill{display:inline-block;padding:2px 9px;border-radius:11px;font-size:10px;
+ font-weight:800;color:var(--bg-0)}
+.src{display:inline-block;font-size:8.5px;font-weight:800;letter-spacing:.06em;
+ padding:1px 6px;border-radius:4px;background:var(--accent);color:var(--bg-0);margin-left:6px}
+.note{margin-top:12px;padding:9px 12px;border-radius:9px;font-size:11.5px;line-height:1.6;
+ background:var(--surface-2);border-left:3px solid var(--warn);color:var(--text-1)}
+.note.ok{border-left-color:var(--good)}
+.chips{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:9px}
+.chip{padding:4px 12px;border-radius:16px;font-size:11.5px;cursor:pointer;
+ background:var(--surface);border:1px solid var(--border);color:var(--text-2)}
+.chip.on{background:var(--accent);border-color:var(--accent);color:var(--bg-0)}
+.wk{display:flex;gap:6px;align-items:flex-end;height:74px;margin:6px 0}
+.wk div{flex:1;border-radius:3px 3px 0 0;min-height:3px}
+.wkl{display:flex;gap:6px;font-size:9px;color:var(--text-3)}
+.wkl div{flex:1;text-align:center}
+.empty{padding:22px 0;color:var(--text-3);font-size:12.5px}
+.foot{margin-top:28px;font-size:10.5px;color:var(--text-3);line-height:1.6}
+@media(max-width:700px){.wrap{padding:16px 12px 40px}}
+</style></head><body>
+<div class="wrap">
+  <div class="top">
+    <h1>New Product Introduction</h1>
+    <span class="thm" onclick="tgl()">light / dark</span>
+  </div>
+  <div class="sub" id="sub"></div>
+  <div class="btns" id="btns"></div>
+  <div id="body"></div>
+  <div class="foot" id="foot"></div>
+</div>
+<script>
+const D = {"generated": "2026-09-22 15:04", "build": "npi-dash-v1", "window_weeks": 8, "ramp_floor": 90.0, "configured": {"IQ10B": ["FTE-005", "HT-93"], "IQ10EV": ["GTC-67", "HVT004"], "SST": ["HVT003"]}, "today": {"products": [{"product": "IQ10B", "units": 13, "fails": 3, "fpy": 76.92, "testers": [{"station": "FTE-005", "units": 13, "fails": 3, "fpy": 76.92, "pareto": [], "hourly": [], "first_ts": "", "last_ts": "", "source": "CMES", "retest_pass": 2, "retest_fail": 2, "exclusive": true}], "pareto": [{"step": "\u2014", "n": 3, "pct": 100.0, "cum": 100.0}], "serials": [{"sn": "542635072033800-00383 0302 14688", "station": "FTE-005", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "state": "", "ts": "", "source": "CMES"}, {"sn": "542635072041800-00383 0302 14688", "station": "FTE-005", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "state": "", "ts": "", "source": "CMES"}, {"sn": "542635072067800-00383 0302 14688", "station": "FTE-005", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "state": "", "ts": "", "source": "CMES"}], "expected": ["FTE-005", "HT-93"]}], "missing": [{"product": "IQ10B", "station": "HT-93"}, {"product": "IQ10EV", "station": "GTC-67"}, {"product": "IQ10EV", "station": "HVT004"}, {"product": "SST", "station": "HVT003"}], "ramp_floor": 90.0, "seen_today": 180, "near_misses": ["ft-e002", "gt-c002", "gt-c004", "gt-c015", "gt-c017", "gt-c022", "gt-c026", "gt-c030", "gt-c042", "gt-c045", "gt-c049", "gt-c056"], "generated": "2026-09-22 15:04", "source": "HPR", "day": "20260922", "cmes_note": "Serials listed are units that failed or retested on FTE-005. CMES has no endpoint listing units that passed clean first time, so those are counted but not listed. Counts are attributable to FTE-005 alone.", "cmes_generated": "2026-09-22T15:01:19"}, "history": {}, "history_source": ""};
+let SEL=null, SNF='notpass';
+
+function tgl(){
+  const r=document.documentElement;
+  r.setAttribute('data-theme', r.getAttribute('data-theme')==='dark'?'light':'dark');
+  try{ localStorage.setItem('npi_theme', r.getAttribute('data-theme')); }catch(e){}
+}
+try{ document.documentElement.setAttribute('data-theme',
+     localStorage.getItem('npi_theme')||'light'); }catch(e){}
+
+function col(v,f){ return v==null?'var(--text-3)':(v>=97?'var(--good)':(v>=f?'var(--warn)':'var(--bad)')); }
+function pick(p){ SEL=p; render(); }
+function snf(f){ SNF=f; render(); }
+function mask(sn){ const s=String(sn||''); return s.length<=4?s:'\u2022'.repeat(Math.max(4,s.length-4))+s.slice(-4); }
+
+function render(){
+  const floor=D.ramp_floor||90;
+  const today=D.today||{}, hist=D.history||{};
+  const cfg=D.configured||{};
+  const names=Object.keys(cfg);
+  if(!names.length){ document.getElementById('body').innerHTML=
+      '<div class="empty">No NPI products configured.</div>'; return; }
+  if(!SEL||names.indexOf(SEL)<0) SEL=names[0];
+
+  document.getElementById('sub').textContent =
+    'Dedicated NPI testers \u00b7 first attempt per serial \u00b7 golden samples excluded \u00b7 '
+    + (D.window_weeks||8) + '-week history \u00b7 generated ' + (D.generated||'');
+
+  document.getElementById('btns').innerHTML = names.map(function(n){
+    const t=(today.products||[]).filter(x=>x.product===n)[0];
+    const h=hist[n];
+    const s = t ? (t.units.toLocaleString()+' today \u00b7 '+(t.fpy==null?'\u2014':t.fpy.toFixed(1)+'%'))
+              : (h ? (h.att.toLocaleString()+' in window \u00b7 '+(h.fpy==null?'\u2014':h.fpy.toFixed(1)+'%'))
+                   : 'no data');
+    return '<div class="btn'+(n===SEL?' on':'')+'" onclick="pick(\''+n+'\')">'
+      +'<div class="btn-n">'+n+'</div><div class="btn-s">'+s+'</div></div>';
+  }).join('');
+
+  const P=(today.products||[]).filter(x=>x.product===SEL)[0];
+  const Hh=hist[SEL];
+  let out='';
+
+  // ---- today ----
+  if(P){
+    const pass=P.units-P.fails;
+    out+='<div class="lbl">Today \u00b7 '+(today.day||'')+' from '+(today.source||'HPR')+'</div>'
+      +'<div class="k">'
+      +'<div class="kc"><div class="kv">'+P.units.toLocaleString()+'</div><div class="kl">Tested</div></div>'
+      +'<div class="kc"><div class="kv" style="color:var(--good)">'+pass.toLocaleString()+'</div><div class="kl">Pass</div></div>'
+      +'<div class="kc"><div class="kv" style="color:var(--bad)">'+P.fails.toLocaleString()+'</div><div class="kl">Fail</div></div>'
+      +'<div class="kc"><div class="kv" style="color:'+col(P.fpy,floor)+'">'
+        +(P.fpy==null?'\u2014':P.fpy.toFixed(2)+'%')+'</div><div class="kl">First pass</div></div>'
+      +'</div>';
+
+    out+='<div class="lbl">Testers today</div><table>'
+      +'<colgroup><col><col style="width:92px"><col style="width:92px"><col style="width:92px">'
+      +'<col style="width:96px"><col style="width:34%"></colgroup>'
+      +'<tr><th>Tester</th><th class="n">Tested</th><th class="n">Pass</th>'
+      +'<th class="n">Fail</th><th class="n">FPY</th><th>Top failing step</th></tr>';
+    (P.testers||[]).forEach(function(t){
+      out+='<tr><td><b>'+t.station+'</b>'+(t.source==='CMES'?'<span class="src">CMES</span>':'')+'</td>'
+        +'<td class="n">'+t.units.toLocaleString()+'</td>'
+        +'<td class="n" style="color:var(--good)">'+(t.units-t.fails).toLocaleString()+'</td>'
+        +'<td class="n" style="color:var(--bad)">'+t.fails+'</td>'
+        +'<td class="n" style="color:'+col(t.fpy,floor)+';font-weight:700">'
+        +(t.fpy==null?'\u2014':t.fpy.toFixed(2)+'%')+'</td>'
+        +'<td>'+(((t.pareto||[])[0]||{}).step||'\u2014')+'</td></tr>';
+    });
+    ((today.missing)||[]).filter(m=>m.product===SEL).forEach(function(m){
+      out+='<tr><td style="color:var(--text-3)">'+m.station+'</td>'
+        +'<td colspan="5" style="color:var(--warn);font-size:11px">no units today</td></tr>';
+    });
+    out+='</table>';
+
+    if((P.pareto||[]).length){
+      out+='<div class="lbl">Failing steps today</div><table>'
+        +'<colgroup><col><col style="width:92px"><col style="width:92px"><col style="width:110px"></colgroup>'
+        +'<tr><th>Step</th><th class="n">Count</th><th class="n">Share</th><th class="n">Cumulative</th></tr>';
+      P.pareto.forEach(r=>{ out+='<tr><td>'+r.step+'</td><td class="n">'+r.n+'</td>'
+        +'<td class="n">'+r.pct+'%</td><td class="n" style="color:var(--warn)">'+r.cum+'%</td></tr>'; });
+      out+='</table>';
+    }
+
+    if(P.golden&&P.golden.units){
+      out+='<div class="lbl">Golden samples \u2014 not counted in yield</div>'
+        +'<div class="note'+(P.golden.fails?'':' ok')+'">'
+        +P.golden.units+' golden unit(s), '+P.golden.fails+' failed. '
+        +(P.golden.fails?'A failing golden means the tester is drifting, not the build.'
+                        :'All golden checks passed.')+'</div>';
+    }
+
+    // serials
+    const S=P.serials||[];
+    if(S.length){
+      const fp=S.filter(r=>r.outcome==='PASS'), rt=S.filter(r=>r.outcome==='RETEST'),
+            nv=S.filter(r=>r.outcome==='FAIL');
+      const show = SNF==='all'?S : SNF==='retest'?rt : SNF==='never'?nv : nv.concat(rt);
+      const chip=(k,l,n)=>'<span class="chip'+(SNF===k?' on':'')+'" onclick="snf(\''+k+'\')">'+l+' <b>'+n+'</b></span>';
+      out+='<div class="lbl">Serial numbers</div><div class="chips">'
+        +chip('notpass','Failed first time',nv.length+rt.length)
+        +chip('never','Never passed',nv.length)
+        +chip('retest','Passed on retest',rt.length)
+        +chip('pass','Passed first time',fp.length)
+        +chip('all','All',S.length)+'</div><table>'
+        +'<colgroup><col style="width:38px"><col style="width:160px"><col style="width:74px">'
+        +'<col style="width:178px"><col><col style="width:64px"></colgroup>'
+        +'<tr><th class="n">#</th><th>Serial</th><th>1st try</th><th>Final outcome</th>'
+        +'<th>First failing step</th><th class="n">Time</th></tr>';
+      const OUT={PASS:['PASS FIRST','var(--good)'],RETEST:['PASSED ON RETEST','var(--warn)'],
+                 FAIL:['NEVER PASSED','var(--bad)']};
+      show.forEach(function(r,i){
+        const o=OUT[r.outcome]||OUT.FAIL;
+        out+='<tr><td class="n" style="color:var(--text-3)">'+(i+1)+'</td>'
+          +'<td style="font-family:Consolas,monospace">'+mask(r.sn)+'</td>'
+          +'<td><span class="pill" style="background:'+(r.status==='FAIL'?'var(--bad)':'var(--good)')+'">'+r.status+'</span></td>'
+          +'<td><span style="color:'+o[1]+';font-weight:700;font-size:10.5px">'+o[0]+'</span>'
+          +(r.attempts>1?' <span style="color:var(--text-3);font-size:10px">'+r.attempts+' attempts</span>':'')+'</td>'
+          +'<td>'+(r.step||'\u2014')+'</td><td class="n" style="color:var(--text-3)">'+(r.ts||'')+'</td></tr>';
+      });
+      out+='</table>';
+    }
+    if(today.cmes_note) out+='<div class="note">'+today.cmes_note+'</div>';
+  } else {
+    out+='<div class="lbl">Today</div><div class="empty">No units from '+SEL
+      +' today. Configured testers: '+(cfg[SEL]||[]).join(', ')+'.</div>';
+  }
+
+  // ---- history ----
+  if(Hh&&(Hh.weeks||[]).length){
+    const W=Hh.weeks, mx=Math.max.apply(null,W.map(w=>w.att).concat([1]));
+    out+='<div class="lbl">'+W.length+' week(s) of history'
+      +(Hh.change!=null?' \u00b7 <span style="color:'+(Hh.change>=0?'var(--good)':'var(--bad)')
+        +'">'+(Hh.change>=0?'\u25b2':'\u25bc')+' '+Math.abs(Hh.change).toFixed(2)
+        +' pts first week to last</span>':'')+'</div>';
+    // Bar height is YIELD, not volume. A ramp page exists to show the climb,
+    // and heights driven by volume hid a 51-point improvement behind five
+    // equally red bars. Volume stays in the tooltip.
+    const lo=Math.min.apply(null,W.map(w=>w.fpy==null?100:w.fpy));
+    const base=Math.max(0,Math.floor((lo-6)/10)*10);
+    out+='<div class="wk">'+W.map(function(w){
+        const h=w.fpy==null?3:Math.max(4,Math.round((w.fpy-base)/(100-base)*100));
+        return '<div style="height:'+h+'%;background:'+col(w.fpy,floor)+'" title="'
+          +w.week+' \u2014 '+w.fp+'/'+w.att+' units ('
+          +(w.fpy==null?'-':w.fpy.toFixed(1)+'%')+')"></div>';
+      }).join('')+'</div>'
+      +'<div class="wkl">'+W.map(w=>'<div>'+w.week.slice(5)+'<br>'
+        +(w.fpy==null?'\u2014':w.fpy.toFixed(0)+'%')+'</div>').join('')+'</div>'
+      +'<div style="font-size:10px;color:var(--text-3);margin-top:3px">'
+      +'bar height = first-pass yield from '+base+'% \u00b7 hover for units</div>';
+
+    out+='<table style="margin-top:12px">'
+      +'<colgroup><col style="width:110px"><col style="width:92px"><col style="width:92px">'
+      +'<col style="width:92px"><col style="width:96px"><col></colgroup>'
+      +'<tr><th>Week</th><th class="n">Tested</th><th class="n">Pass</th>'
+      +'<th class="n">Fail</th><th class="n">FPY</th><th>Days</th></tr>';
+    W.forEach(function(w){
+      out+='<tr><td>'+w.week+'</td><td class="n">'+w.att.toLocaleString()+'</td>'
+        +'<td class="n" style="color:var(--good)">'+w.fp.toLocaleString()+'</td>'
+        +'<td class="n" style="color:var(--bad)">'+w.fails.toLocaleString()+'</td>'
+        +'<td class="n" style="color:'+col(w.fpy,floor)+';font-weight:700">'
+        +(w.fpy==null?'\u2014':w.fpy.toFixed(2)+'%')+'</td>'
+        +'<td style="color:var(--text-3)">'+w.days+' day(s) \u00b7 '+w.first.slice(4)+'\u2013'+w.last.slice(4)+'</td></tr>';
+    });
+    out+='<tr class="tot"><td>All '+W.length+' week(s)</td>'
+      +'<td class="n">'+Hh.att.toLocaleString()+'</td>'
+      +'<td class="n" style="color:var(--good)">'+Hh.fp.toLocaleString()+'</td>'
+      +'<td class="n" style="color:var(--bad)">'+Hh.fails.toLocaleString()+'</td>'
+      +'<td class="n">'+(Hh.fpy==null?'\u2014':Hh.fpy.toFixed(2)+'%')+'</td><td></td></tr></table>';
+
+    const T=Object.values(Hh.testers||{});
+    if(T.length){
+      out+='<div class="lbl">By tester \u00b7 whole window</div><table>'
+        +'<colgroup><col><col style="width:92px"><col style="width:92px">'
+        +'<col style="width:92px"><col style="width:96px"><col style="width:92px"></colgroup>'
+        +'<tr><th>Tester</th><th class="n">Tested</th><th class="n">Pass</th>'
+        +'<th class="n">Fail</th><th class="n">FPY</th><th class="n">Active</th></tr>';
+      T.sort((a,b)=>b.att-a.att).forEach(function(t){
+        out+='<tr><td><b>'+t.station+'</b></td><td class="n">'+t.att.toLocaleString()+'</td>'
+          +'<td class="n" style="color:var(--good)">'+t.fp.toLocaleString()+'</td>'
+          +'<td class="n" style="color:var(--bad)">'+t.fails.toLocaleString()+'</td>'
+          +'<td class="n" style="color:'+col(t.fpy,floor)+';font-weight:700">'
+          +(t.fpy==null?'\u2014':t.fpy.toFixed(2)+'%')+'</td>'
+          +'<td class="n" style="color:var(--text-3)">'+t.days+' day(s)</td></tr>';
+      });
+      out+='</table>';
+    }
+  } else {
+    out+='<div class="lbl">History</div><div class="empty">No history yet for '+SEL
+      +'. It builds from the daily DPR exports as they arrive.</div>';
+  }
+
+  document.getElementById('body').innerHTML=out;
+  document.getElementById('foot').innerHTML=
+    'Judge an NPI build on DIRECTION, not level \u2014 low yield early in a ramp is '
+    +'expected, a flat or falling trend is not. First attempt per serial; golden '
+    +'samples excluded from every count. Week history comes from the daily DPR '
+    +'exports'+(D.history_source?' ('+D.history_source+')':'')+'. Serials are masked. '
+    +'Same data and the same rules as the NPI tab in the hourly dashboard.';
+}
+render();
+</script></body></html>
