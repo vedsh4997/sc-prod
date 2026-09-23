@@ -41,7 +41,7 @@ h1{font-size:25px;margin:0 0 2px;color:var(--text-0);letter-spacing:-.01em}
  letter-spacing:.07em;margin:22px 0 6px}
 table{width:100%;border-collapse:collapse;font-size:12.5px;background:var(--surface);
  border:1px solid var(--border);border-radius:11px;overflow:hidden;table-layout:fixed}
-th{text-align:left;font-size:9px;text-transform:uppercase;letter-spacing:.5px;
+th{text-align:left;font-size:9px;white-space:nowrap;text-transform:uppercase;letter-spacing:.5px;
  color:var(--text-3);padding:9px 12px;background:var(--surface-2);font-weight:700}
 td{padding:8px 12px;border-top:1px solid var(--border)}
 .n{text-align:right;font-variant-numeric:tabular-nums}
@@ -62,6 +62,15 @@ td{padding:8px 12px;border-top:1px solid var(--border)}
 .wkl{display:flex;gap:6px;font-size:9px;color:var(--text-3)}
 .wkl div{flex:1;text-align:center}
 .empty{padding:22px 0;color:var(--text-3);font-size:12.5px}
+.vr{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:.06em;
+ padding:2px 8px;border-radius:5px;color:var(--bg-0)}
+.vr-NA{background:#2563eb}
+.vr-INT{background:#9333ea}
+tbody tr:hover td,tr:hover td{background:var(--surface-2)}
+.btn,.chip,.kc,table{transition:border-color .14s,background .14s,box-shadow .14s}
+.kc:hover{box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.btn{box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.btn.on{box-shadow:0 2px 12px rgba(20,184,166,.28)}
 .foot{margin-top:28px;font-size:10.5px;color:var(--text-3);line-height:1.6}
 @media(max-width:700px){.wrap{padding:16px 12px 40px}}
 </style></head><body>
@@ -76,7 +85,7 @@ td{padding:8px 12px;border-top:1px solid var(--border)}
   <div class="foot" id="foot"></div>
 </div>
 <script>
-const D = {"generated": "2026-09-22 15:04", "build": "npi-dash-v1", "window_weeks": 8, "ramp_floor": 90.0, "configured": {"IQ10B": ["FTE-005", "HT-93"], "IQ10EV": ["GTC-67", "HVT004"], "SST": ["HVT003"]}, "today": {"products": [{"product": "IQ10B", "units": 13, "fails": 3, "fpy": 76.92, "testers": [{"station": "FTE-005", "units": 13, "fails": 3, "fpy": 76.92, "pareto": [], "hourly": [], "first_ts": "", "last_ts": "", "source": "CMES", "retest_pass": 2, "retest_fail": 2, "exclusive": true}], "pareto": [{"step": "\u2014", "n": 3, "pct": 100.0, "cum": 100.0}], "serials": [{"sn": "542635072033800-00383 0302 14688", "station": "FTE-005", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "state": "", "ts": "", "source": "CMES"}, {"sn": "542635072041800-00383 0302 14688", "station": "FTE-005", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "state": "", "ts": "", "source": "CMES"}, {"sn": "542635072067800-00383 0302 14688", "station": "FTE-005", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "state": "", "ts": "", "source": "CMES"}], "expected": ["FTE-005", "HT-93"]}], "missing": [{"product": "IQ10B", "station": "HT-93"}, {"product": "IQ10EV", "station": "GTC-67"}, {"product": "IQ10EV", "station": "HVT004"}, {"product": "SST", "station": "HVT003"}], "ramp_floor": 90.0, "seen_today": 180, "near_misses": ["ft-e002", "gt-c002", "gt-c004", "gt-c015", "gt-c017", "gt-c022", "gt-c026", "gt-c030", "gt-c042", "gt-c045", "gt-c049", "gt-c056"], "generated": "2026-09-22 15:04", "source": "HPR", "day": "20260922", "cmes_note": "Serials listed are units that failed or retested on FTE-005. CMES has no endpoint listing units that passed clean first time, so those are counted but not listed. Counts are attributable to FTE-005 alone.", "cmes_generated": "2026-09-22T15:01:19"}, "history": {}, "history_source": ""};
+const D = {"generated": "2026-09-23 15:41", "build": "npi-dash-v2", "window_weeks": 8, "ramp_floor": 90.0, "configured": {"IQ10B": ["FTE-005", "HT-93"], "IQ10EV": ["GTC-67", "HVT004"], "SST": ["HVT003"]}, "today": {"day": "", "source": "DPR", "products": [{"product": "IQ10B", "units": 4, "fails": 2, "fpy": 50.0, "testers": [{"station": "FTE-005 + HT93", "units": 4, "fails": 2, "fpy": 50.0, "pareto": [], "hourly": [], "first_ts": "", "last_ts": "", "source": "CMES", "combined": true, "retest_pass": 5, "retest_fail": 5}], "pareto": [{"step": "\u2014", "n": 2, "pct": 100.0, "cum": 100.0}], "serials": [{"sn": "542634058843", "station": "EL08.FTE005", "variant": "INT", "part": "800-00384", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "ts": "", "source": "CMES"}, {"sn": "542634066128", "station": "EL08.FTE005", "variant": "INT", "part": "800-00384", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "ts": "", "source": "CMES"}], "golden": null, "expected": ["FTE-005", "HT-93"]}], "missing": [{"product": "IQ10EV", "station": "GTC-67"}, {"product": "IQ10EV", "station": "HVT004"}, {"product": "SST", "station": "HVT003"}], "ramp_floor": 90.0, "cmes_note": "Serials listed are units that failed or retested on FTE-005, HT93. CMES has no endpoint listing units that passed clean first time, so those are counted but not listed. Counts are attributable to FTE-005, HT93 alone."}, "history": {"IQ10B": {"weeks": [{"week": "2026-W39", "att": 4, "fp": 2, "fails": 2, "days": 1, "first": "20260923", "last": "20260923", "fpy": 50.0}], "days": [{"day": "20260923", "att": 4, "fp": 2, "fails": 2, "fpy": 50.0, "by_variant": {"NA": {"input": 4, "first_pass": 2, "first_fail": 2, "retest_pass": 3, "retest_fail": 1, "fpy": 50.0}, "INT": {"input": 0, "first_pass": 0, "first_fail": 0, "retest_pass": 2, "retest_fail": 4, "fpy": null}}, "symptoms": {"\u2014": 2}}], "att": 4, "fp": 2, "fails": 2, "fpy": 50.0, "change": null, "testers": {}, "source": "CMES"}}, "by_variant": {"IQ10B": {"NA": {"input": 4, "first_pass": 2, "first_fail": 2, "retest_pass": 3, "retest_fail": 1, "fpy": 50.0}, "INT": {"input": 0, "first_pass": 0, "first_fail": 0, "retest_pass": 2, "retest_fail": 4, "fpy": null}}}, "variant_order": ["NA", "INT"], "history_source": "DPR + CMES"};
 let SEL=null, SNF='notpass';
 
 function tgl(){
@@ -90,7 +99,10 @@ try{ document.documentElement.setAttribute('data-theme',
 function col(v,f){ return v==null?'var(--text-3)':(v>=97?'var(--good)':(v>=f?'var(--warn)':'var(--bad)')); }
 function pick(p){ SEL=p; render(); }
 function snf(f){ SNF=f; render(); }
-function mask(sn){ const s=String(sn||''); return s.length<=4?s:'\u2022'.repeat(Math.max(4,s.length-4))+s.slice(-4); }
+// Full serial numbers. This page is for the ramp team, who need to pull the
+// exact board off the rack — a masked serial is useless to them.
+function mask(sn){ return String(sn||''); }
+function variantOf(u){ return u.variant || ''; }
 
 function render(){
   const floor=D.ramp_floor||90;
@@ -108,7 +120,8 @@ function render(){
   document.getElementById('btns').innerHTML = names.map(function(n){
     const t=(today.products||[]).filter(x=>x.product===n)[0];
     const h=hist[n];
-    const s = t ? (t.units.toLocaleString()+' today \u00b7 '+(t.fpy==null?'\u2014':t.fpy.toFixed(1)+'%'))
+    const s = (t&&t.retest_only) ? ('retest only \u00b7 '+(t.retest_pass||0)+'\u2713 '+(t.retest_fail||0)+'\u2717')
+              : t ? (t.units.toLocaleString()+' today \u00b7 '+(t.fpy==null?'\u2014':t.fpy.toFixed(1)+'%'))
               : (h ? (h.att.toLocaleString()+' in window \u00b7 '+(h.fpy==null?'\u2014':h.fpy.toFixed(1)+'%'))
                    : 'no data');
     return '<div class="btn'+(n===SEL?' on':'')+'" onclick="pick(\''+n+'\')">'
@@ -120,7 +133,24 @@ function render(){
   let out='';
 
   // ---- today ----
-  if(P){
+  if(P&&P.retest_only){
+    // No first-pass input today. Showing a yield here would be inventing one.
+    out+='<div class="lbl">Today \u00b7 '+(today.day||'')+' from '+(today.source||'CMES')+'</div>'
+      +'<div class="k">'
+      +'<div class="kc"><div class="kv" style="color:var(--text-3)">\u2014</div>'
+        +'<div class="kl">First pass</div></div>'
+      +'<div class="kc"><div class="kv" style="color:var(--good)">'+(P.retest_pass||0)
+        +'</div><div class="kl">Retest pass</div></div>'
+      +'<div class="kc"><div class="kv" style="color:var(--bad)">'+(P.retest_fail||0)
+        +'</div><div class="kl">Retest fail</div></div>'
+      +'<div class="kc"><div class="kv">'+(P.output||0)+'</div>'
+        +'<div class="kl">Output</div></div>'
+      +'</div>'
+      +'<div class="note"><b>Retest-only day.</b> CMES reports no first-pass input '
+      +'for '+SEL+' today \u2014 only units coming back for retest. A first-pass '
+      +'yield cannot be computed from that, so it is shown as \u2014 rather than '
+      +'as 100%.</div>';
+  } else if(P){
     const pass=P.units-P.fails;
     out+='<div class="lbl">Today \u00b7 '+(today.day||'')+' from '+(today.source||'HPR')+'</div>'
       +'<div class="k">'
@@ -130,6 +160,25 @@ function render(){
       +'<div class="kc"><div class="kv" style="color:'+col(P.fpy,floor)+'">'
         +(P.fpy==null?'\u2014':P.fpy.toFixed(2)+'%')+'</div><div class="kl">First pass</div></div>'
       +'</div>';
+
+    // NA vs INT. IQ10B ships in two variants (part 800-00383 = NA,
+    // 800-00384 = INT) and they are different builds — one averaged number
+    // hides which of the two is actually struggling.
+    const BV=(D.by_variant&&D.by_variant[SEL])||null;
+    if(BV){
+      const order=(D.variant_order||['NA','INT']);
+      out+='<div class="lbl">By type</div><div class="k">'
+        +order.filter(v=>BV[v]).map(function(v){
+          const b=BV[v], att=b.input||0, pass=b.first_pass||0;
+          const f=att?(pass/att*100):null;
+          return '<div class="kc"><div style="display:flex;align-items:baseline;gap:8px">'
+            +'<span class="vr vr-'+v+'">'+v+'</span>'
+            +'<span class="kv" style="color:'+col(f,floor)+'">'
+            +(att?(f.toFixed(1)+'%'):'<span style="font-size:15px;color:var(--text-3)">no units</span>')
+            +'</span></div>'
+            +'<div class="kl">'+(att?(pass+' of '+att+' first pass'):'nothing built today')+'</div></div>';
+        }).join('')+'</div>';
+    }
 
     out+='<div class="lbl">Testers today</div><table>'
       +'<colgroup><col><col style="width:92px"><col style="width:92px"><col style="width:92px">'
@@ -183,14 +232,15 @@ function render(){
         +chip('all','All',S.length)+'</div><table>'
         +'<colgroup><col style="width:38px"><col style="width:160px"><col style="width:74px">'
         +'<col style="width:178px"><col><col style="width:64px"></colgroup>'
-        +'<tr><th class="n">#</th><th>Serial</th><th>1st try</th><th>Final outcome</th>'
-        +'<th>First failing step</th><th class="n">Time</th></tr>';
+        +'<tr><th class="n">#</th><th>Serial number</th><th>Type</th><th>1st try</th>'
+        +'<th>Final outcome</th><th>First failing step</th><th class="n">Time</th></tr>';
       const OUT={PASS:['PASS FIRST','var(--good)'],RETEST:['PASSED ON RETEST','var(--warn)'],
                  FAIL:['NEVER PASSED','var(--bad)']};
       show.forEach(function(r,i){
         const o=OUT[r.outcome]||OUT.FAIL;
         out+='<tr><td class="n" style="color:var(--text-3)">'+(i+1)+'</td>'
-          +'<td style="font-family:Consolas,monospace">'+mask(r.sn)+'</td>'
+          +'<td style="font-family:Consolas,monospace;letter-spacing:.3px">'+mask(r.sn)+'</td>'
+          +'<td>'+(r.variant?'<span class="vr vr-'+r.variant+'">'+r.variant+'</span>':'\u2014')+'</td>'
           +'<td><span class="pill" style="background:'+(r.status==='FAIL'?'var(--bad)':'var(--good)')+'">'+r.status+'</span></td>'
           +'<td><span style="color:'+o[1]+';font-weight:700;font-size:10.5px">'+o[0]+'</span>'
           +(r.attempts>1?' <span style="color:var(--text-3);font-size:10px">'+r.attempts+' attempts</span>':'')+'</td>'
@@ -246,6 +296,39 @@ function render(){
       +'<td class="n" style="color:var(--bad)">'+Hh.fails.toLocaleString()+'</td>'
       +'<td class="n">'+(Hh.fpy==null?'\u2014':Hh.fpy.toFixed(2)+'%')+'</td><td></td></tr></table>';
 
+    // Day-by-day. The week chart shows the arc; this is the row someone asks
+    // for when they want to know what happened on a specific date.
+    const DD=(Hh.days||[]);
+    if(DD.length){
+      out+='<div class="lbl">Day by day</div><table>'
+        +'<colgroup><col style="width:112px"><col style="width:88px"><col style="width:88px">'
+        +'<col style="width:88px"><col style="width:92px"><col></colgroup>'
+        +'<tr><th>Day</th><th class="n">Tested</th><th class="n">Pass</th>'
+        +'<th class="n">Fail</th><th class="n">FPY</th><th>By type / top failure</th></tr>';
+      DD.slice().reverse().forEach(function(r){
+        const d=String(r.day);
+        const lbl=d.length===8?(d.slice(4,6)+'/'+d.slice(6,8)+' '+d.slice(0,4)):d;
+        let extra='';
+        if(r.by_variant){
+          extra=Object.keys(r.by_variant).map(function(v){
+            const b=r.by_variant[v];
+            return '<span class="vr vr-'+v+'">'+v+'</span> '+b.first_pass+'/'+b.input;
+          }).join(' &nbsp; ');
+        }
+        if(!extra&&r.symptoms){
+          const k=Object.keys(r.symptoms)[0];
+          if(k) extra='<span style="color:var(--text-2)">'+k+' ('+r.symptoms[k]+')</span>';
+        }
+        out+='<tr><td>'+lbl+'</td><td class="n">'+r.att.toLocaleString()+'</td>'
+          +'<td class="n" style="color:var(--good)">'+r.fp.toLocaleString()+'</td>'
+          +'<td class="n" style="color:var(--bad)">'+r.fails.toLocaleString()+'</td>'
+          +'<td class="n" style="color:'+col(r.fpy,floor)+';font-weight:700">'
+          +(r.fpy==null?'\u2014':r.fpy.toFixed(2)+'%')+'</td>'
+          +'<td style="font-size:11px">'+extra+'</td></tr>';
+      });
+      out+='</table>';
+    }
+
     const T=Object.values(Hh.testers||{});
     if(T.length){
       out+='<div class="lbl">By tester \u00b7 whole window</div><table>'
@@ -273,7 +356,8 @@ function render(){
     'Judge an NPI build on DIRECTION, not level \u2014 low yield early in a ramp is '
     +'expected, a flat or falling trend is not. First attempt per serial; golden '
     +'samples excluded from every count. Week history comes from the daily DPR '
-    +'exports'+(D.history_source?' ('+D.history_source+')':'')+'. Serials are masked. '
+    +'exports'+(D.history_source?' ('+D.history_source+')':'')+'. Full serials are shown '
+    +'so a board can be pulled off the rack. NA = part 800-00383, INT = 800-00384. '
     +'Same data and the same rules as the NPI tab in the hourly dashboard.';
 }
 render();
