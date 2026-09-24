@@ -62,6 +62,7 @@ td{padding:8px 12px;border-top:1px solid var(--border)}
 .wkl{display:flex;gap:6px;font-size:9px;color:var(--text-3)}
 .wkl div{flex:1;text-align:center}
 .empty{padding:22px 0;color:var(--text-3);font-size:12.5px}
+.sub-line{font-size:12px;color:var(--text-2);line-height:1.65;margin:-4px 0 4px;padding:0 2px}
 .vr{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:.06em;
  padding:2px 8px;border-radius:5px;color:var(--bg-0)}
 .vr-NA{background:#2563eb}
@@ -85,7 +86,7 @@ tbody tr:hover td,tr:hover td{background:var(--surface-2)}
   <div class="foot" id="foot"></div>
 </div>
 <script>
-const D = {"generated": "2026-09-23 18:37", "build": "npi-dash-v2", "window_weeks": 8, "ramp_floor": 90.0, "configured": {"IQ10B": ["FTE-005", "HT-93"], "IQ10EV": ["GTC-67", "HVT004"], "SST": ["HVT003"]}, "today": {"day": "", "source": "DPR", "products": [], "missing": [{"product": "IQ10B", "station": "FTE-005"}, {"product": "IQ10B", "station": "HT-93"}, {"product": "IQ10EV", "station": "GTC-67"}, {"product": "IQ10EV", "station": "HVT004"}, {"product": "SST", "station": "HVT003"}], "ramp_floor": 90.0}, "history": {}, "by_variant": {}, "variant_order": ["NA", "INT"], "history_source": "DPR + CMES"};
+const D = {"generated": "2026-09-23 21:56", "build": "npi-dash-v2", "window_weeks": 8, "ramp_floor": 90.0, "configured": {"IQ10B": ["FTE-005", "HT-93"], "IQ10EV": ["GTC-67", "HVT004"], "SST": ["HVT003"]}, "today": {"day": "20260919", "source": "DPR", "products": [{"product": "SST", "units": 1, "fails": 1, "fpy": 0.0, "expected": ["HVT003"], "golden": null, "pareto": [{"step": "cal_kestrel", "n": 1, "pct": 100.0, "cum": 100.0}], "serials": [{"sn": "542637024638", "tester": "HVT003", "variant": "", "outcome": "FAIL", "status": "FAIL", "attempts": 1, "step": "cal_kestrel", "ts": "12:57"}], "testers": [{"station": "HVT003", "units": 1, "fails": 1, "fpy": 0.0, "first_ts": "12:57", "last_ts": "12:57", "pareto": [{"step": "cal_kestrel", "n": 1}], "hourly": []}]}, {"product": "IQ10B", "units": 18, "fails": 6, "fpy": 66.67, "testers": [{"station": "FTE-005", "units": 18, "fails": 6, "fpy": 66.67, "pareto": [], "hourly": [], "first_ts": "", "last_ts": "", "source": "CMES", "combined": false, "retest_pass": 10, "retest_fail": 8}], "pareto": [{"step": "\u2014", "n": 6, "pct": 100.0, "cum": 100.0}], "serials": [{"sn": "542634058843", "station": "EL08.FTE005", "variant": "INT", "part": "800-00384", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "ts": "", "source": "CMES"}, {"sn": "542634058869", "station": "EL08.FTE005", "variant": "INT", "part": "800-00384", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "ts": "", "source": "CMES"}, {"sn": "542634058879", "station": "EL08.FTE005", "variant": "INT", "part": "800-00384", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "ts": "", "source": "CMES"}, {"sn": "542634058880", "station": "EL08.FTE005", "variant": "INT", "part": "800-00384", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "ts": "", "source": "CMES"}, {"sn": "542634058883", "station": "EL08.FTE005", "variant": "INT", "part": "800-00384", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "ts": "", "source": "CMES"}, {"sn": "542634066128", "station": "EL08.FTE005", "variant": "INT", "part": "800-00384", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "ts": "", "source": "CMES"}], "golden": null, "expected": ["FTE-005", "HT-93"], "day": "20260923", "source": "CMES", "cmes_rows": [{"product": "EP5000", "operation": "EL07.FT", "input": 16, "first_pass": 10, "first_fail": 6, "retest_pass": 8, "retest_fail": 4, "output": 18}, {"product": "EP5001", "operation": "EL07.FT", "input": 2, "first_pass": 2, "first_fail": 0, "retest_pass": 2, "retest_fail": 4, "output": 4}], "golden_identified": 0, "golden_exact": false, "golden_caveat": "CMES reports pre-aggregated counts, so only golden units that appear by serial in the fail history can be removed. A golden that passed clean is not distinguishable and remains in the totals.", "final_pass": 22, "first_pass_only": 12}], "missing": [{"product": "IQ10B", "station": "HT-93"}, {"product": "IQ10EV", "station": "GTC-67"}, {"product": "IQ10EV", "station": "HVT004"}], "ramp_floor": 90.0, "cmes_note": "Serials listed are units that failed or retested on FTE-005, HT93. CMES has no endpoint listing units that passed clean first time, so those are counted but not listed. Counts are attributable to FTE-005, HT93 alone."}, "history": {"SST": {"weeks": [{"week": "2026-W34", "att": 10, "fp": 8, "fails": 2, "days": 1, "first": "20260823", "last": "20260823", "fpy": 80.0}, {"week": "2026-W35", "att": 84, "fp": 55, "fails": 29, "days": 4, "first": "20260826", "last": "20260829", "fpy": 65.48}, {"week": "2026-W36", "att": 75, "fp": 50, "fails": 25, "days": 3, "first": "20260901", "last": "20260904", "fpy": 66.67}, {"week": "2026-W37", "att": 59, "fp": 37, "fails": 22, "days": 3, "first": "20260911", "last": "20260913", "fpy": 62.71}, {"week": "2026-W38", "att": 98, "fp": 56, "fails": 42, "days": 4, "first": "20260915", "last": "20260919", "fpy": 57.14}], "days": [{"day": "20260823", "att": 10, "fp": 8, "fails": 2, "fpy": 80.0, "symptoms": {"cal_kestrel": 1, "finish_test": 1}}, {"day": "20260826", "att": 9, "fp": 5, "fails": 4, "fpy": 55.56, "symptoms": {"cal_kestrel": 4}}, {"day": "20260827", "att": 15, "fp": 9, "fails": 6, "fpy": 60.0, "symptoms": {"cal_kestrel": 2, "finish_test": 4}}, {"day": "20260828", "att": 27, "fp": 17, "fails": 10, "fpy": 62.96, "symptoms": {"cal_kestrel": 8, "finish_test": 2}}, {"day": "20260829", "att": 33, "fp": 24, "fails": 9, "fpy": 72.73, "symptoms": {"cal_kestrel": 7, "finish_test": 2}}, {"day": "20260901", "att": 51, "fp": 35, "fails": 16, "fpy": 68.63, "symptoms": {"cal_kestrel": 10, "finish_test": 6}}, {"day": "20260902", "att": 17, "fp": 9, "fails": 8, "fpy": 52.94, "symptoms": {"areacheck": 1, "finish_test": 5, "cal_kestrel": 2}}, {"day": "20260904", "att": 7, "fp": 6, "fails": 1, "fpy": 85.71, "symptoms": {"cal_kestrel": 1}}, {"day": "20260911", "att": 3, "fp": 0, "fails": 3, "fpy": 0.0, "symptoms": {"finish_test": 1, "check_deviations": 1, "cal_kestrel": 1}}, {"day": "20260912", "att": 26, "fp": 13, "fails": 13, "fpy": 50.0, "symptoms": {"cal_kestrel": 11, "finish_test": 2}}, {"day": "20260913", "att": 30, "fp": 24, "fails": 6, "fpy": 80.0, "symptoms": {"cal_kestrel": 3, "finish_test": 3}}, {"day": "20260915", "att": 41, "fp": 28, "fails": 13, "fpy": 68.29, "symptoms": {"finish_test": 4, "cal_kestrel": 9}}, {"day": "20260916", "att": 45, "fp": 26, "fails": 19, "fpy": 57.78, "symptoms": {"cal_kestrel": 13, "finish_test": 6}}, {"day": "20260917", "att": 11, "fp": 2, "fails": 9, "fpy": 18.18, "symptoms": {"cal_kestrel": 8, "finish_test": 1}}, {"day": "20260919", "att": 1, "fp": 0, "fails": 1, "fpy": 0.0, "symptoms": {"cal_kestrel": 1}}], "att": 326, "fp": 206, "fails": 120, "fpy": 63.19, "change": -22.86, "testers": {"HVT003": {"station": "HVT003", "att": 326, "fp": 206, "fails": 120, "days": 15, "fpy": 63.19}}, "source": "DPR"}, "IQ10B": {"weeks": [{"week": "2026-W39", "att": 18, "fp": 12, "fails": 6, "days": 1, "first": "20260923", "last": "20260923", "fpy": 66.67}], "days": [{"day": "20260923", "att": 18, "fp": 12, "fails": 6, "fpy": 66.67, "by_variant": {"NA": {"input": 16, "first_pass": 10, "first_fail": 6, "retest_pass": 8, "retest_fail": 4, "fpy": 62.5}, "INT": {"input": 2, "first_pass": 2, "first_fail": 0, "retest_pass": 2, "retest_fail": 4, "fpy": 100.0}}, "symptoms": {"\u2014": 6}}], "att": 18, "fp": 12, "fails": 6, "fpy": 66.67, "change": null, "testers": {}, "source": "CMES"}}, "by_variant": {"IQ10B": {"NA": {"input": 16, "first_pass": 10, "first_fail": 6, "retest_pass": 8, "retest_fail": 4, "fpy": 62.5}, "INT": {"input": 2, "first_pass": 2, "first_fail": 0, "retest_pass": 2, "retest_fail": 4, "fpy": 100.0}}}, "variant_order": ["NA", "INT"], "history_source": "DPR + CMES"};
 let SEL=null, SNF='notpass';
 
 function tgl(){
@@ -135,7 +136,7 @@ function render(){
   // ---- today ----
   if(P&&P.retest_only){
     // No first-pass input today. Showing a yield here would be inventing one.
-    out+='<div class="lbl">Today \u00b7 '+(today.day||'')+' from '+(today.source||'CMES')+'</div>'
+    out+='<div class="lbl">Today \u00b7 '+(P.day||today.day||'')+' from '+(P.source||today.source||'CMES')+'</div>'
       +'<div class="k">'
       +'<div class="kc"><div class="kv" style="color:var(--text-3)">\u2014</div>'
         +'<div class="kl">First pass</div></div>'
@@ -151,15 +152,70 @@ function render(){
       +'yield cannot be computed from that, so it is shown as \u2014 rather than '
       +'as 100%.</div>';
   } else if(P){
+    // Each product carries its own day and source. The DPR archive lags, so a
+    // CMES-sourced product stamped with the newest DPR date read as days old.
     const pass=P.units-P.fails;
-    out+='<div class="lbl">Today \u00b7 '+(today.day||'')+' from '+(today.source||'HPR')+'</div>'
+    // retests summed across this product's testers
+    const RT=(P.testers||[]).reduce(function(a,t){
+      a.p+=(t.retest_pass||0); a.f+=(t.retest_fail||0); return a; },{p:0,f:0});
+    // FINAL pass/fail: what actually came out good, as opposed to first-pass.
+    const FN=(P.testers||[]).reduce(function(a,t){
+      a.p+=(t.final_pass||0); a.f+=(t.final_fail||0); return a; },{p:0,f:0});
+    // PASS is what came out good, not what passed first time. CMES calls it
+    // OUTPUT QTY and it equals FIRST PASS + RETEST PASS. Showing first-pass
+    // here read as 11 on a day CMES said 18.
+    const GOOD = FN.p || pass;
+    const BAD  = (P.first_pass_only!=null) ? (P.units - P.first_pass_only) : P.fails;
+    out+='<div class="lbl">Today \u00b7 '+(P.day||today.day||'')+' from '+(P.source||today.source||'DPR')+'</div>'
       +'<div class="k">'
-      +'<div class="kc"><div class="kv">'+P.units.toLocaleString()+'</div><div class="kl">Tested</div></div>'
-      +'<div class="kc"><div class="kv" style="color:var(--good)">'+pass.toLocaleString()+'</div><div class="kl">Pass</div></div>'
-      +'<div class="kc"><div class="kv" style="color:var(--bad)">'+P.fails.toLocaleString()+'</div><div class="kl">Fail</div></div>'
-      +'<div class="kc"><div class="kv" style="color:'+col(P.fpy,floor)+'">'
-        +(P.fpy==null?'\u2014':P.fpy.toFixed(2)+'%')+'</div><div class="kl">First pass</div></div>'
+      +'<div class="kc"><div class="kv">'+P.units.toLocaleString()+'</div>'
+        +'<div class="kl">Tested</div></div>'
+      +'<div class="kc"><div class="kv" style="color:var(--good)">'+GOOD.toLocaleString()+'</div>'
+        +'<div class="kl">Pass \u00b7 good out</div></div>'
+      +'<div class="kc"><div class="kv" style="color:var(--bad)">'+BAD.toLocaleString()+'</div>'
+        +'<div class="kl">Failed first time</div></div>'
+      +'</div>'
+      +'<div class="sub-line">First pass '
+        +(P.fpy==null?'\u2014':'<b style="color:'+col(P.fpy,floor)+'">'+P.fpy.toFixed(2)+'%</b>')
+        +'. '+(P.golden_identified
+          ? ('<b>'+P.golden_identified+'</b> golden unit(s) removed from these counts.')
+          : (P.golden_exact===false ? 'Golden removed where identifiable.'
+                                    : 'Golden samples excluded.'))
+        +((RT.p||RT.f)?(' <b>'+RT.p+'</b> passed on a later retest, <b>'+RT.f
+          +'</b> failed again.'):'')
+        +(FN.p?(' Pass = '+(P.first_pass_only!=null?P.first_pass_only:pass)+' first pass + '
+          +RT.p+' retest pass = <b>'+FN.p+'</b>.'):'')
       +'</div>';
+
+    // The CMES rows verbatim, so the page can be checked against the screen.
+    if((P.cmes_rows||[]).length){
+      out+='<div class="lbl">CMES rows \u00b7 as reported</div><table>'
+        +'<colgroup><col style="width:104px"><col style="width:120px"><col style="width:74px">'
+        +'<col style="width:86px"><col style="width:82px"><col style="width:92px">'
+        +'<col style="width:88px"><col style="width:84px"></colgroup>'
+        +'<tr><th>Product</th><th>Operation</th><th class="n">Input</th>'
+        +'<th class="n">First pass</th><th class="n">First fail</th>'
+        +'<th class="n">Retest pass</th><th class="n">Retest fail</th>'
+        +'<th class="n">Output</th></tr>';
+      let ti=0,tf=0,tff=0,trp=0,trf=0,to=0;
+      P.cmes_rows.forEach(function(r){
+        ti+=r.input; tf+=r.first_pass; tff+=r.first_fail;
+        trp+=r.retest_pass; trf+=r.retest_fail; to+=r.output;
+        out+='<tr><td>'+r.product+'</td><td>'+r.operation+'</td>'
+          +'<td class="n">'+r.input+'</td><td class="n">'+r.first_pass+'</td>'
+          +'<td class="n">'+r.first_fail+'</td><td class="n">'+r.retest_pass+'</td>'
+          +'<td class="n">'+r.retest_fail+'</td>'
+          +'<td class="n" style="font-weight:800">'+r.output+'</td></tr>';
+      });
+      out+='<tr class="tot"><td>Total</td><td></td><td class="n">'+ti+'</td>'
+        +'<td class="n">'+tf+'</td><td class="n">'+tff+'</td><td class="n">'+trp+'</td>'
+        +'<td class="n">'+trf+'</td><td class="n">'+to+'</td></tr></table>'
+        +'<div style="font-size:10.5px;color:var(--text-3);margin-top:5px">'
+        +'FT and HT stages only \u2014 other stages (GLUE_HT and so on) are the '
+        +'same units counted again and are excluded. These are the CMES figures '
+        +'before golden removal; the cards above have golden taken out.</div>'
+        +(P.golden_caveat?('<div class="note">'+P.golden_caveat+'</div>'):'');
+    }
 
     // NA vs INT. IQ10B ships in two variants (part 800-00383 = NA,
     // 800-00384 = INT) and they are different builds — one averaged number
