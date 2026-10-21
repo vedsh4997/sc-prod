@@ -284,4 +284,29 @@ function exportXlsx(){
 }
 
 init();
-</script></body></html>
+</script>
+<!-- back to the report index. Injected at publish time, because index.html
+     only exists on the published site -- a local build in TRY has no home
+     page to go back to, and a dead link is worse than none. -->
+<a href="index.html" id="scHome" aria-label="Back to all reports">
+  <span aria-hidden="true">&#8592;</span> All reports
+</a>
+<style>
+#scHome{position:fixed;left:16px;bottom:16px;z-index:9999;
+  display:inline-flex;align-items:center;gap:7px;
+  padding:9px 15px;border-radius:999px;text-decoration:none;
+  font:600 13px/1 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  letter-spacing:.01em;
+  /* its own colours, not the page's tokens: these six dashboards do not
+     share a variable set, and two of them flip between light and dark. */
+  color:#f4f6f0;background:rgba(22,26,20,.92);
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 6px 22px rgba(0,0,0,.34);
+  backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);
+  transition:transform .12s ease,background .12s ease}
+#scHome:hover{background:rgba(22,26,20,1);transform:translateY(-1px)}
+#scHome:focus-visible{outline:2px solid #9eff3d;outline-offset:2px}
+@media print{#scHome{display:none}}
+@media(max-width:520px){#scHome{left:10px;bottom:10px;padding:8px 13px;font-size:12px}}
+</style>
+</body></html>
