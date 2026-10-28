@@ -1,422 +1,479 @@
 <!DOCTYPE html>
-<html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NPI · New Product Introduction</title>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>New Product Introduction</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f7f6ef; --surface:#ffffff; --surface-2:#f1efe4; --border:#e0dccb;
-  --border-2:#c9c4ae; --text-0:#14140f; --text-1:#2b2b24; --text-2:#6b6a5c;
-  --text-3:#9b9a8a; --good:#1a7f37; --warn:#9a6a00; --bad:#b3261e;
-  --accent:#14b8a6; --bg-0:#ffffff;
-}
+ --bg:#f7f6ef;--surface:#fff;--surface-2:#f1efe4;--border:#e0dccb;
+ --text-1:#1c1b16;--text-2:#5c5a4d;--text-3:#9b9a8a;
+ --good:#1a7f37;--warn:#9a6a00;--bad:#b3261e;--accent:#14b8a6;--bg-0:#fff;
+ --p1:#2563eb;--p2:#ea580c;--p3:#7c3aed;--p4:#0f766e;--p5:#be185d;
+ --mono:"IBM Plex Mono",ui-monospace,monospace;--sans:"IBM Plex Sans",system-ui,sans-serif}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+ --bg:#0e1b2a;--surface:#16293d;--surface-2:#1e3a54;--border:#27405a;
+ --text-1:#e8eef6;--text-2:#9fb3c6;--text-3:#6d8094;
+ --good:#3dd68c;--warn:#f5a623;--bad:#ef6461;--accent:#2dd4bf;--bg-0:#0e1b2a;
+ --p1:#4a90e8;--p2:#e06c0a;--p3:#8f6ae8;--p4:#2dd4bf;--p5:#f472b6}}
 [data-theme="dark"]{
-  --bg:#0e1b2a; --surface:#16293d; --surface-2:#1e3a54; --border:#27405a;
-  --border-2:#365madd; --text-0:#e8eef4; --text-1:#d3dde7; --text-2:#8fa6bc;
-  --text-3:#6d8094; --good:#3dd68c; --warn:#f5a623; --bad:#ef6461;
-  --accent:#2dd4bf; --bg-0:#0e1b2a;
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text-1);
- font-family:'Segoe UI',Calibri,Arial,sans-serif;font-size:14px}
-.wrap{max-width:1180px;margin:0 auto;padding:26px 22px 60px}
-h1{font-size:25px;margin:0 0 2px;color:var(--text-0);letter-spacing:-.01em}
-.sub{color:var(--text-2);font-size:12.5px;margin-bottom:20px}
-.top{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
-.thm{margin-left:auto;font-size:11px;color:var(--accent);cursor:pointer;
- border:1px solid var(--border);border-radius:16px;padding:4px 12px;background:var(--surface)}
-.btns{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
-.btn{padding:11px 18px;border-radius:11px;cursor:pointer;background:var(--surface);
- border:1px solid var(--border);min-width:150px}
-.btn:hover{border-color:var(--accent)}
-.btn.on{background:var(--accent);border-color:var(--accent)}
-.btn-n{font-size:16px;font-weight:800;color:var(--text-0)}
-.btn.on .btn-n{color:var(--bg-0)}
-.btn-s{font-size:10.5px;color:var(--text-2);margin-top:2px}
-.btn.on .btn-s{color:var(--bg-0);opacity:.8}
-.k{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:11px;margin-bottom:16px}
-.kc{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:12px 14px}
-.kv{font-size:23px;font-weight:800;line-height:1.1;color:var(--text-0)}
-.kl{font-size:9.5px;color:var(--text-3);text-transform:uppercase;letter-spacing:.07em;margin-top:3px}
-.lbl{font-size:9.5px;color:var(--text-3);text-transform:uppercase;
- letter-spacing:.07em;margin:22px 0 6px}
-table{width:100%;border-collapse:collapse;font-size:12.5px;background:var(--surface);
- border:1px solid var(--border);border-radius:11px;overflow:hidden;table-layout:fixed}
-th{text-align:left;font-size:9px;white-space:nowrap;text-transform:uppercase;letter-spacing:.5px;
- color:var(--text-3);padding:9px 12px;background:var(--surface-2);font-weight:700}
-td{padding:8px 12px;border-top:1px solid var(--border)}
-.n{text-align:right;font-variant-numeric:tabular-nums}
-.tot td{background:var(--surface-2);font-weight:800;border-top:2px solid var(--border-2)}
-.pill{display:inline-block;padding:2px 9px;border-radius:11px;font-size:10px;
- font-weight:800;color:var(--bg-0)}
-.src{display:inline-block;font-size:8.5px;font-weight:800;letter-spacing:.06em;
- padding:1px 6px;border-radius:4px;background:var(--accent);color:var(--bg-0);margin-left:6px}
-.note{margin-top:12px;padding:9px 12px;border-radius:9px;font-size:11.5px;line-height:1.6;
- background:var(--surface-2);border-left:3px solid var(--warn);color:var(--text-1)}
-.note.ok{border-left-color:var(--good)}
-.chips{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:9px}
-.chip{padding:4px 12px;border-radius:16px;font-size:11.5px;cursor:pointer;
- background:var(--surface);border:1px solid var(--border);color:var(--text-2)}
-.chip.on{background:var(--accent);border-color:var(--accent);color:var(--bg-0)}
-.wk{display:flex;gap:6px;align-items:flex-end;height:74px;margin:6px 0}
-.wk div{flex:1;border-radius:3px 3px 0 0;min-height:3px}
-.wkl{display:flex;gap:6px;font-size:9px;color:var(--text-3)}
-.wkl div{flex:1;text-align:center}
-.empty{padding:22px 0;color:var(--text-3);font-size:12.5px}
-.sub-line{font-size:12px;color:var(--text-2);line-height:1.65;margin:-4px 0 4px;padding:0 2px}
-.vr{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:.06em;
- padding:2px 8px;border-radius:5px;color:var(--bg-0)}
-.vr-NA{background:#2563eb}
-.vr-INT{background:#9333ea}
-tbody tr:hover td,tr:hover td{background:var(--surface-2)}
-.btn,.chip,.kc,table{transition:border-color .14s,background .14s,box-shadow .14s}
-.kc:hover{box-shadow:0 2px 10px rgba(0,0,0,.06)}
-.btn{box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.btn.on{box-shadow:0 2px 12px rgba(20,184,166,.28)}
-.foot{margin-top:28px;font-size:10.5px;color:var(--text-3);line-height:1.6}
-@media(max-width:700px){.wrap{padding:16px 12px 40px}}
-</style></head><body>
-<div class="wrap">
-  <div class="top">
-    <h1>New Product Introduction</h1>
-    <span class="thm" onclick="tgl()">light / dark</span>
-  </div>
-  <div class="sub" id="sub"></div>
-  <div class="btns" id="btns"></div>
-  <div id="body"></div>
-  <div class="foot" id="foot"></div>
+ --bg:#0e1b2a;--surface:#16293d;--surface-2:#1e3a54;--border:#27405a;
+ --text-1:#e8eef6;--text-2:#9fb3c6;--text-3:#6d8094;
+ --good:#3dd68c;--warn:#f5a623;--bad:#ef6461;--accent:#2dd4bf;--bg-0:#0e1b2a;
+ --p1:#4a90e8;--p2:#e06c0a;--p3:#8f6ae8;--p4:#2dd4bf;--p5:#f472b6}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--text-1);font-family:var(--sans);
+ padding:22px clamp(14px,3vw,30px) 60px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1280px;margin:0 auto}
+.top{display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+h1{font-size:clamp(19px,2.3vw,25px);font-weight:700;margin:3px 0 3px;letter-spacing:-.02em}
+.sub{color:var(--text-2);font-size:12.5px}
+.thm{margin-left:auto;font-family:var(--mono);font-size:10.5px;font-weight:600;
+ border:1px solid var(--border);background:var(--surface);color:var(--text-2);
+ border-radius:7px;padding:6px 11px;cursor:pointer}
+.jump{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.jump a{font-family:var(--mono);font-size:10.5px;font-weight:600;padding:5px 11px;border-radius:7px;
+ border:1px solid var(--border);background:var(--surface);color:var(--text-2);text-decoration:none;
+ display:inline-flex;align-items:center;gap:6px}
+.jump a:hover{border-color:var(--accent);color:var(--accent)}
+.jump i{width:9px;height:9px;border-radius:3px;display:inline-block}
+.unres{display:flex;gap:11px;align-items:flex-start;padding:11px 14px;border-radius:9px;
+ margin-bottom:16px;background:var(--surface-2);border-left:4px solid var(--bad);font-size:12.5px;line-height:1.55}
+.unres code{font-family:var(--mono);font-size:11.5px;background:var(--surface);
+ border:1px solid var(--border);border-radius:4px;padding:1px 5px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:11px;margin-bottom:18px}
+.tile{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:13px 15px}
+.tile-l{font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--text-3)}
+.tile-v{font-family:var(--mono);font-size:26px;font-weight:700;line-height:1.1;margin-top:5px;letter-spacing:-.02em}
+.tile-s{font-size:11px;color:var(--text-2);margin-top:3px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+ padding:15px 17px 17px;margin-bottom:14px}
+.card-h{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:3px}
+.card-t{font-size:14px;font-weight:700;letter-spacing:-.01em}
+.card-s{font-size:11.5px;color:var(--text-2)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin:9px 0 2px;
+ font-family:var(--mono);font-size:10.5px;color:var(--text-2)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+.psec{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+ padding:0;margin-bottom:16px;overflow:hidden}
+.pbar{height:4px}
+.pin{padding:14px 17px 17px}
+.phd{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:9px}
+.pdot{width:12px;height:12px;border-radius:4px;display:inline-block;flex:none}
+.pnm{font-size:16px;font-weight:700;letter-spacing:-.01em}
+.ptest{font-family:var(--mono);font-size:10px;color:var(--text-3);margin-left:auto}
+.pk{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:9px;margin-bottom:12px}
+.pkc{background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:9px 11px}
+.pkv{font-family:var(--mono);font-size:19px;font-weight:700;line-height:1.15}
+.pkl{font-family:var(--mono);font-size:9px;color:var(--text-3);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
+.g2{display:grid;grid-template-columns:1.25fr 1fr;gap:15px;align-items:start}
+@media(max-width:900px){.g2{grid-template-columns:1fr}}
+.colh{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;
+ color:var(--text-3);margin:0 0 6px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 10px}
+.chip{font-family:var(--mono);font-size:10px;font-weight:600;padding:4px 10px;border-radius:7px;
+ border:1px solid var(--border);background:var(--surface);color:var(--text-2);cursor:pointer}
+.chip.on{background:var(--accent);border-color:transparent;color:var(--bg-0)}
+.acts{display:flex;gap:7px;flex-wrap:wrap;margin-left:auto}
+.dl{font-family:var(--mono);font-size:10px;font-weight:700;padding:5px 11px;border-radius:7px;
+ border:1px solid var(--accent);background:transparent;color:var(--accent);cursor:pointer}
+.dl.solid{background:var(--accent);color:var(--bg-0)}
+.tbl-w{overflow:auto;max-height:340px;border:1px solid var(--border);border-radius:9px}
+table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:10.5px}
+th,td{padding:5px 8px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+th{position:sticky;top:0;background:var(--surface-2);color:var(--text-3);font-size:8.5px;
+ letter-spacing:.07em;text-transform:uppercase;z-index:1}
+td.num,th.num{text-align:right}
+.pill{display:inline-block;padding:1px 7px;border-radius:20px;font-size:9px;font-weight:700}
+.pill.ok{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}
+.pill.no{background:color-mix(in srgb,var(--bad) 18%,transparent);color:var(--bad)}
+.pill.rt{background:color-mix(in srgb,var(--warn) 20%,transparent);color:var(--warn)}
+.hstrip{display:flex;gap:9px;overflow-x:auto;padding:3px 2px 9px;scrollbar-width:thin}
+.hc{flex:0 0 132px;background:var(--surface);border:1px solid var(--border);border-radius:10px;
+ padding:9px 11px 10px;cursor:pointer;transition:.12s;position:relative}
+.hc:hover{border-color:var(--text-3);transform:translateY(-1px)}
+.hc.on{border-color:var(--text-1);box-shadow:0 0 0 1px var(--text-1) inset}
+.hc-h{font-family:var(--mono);font-size:10px;color:var(--text-3);letter-spacing:.06em}
+.hc-live{position:absolute;top:8px;right:10px;font-family:var(--mono);font-size:8.5px;
+ font-weight:700;color:var(--good);letter-spacing:.09em}
+.hc-y{font-family:var(--mono);font-size:19px;font-weight:700;margin:3px 0 7px;letter-spacing:-.01em}
+.hc-r{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;
+ color:var(--text-3);line-height:1.55}
+.hc-r b{color:var(--text-2);font-weight:600}
+.hc-r.f b{color:var(--bad)}
+.hc-nd{margin-top:5px;font-family:var(--mono);font-size:8.5px;color:var(--warn)}
+.hrp{margin-top:10px;border:1px solid var(--border);border-radius:11px;padding:11px 13px;background:var(--bg)}
+.hrh{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:7px}
+.hrt{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text-2)}
+.hrp table{width:100%}
+.hrp tr.vit td{font-weight:700}
+.hrp tr.vit td:first-child{border-left:3px solid var(--bad);padding-left:6px}
+.empty{padding:22px 14px;text-align:center;color:var(--text-3);font-size:12px}
+.tipw{position:fixed;pointer-events:none;z-index:60;opacity:0;transition:opacity .1s}
+.tip{background:var(--surface);border:1px solid var(--border);border-radius:8px;
+ padding:7px 10px;font-family:var(--mono);font-size:10.5px;line-height:1.55;
+ box-shadow:0 8px 24px rgba(0,0,0,.18);white-space:nowrap}
+.foot{color:var(--text-3);font-family:var(--mono);font-size:10px;text-align:center;margin-top:24px}
+</style></head><body><div class="wrap">
+<div class="top">
+ <div><div class="eyebrow">New Product Introduction &middot; Hourly</div>
+  <h1>New Product Introduction</h1>
+  <div class="sub" id="sub"></div></div>
+ <button class="thm" onclick="tgl()">light / dark</button>
 </div>
+<div class="jump" id="jump"></div>
+<div class="unres" id="unres" style="display:none"></div>
+<div class="unres" id="daynote" style="display:none;border-left-color:var(--warn)"></div>
+<div class="tiles" id="tiles"></div>
+<div class="card">
+ <div class="card-h"><span class="card-t">Every unit, every hour</span>
+  <span class="card-s">all products together &middot; bar height is units tested &middot; first-pass % above each bar</span></div>
+ <div class="legend"><span><i style="background:var(--good)"></i>passed first time</span>
+  <span><i style="background:var(--bad)"></i>failed first time</span></div>
+ <div id="ch1"></div>
+</div>
+<div id="sections"></div>
+<div class="foot" id="foot"></div>
+</div>
+<div class="tipw" id="tipw"><div class="tip" id="tip"></div></div>
 <script>
-const D = {"generated": "2026-10-27 22:34", "build": "npi-dash-v2", "window_weeks": 8, "ramp_floor": 90.0, "configured": {"IQ10B": ["FTE-005", "HT-93"], "IQ10EV": ["GTC-67", "HVT004"], "SST": ["HVT003"]}, "today": {"day": "20261027", "source": "DPR", "products": [{"product": "IQ10EV", "units": 12, "fails": 6, "fpy": 50.0, "expected": ["GTC-67", "HVT004"], "golden": {"units": 5, "fails": 1}, "pareto": [{"step": "areacheck", "n": 3, "pct": 50.0, "cum": 50.0}, {"step": "finish_test", "n": 3, "pct": 50.0, "cum": 100.0}], "serials": [{"sn": "542643052564", "tester": "HVT004", "variant": "", "outcome": "FAIL", "status": "FAIL", "attempts": 1, "step": "finish_test", "ts": "04:08"}, {"sn": "542643052615", "tester": "HVT004", "variant": "", "outcome": "FAIL", "status": "FAIL", "attempts": 1, "step": "finish_test", "ts": "04:32"}, {"sn": "542643052595", "tester": "HVT004", "variant": "", "outcome": "FAIL", "status": "FAIL", "attempts": 4, "step": "areacheck", "ts": "10:19"}, {"sn": "542643052576", "tester": "HVT004", "variant": "", "outcome": "FAIL", "status": "FAIL", "attempts": 1, "step": "finish_test", "ts": "15:13"}, {"sn": "542643052586", "tester": "HVT004", "variant": "", "outcome": "RETEST", "status": "FAIL", "attempts": 2, "step": "areacheck", "ts": "10:30"}, {"sn": "542642061637", "tester": "HVT004", "variant": "", "outcome": "RETEST", "status": "FAIL", "attempts": 2, "step": "areacheck", "ts": "10:40"}, {"sn": "542642061624", "tester": "HVT004", "variant": "", "outcome": "PASS", "status": "PASS", "attempts": 1, "step": "", "ts": "10:09"}, {"sn": "542643052547", "tester": "HVT004", "variant": "", "outcome": "PASS", "status": "PASS", "attempts": 1, "step": "", "ts": "10:13"}, {"sn": "542643052579", "tester": "HVT004", "variant": "", "outcome": "PASS", "status": "PASS", "attempts": 1, "step": "", "ts": "10:16"}, {"sn": "542643052515", "tester": "HVT004", "variant": "", "outcome": "PASS", "status": "PASS", "attempts": 1, "step": "", "ts": "10:35"}, {"sn": "542643052690", "tester": "HVT004", "variant": "", "outcome": "PASS", "status": "PASS", "attempts": 1, "step": "", "ts": "12:38"}, {"sn": "542643052683", "tester": "HVT004", "variant": "", "outcome": "PASS", "status": "PASS", "attempts": 1, "step": "", "ts": "12:46"}], "testers": [{"station": "HVT004", "units": 12, "fails": 6, "fpy": 50.0, "first_ts": "04:08", "last_ts": "15:13", "pareto": [{"step": "areacheck", "n": 3}, {"step": "finish_test", "n": 3}], "hourly": []}]}, {"product": "IQ10B", "units": 31, "fails": 7, "fpy": 77.42, "testers": [{"station": "FTE-005", "units": 31, "fails": 7, "fpy": 77.42, "pareto": [], "hourly": [], "first_ts": "", "last_ts": "", "source": "CMES", "combined": false, "retest_pass": 3, "retest_fail": 8}], "pareto": [{"step": "\u2014", "n": 7, "pct": 100.0, "cum": 100.0}], "serials": [{"sn": "542638063488", "station": "EL08.FTE005", "variant": "INT", "part": "800-00384", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "ts": "", "source": "CMES"}, {"sn": "542638063500", "station": "EL08.FTE005", "variant": "INT", "part": "800-00384", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "ts": "", "source": "CMES"}, {"sn": "542640029080", "station": "EL08.FTE005", "variant": "INT", "part": "800-00384", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "ts": "", "source": "CMES"}, {"sn": "542640032639", "station": "EL08.FTE005", "variant": "NA", "part": "800-00383", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "ts": "", "source": "CMES"}, {"sn": "542640032696", "station": "EL08.FTE005", "variant": "NA", "part": "800-00383", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "ts": "", "source": "CMES"}, {"sn": "542640032699", "station": "EL08.FTE005", "variant": "NA", "part": "800-00383", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "ts": "", "source": "CMES"}, {"sn": "542640032798", "station": "EL08.FTE005", "variant": "NA", "part": "800-00383", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "ts": "", "source": "CMES"}], "golden": null, "expected": ["FTE-005", "HT-93"], "day": "20261027", "source": "CMES", "cmes_rows": [{"product": "EP5000", "operation": "EL07.HT", "input": 9, "first_pass": 9, "first_fail": 0, "retest_pass": 0, "retest_fail": 0, "output": 9}, {"product": "EP5000", "operation": "EL07.FT", "input": 3, "first_pass": 0, "first_fail": 3, "retest_pass": 2, "retest_fail": 7, "output": 2}, {"product": "EP5001", "operation": "EL07.FT", "input": 19, "first_pass": 15, "first_fail": 4, "retest_pass": 1, "retest_fail": 1, "output": 16}], "golden_identified": 0, "golden_exact": false, "golden_caveat": "CMES reports pre-aggregated counts, so only golden units that appear by serial in the fail history can be removed. A golden that passed clean is not distinguishable and remains in the totals.", "final_pass": 27, "first_pass_only": 24}], "missing": [{"product": "IQ10B", "station": "HT-93"}, {"product": "IQ10EV", "station": "GTC-67"}, {"product": "SST", "station": "HVT003"}], "ramp_floor": 90.0, "cmes_note": "Serials listed are units that failed or retested on FTE-005, HT93. CMES has no endpoint listing units that passed clean first time, so those are counted but not listed. Counts are attributable to FTE-005, HT93 alone."}, "history": {"SST": {"weeks": [{"week": "2026-W36", "att": 24, "fp": 15, "fails": 9, "days": 2, "first": "20260902", "last": "20260904", "fpy": 62.5}, {"week": "2026-W37", "att": 59, "fp": 37, "fails": 22, "days": 3, "first": "20260911", "last": "20260913", "fpy": 62.71}, {"week": "2026-W38", "att": 98, "fp": 56, "fails": 42, "days": 4, "first": "20260915", "last": "20260919", "fpy": 57.14}, {"week": "2026-W41", "att": 1, "fp": 0, "fails": 1, "days": 1, "first": "20261010", "last": "20261010", "fpy": 0.0}, {"week": "2026-W43", "att": 21, "fp": 13, "fails": 8, "days": 3, "first": "20261020", "last": "20261022", "fpy": 61.9}], "days": [{"day": "20260902", "att": 17, "fp": 9, "fails": 8, "fpy": 52.94, "symptoms": {"areacheck": 1, "finish_test": 5, "cal_kestrel": 2}}, {"day": "20260904", "att": 7, "fp": 6, "fails": 1, "fpy": 85.71, "symptoms": {"cal_kestrel": 1}}, {"day": "20260911", "att": 3, "fp": 0, "fails": 3, "fpy": 0.0, "symptoms": {"finish_test": 1, "check_deviations": 1, "cal_kestrel": 1}}, {"day": "20260912", "att": 26, "fp": 13, "fails": 13, "fpy": 50.0, "symptoms": {"cal_kestrel": 11, "finish_test": 2}}, {"day": "20260913", "att": 30, "fp": 24, "fails": 6, "fpy": 80.0, "symptoms": {"cal_kestrel": 3, "finish_test": 3}}, {"day": "20260915", "att": 41, "fp": 28, "fails": 13, "fpy": 68.29, "symptoms": {"finish_test": 4, "cal_kestrel": 9}}, {"day": "20260916", "att": 45, "fp": 26, "fails": 19, "fpy": 57.78, "symptoms": {"cal_kestrel": 13, "finish_test": 6}}, {"day": "20260917", "att": 11, "fp": 2, "fails": 9, "fpy": 18.18, "symptoms": {"cal_kestrel": 8, "finish_test": 1}}, {"day": "20260919", "att": 1, "fp": 0, "fails": 1, "fpy": 0.0, "symptoms": {"cal_kestrel": 1}}, {"day": "20261010", "att": 1, "fp": 0, "fails": 1, "fpy": 0.0, "symptoms": {"areacheck": 1}}, {"day": "20261020", "att": 9, "fp": 5, "fails": 4, "fpy": 55.56, "symptoms": {"cal_kestrel": 3, "finish_test": 1}}, {"day": "20261021", "att": 11, "fp": 8, "fails": 3, "fpy": 72.73, "symptoms": {"cal_kestrel": 3}}, {"day": "20261022", "att": 1, "fp": 0, "fails": 1, "fpy": 0.0, "symptoms": {"areacheck": 1}}], "att": 203, "fp": 121, "fails": 82, "fpy": 59.61, "change": -0.6, "testers": {"HVT003": {"station": "HVT003", "att": 203, "fp": 121, "fails": 82, "days": 13, "fpy": 59.61}}, "source": "DPR"}, "IQ10EV": {"weeks": [{"week": "2026-W42", "att": 1, "fp": 0, "fails": 1, "days": 1, "first": "20261015", "last": "20261015", "fpy": 0.0}, {"week": "2026-W43", "att": 117, "fp": 83, "fails": 34, "days": 3, "first": "20261022", "last": "20261024", "fpy": 70.94}, {"week": "2026-W44", "att": 13, "fp": 7, "fails": 6, "days": 2, "first": "20261026", "last": "20261027", "fpy": 53.85}], "days": [{"day": "20261015", "att": 1, "fp": 0, "fails": 1, "fpy": 0.0, "symptoms": {"areacheck": 1}}, {"day": "20261022", "att": 1, "fp": 0, "fails": 1, "fpy": 0.0, "symptoms": {"finish_test": 1}}, {"day": "20261023", "att": 60, "fp": 41, "fails": 19, "fpy": 68.33, "symptoms": {"finish_test": 18, "areacheck": 1}}, {"day": "20261024", "att": 56, "fp": 42, "fails": 14, "fpy": 75.0, "symptoms": {"areacheck": 2, "finish_test": 12}}, {"day": "20261026", "att": 1, "fp": 1, "fails": 0, "fpy": 100.0, "symptoms": {}}, {"day": "20261027", "att": 12, "fp": 6, "fails": 6, "fpy": 50.0, "symptoms": {"areacheck": 3, "finish_test": 3}}], "att": 131, "fp": 90, "fails": 41, "fpy": 68.7, "change": 53.85, "testers": {"HVT004": {"station": "HVT004", "att": 131, "fp": 90, "fails": 41, "days": 6, "fpy": 68.7}}, "source": "DPR"}, "IQ10B": {"weeks": [{"week": "2026-W39", "att": 43, "fp": 29, "fails": 14, "days": 3, "first": "20260923", "last": "20260925", "fpy": 67.44}, {"week": "2026-W40", "att": 7, "fp": 4, "fails": 3, "days": 4, "first": "20260928", "last": "20261002", "fpy": 57.14}, {"week": "2026-W41", "att": 64, "fp": 60, "fails": 4, "days": 5, "first": "20261005", "last": "20261009", "fpy": 93.75}, {"week": "2026-W42", "att": 38, "fp": 25, "fails": 13, "days": 3, "first": "20261014", "last": "20261016", "fpy": 65.79}, {"week": "2026-W43", "att": 51, "fp": 37, "fails": 14, "days": 6, "first": "20261019", "last": "20261024", "fpy": 72.55}, {"week": "2026-W44", "att": 49, "fp": 34, "fails": 15, "days": 2, "first": "20261026", "last": "20261027", "fpy": 69.39}], "days": [{"day": "20260923", "att": 21, "fp": 15, "fails": 6, "fpy": 71.43, "by_variant": {"NA": {"input": 18, "first_pass": 12, "first_fail": 6, "retest_pass": 9, "retest_fail": 4, "fpy": 66.67}, "INT": {"input": 3, "first_pass": 3, "first_fail": 0, "retest_pass": 4, "retest_fail": 4, "fpy": 100.0}}, "symptoms": {"\u2014": 6}}, {"day": "20260924", "att": 21, "fp": 14, "fails": 7, "fpy": 66.67, "by_variant": {"NA": {"input": 11, "first_pass": 6, "first_fail": 5, "retest_pass": 1, "retest_fail": 12, "fpy": 54.55}, "INT": {"input": 10, "first_pass": 8, "first_fail": 2, "retest_pass": 2, "retest_fail": 3, "fpy": 80.0}}, "symptoms": {"\u2014": 7}}, {"day": "20260925", "att": 1, "fp": 0, "fails": 1, "fpy": 0.0, "by_variant": {"NA": {"input": 1, "first_pass": 0, "first_fail": 1, "retest_pass": 6, "retest_fail": 14, "fpy": 0.0}, "INT": {"input": 0, "first_pass": 0, "first_fail": 0, "retest_pass": 1, "retest_fail": 0, "fpy": null}}, "symptoms": {"\u2014": 1}}, {"day": "20260928", "att": 1, "fp": 1, "fails": 0, "fpy": 100.0, "by_variant": {"NA": {"input": 0, "first_pass": 0, "first_fail": 0, "retest_pass": 9, "retest_fail": 17, "fpy": null}, "INT": {"input": 1, "first_pass": 1, "first_fail": 0, "retest_pass": 0, "retest_fail": 0, "fpy": 100.0}}, "symptoms": {}}, {"day": "20260929", "att": 2, "fp": 0, "fails": 2, "fpy": 0.0, "by_variant": {"NA": {"input": 1, "first_pass": 0, "first_fail": 1, "retest_pass": 13, "retest_fail": 3, "fpy": 0.0}, "INT": {"input": 1, "first_pass": 0, "first_fail": 1, "retest_pass": 1, "retest_fail": 0, "fpy": 0.0}}, "symptoms": {"\u2014": 2}}, {"day": "20260930", "att": 1, "fp": 0, "fails": 1, "fpy": 0.0, "by_variant": {"NA": {"input": 0, "first_pass": 0, "first_fail": 0, "retest_pass": 2, "retest_fail": 8, "fpy": null}, "INT": {"input": 1, "first_pass": 0, "first_fail": 1, "retest_pass": 1, "retest_fail": 0, "fpy": 0.0}}, "symptoms": {"\u2014": 1}}, {"day": "20261002", "att": 3, "fp": 3, "fails": 0, "fpy": 100.0, "by_variant": {"INT": {"input": 1, "first_pass": 1, "first_fail": 0, "retest_pass": 1, "retest_fail": 0, "fpy": 100.0}, "NA": {"input": 2, "first_pass": 2, "first_fail": 0, "retest_pass": 0, "retest_fail": 3, "fpy": 100.0}}, "symptoms": {}}, {"day": "20261005", "att": 18, "fp": 17, "fails": 1, "fpy": 94.44, "by_variant": {"NA": {"input": 12, "first_pass": 11, "first_fail": 1, "retest_pass": 6, "retest_fail": 4, "fpy": 91.67}, "INT": {"input": 6, "first_pass": 6, "first_fail": 0, "retest_pass": 2, "retest_fail": 0, "fpy": 100.0}}, "symptoms": {"\u2014": 1}}, {"day": "20261006", "att": 5, "fp": 5, "fails": 0, "fpy": 100.0, "by_variant": {"NA": {"input": 5, "first_pass": 5, "first_fail": 0, "retest_pass": 1, "retest_fail": 4, "fpy": 100.0}, "INT": {"input": 0, "first_pass": 0, "first_fail": 0, "retest_pass": 5, "retest_fail": 0, "fpy": null}}, "symptoms": {}}, {"day": "20261007", "att": 14, "fp": 13, "fails": 1, "fpy": 92.86, "by_variant": {"NA": {"input": 6, "first_pass": 6, "first_fail": 0, "retest_pass": 1, "retest_fail": 2, "fpy": 100.0}, "INT": {"input": 8, "first_pass": 7, "first_fail": 1, "retest_pass": 0, "retest_fail": 0, "fpy": 87.5}}, "symptoms": {"\u2014": 1}}, {"day": "20261008", "att": 26, "fp": 24, "fails": 2, "fpy": 92.31, "by_variant": {"NA": {"input": 10, "first_pass": 9, "first_fail": 1, "retest_pass": 1, "retest_fail": 4, "fpy": 90.0}, "INT": {"input": 16, "first_pass": 15, "first_fail": 1, "retest_pass": 0, "retest_fail": 1, "fpy": 93.75}}, "symptoms": {"\u2014": 2}}, {"day": "20261009", "att": 1, "fp": 1, "fails": 0, "fpy": 100.0, "by_variant": {"NA": {"input": 1, "first_pass": 1, "first_fail": 0, "retest_pass": 0, "retest_fail": 0, "fpy": 100.0}, "INT": {"input": 0, "first_pass": 0, "first_fail": 0, "retest_pass": 0, "retest_fail": 5, "fpy": null}}, "symptoms": {}}, {"day": "20261014", "att": 17, "fp": 10, "fails": 7, "fpy": 58.82, "by_variant": {"NA": {"input": 17, "first_pass": 10, "first_fail": 7, "retest_pass": 4, "retest_fail": 5, "fpy": 58.82}, "INT": {"input": 0, "first_pass": 0, "first_fail": 0, "retest_pass": 1, "retest_fail": 0, "fpy": null}}, "symptoms": {"\u2014": 7}}, {"day": "20261015", "att": 20, "fp": 14, "fails": 6, "fpy": 70.0, "by_variant": {"INT": {"input": 8, "first_pass": 7, "first_fail": 1, "retest_pass": 1, "retest_fail": 1, "fpy": 87.5}, "NA": {"input": 12, "first_pass": 7, "first_fail": 5, "retest_pass": 0, "retest_fail": 3, "fpy": 58.33}}, "symptoms": {"\u2014": 6}}, {"day": "20261016", "att": 1, "fp": 1, "fails": 0, "fpy": 100.0, "by_variant": {"NA": {"input": 0, "first_pass": 0, "first_fail": 0, "retest_pass": 0, "retest_fail": 2, "fpy": null}, "INT": {"input": 1, "first_pass": 1, "first_fail": 0, "retest_pass": 0, "retest_fail": 0, "fpy": 100.0}}, "symptoms": {}}, {"day": "20261019", "att": 21, "fp": 20, "fails": 1, "fpy": 95.24, "by_variant": {"NA": {"input": 19, "first_pass": 18, "first_fail": 1, "retest_pass": 1, "retest_fail": 0, "fpy": 94.74}, "INT": {"input": 2, "first_pass": 2, "first_fail": 0, "retest_pass": 0, "retest_fail": 0, "fpy": 100.0}}, "symptoms": {"\u2014": 1}}, {"day": "20261020", "att": 2, "fp": 0, "fails": 2, "fpy": 0.0, "by_variant": {"NA": {"input": 2, "first_pass": 0, "first_fail": 2, "retest_pass": 2, "retest_fail": 3, "fpy": 0.0}}, "symptoms": {"\u2014": 2}}, {"day": "20261021", "att": 16, "fp": 10, "fails": 6, "fpy": 62.5, "by_variant": {"NA": {"input": 13, "first_pass": 8, "first_fail": 5, "retest_pass": 3, "retest_fail": 1, "fpy": 61.54}, "INT": {"input": 3, "first_pass": 2, "first_fail": 1, "retest_pass": 1, "retest_fail": 0, "fpy": 66.67}}, "symptoms": {"\u2014": 6}}, {"day": "20261022", "att": 5, "fp": 2, "fails": 3, "fpy": 40.0, "by_variant": {"INT": {"input": 1, "first_pass": 1, "first_fail": 0, "retest_pass": 0, "retest_fail": 0, "fpy": 100.0}, "NA": {"input": 4, "first_pass": 1, "first_fail": 3, "retest_pass": 0, "retest_fail": 1, "fpy": 25.0}}, "symptoms": {"\u2014": 1}}, {"day": "20261023", "att": 1, "fp": 1, "fails": 0, "fpy": 100.0, "by_variant": {"NA": {"input": 1, "first_pass": 1, "first_fail": 0, "retest_pass": 0, "retest_fail": 0, "fpy": 100.0}}, "symptoms": {}}, {"day": "20261024", "att": 6, "fp": 4, "fails": 2, "fpy": 66.67, "by_variant": {"NA": {"input": 5, "first_pass": 4, "first_fail": 1, "retest_pass": 2, "retest_fail": 0, "fpy": 80.0}, "INT": {"input": 1, "first_pass": 0, "first_fail": 1, "retest_pass": 0, "retest_fail": 0, "fpy": 0.0}}, "symptoms": {"\u2014": 2}}, {"day": "20261026", "att": 18, "fp": 10, "fails": 8, "fpy": 55.56, "by_variant": {"NA": {"input": 13, "first_pass": 7, "first_fail": 6, "retest_pass": 11, "retest_fail": 19, "fpy": 53.85}, "INT": {"input": 5, "first_pass": 3, "first_fail": 2, "retest_pass": 0, "retest_fail": 2, "fpy": 60.0}}, "symptoms": {"\u2014": 8}}, {"day": "20261027", "att": 31, "fp": 24, "fails": 7, "fpy": 77.42, "by_variant": {"NA": {"input": 12, "first_pass": 9, "first_fail": 3, "retest_pass": 2, "retest_fail": 7, "fpy": 75.0}, "INT": {"input": 19, "first_pass": 15, "first_fail": 4, "retest_pass": 1, "retest_fail": 1, "fpy": 78.95}}, "symptoms": {"\u2014": 7}}], "att": 252, "fp": 189, "fails": 63, "fpy": 75.0, "change": 1.95, "testers": {}, "source": "CMES"}}, "by_variant": {"IQ10B": {"NA": {"input": 12, "first_pass": 9, "first_fail": 3, "retest_pass": 2, "retest_fail": 7, "fpy": 75.0}, "INT": {"input": 19, "first_pass": 15, "first_fail": 4, "retest_pass": 1, "retest_fail": 1, "fpy": 78.95}}}, "variant_order": ["NA", "INT"], "history_source": "DPR + CMES"};
-let SEL=null, SNF='notpass';
+const D={"generated": "2026-10-27 23:30", "build": "npi-dash-v2", "window_weeks": 8, "ramp_floor": 90.0, "configured": {"SST": ["FTE-012", "HVT003", "HVT004"], "IQ10B": ["FTE-005", "HT-93"], "IQ10BiDi": ["HVT004"]}, "counts_only": ["hvt003"], "today": {"day": "20261027", "source": "DPR", "products": [{"product": "SST", "units": 12, "fails": 6, "fpy": 50.0, "expected": ["FTE-012", "HVT003", "HVT004"], "golden": {"units": 5, "fails": 1}, "unresolved": false, "hours": [{"h": 4, "units": 2, "pass": 0, "fail": 2}, {"h": 10, "units": 7, "pass": 4, "fail": 3}, {"h": 12, "units": 2, "pass": 2, "fail": 0}, {"h": 15, "units": 1, "pass": 0, "fail": 1}], "pareto": [{"step": "areacheck", "n": 3, "pct": 50.0, "cum": 50.0}, {"step": "finish_test", "n": 3, "pct": 50.0, "cum": 100.0}], "serials": [{"sn": "542643052564", "tester": "HVT004", "variant": "", "outcome": "FAIL", "status": "FAIL", "attempts": 1, "step": "finish_test", "ts": "04:08"}, {"sn": "542643052615", "tester": "HVT004", "variant": "", "outcome": "FAIL", "status": "FAIL", "attempts": 1, "step": "finish_test", "ts": "04:32"}, {"sn": "542643052595", "tester": "HVT004", "variant": "", "outcome": "FAIL", "status": "FAIL", "attempts": 4, "step": "areacheck", "ts": "10:19"}, {"sn": "542643052576", "tester": "HVT004", "variant": "", "outcome": "FAIL", "status": "FAIL", "attempts": 1, "step": "finish_test", "ts": "15:13"}, {"sn": "542643052586", "tester": "HVT004", "variant": "", "outcome": "RETEST", "status": "FAIL", "attempts": 2, "step": "areacheck", "ts": "10:30"}, {"sn": "542642061637", "tester": "HVT004", "variant": "", "outcome": "RETEST", "status": "FAIL", "attempts": 2, "step": "areacheck", "ts": "10:40"}, {"sn": "542642061624", "tester": "HVT004", "variant": "", "outcome": "PASS", "status": "PASS", "attempts": 1, "step": "", "ts": "10:09"}, {"sn": "542643052547", "tester": "HVT004", "variant": "", "outcome": "PASS", "status": "PASS", "attempts": 1, "step": "", "ts": "10:13"}, {"sn": "542643052579", "tester": "HVT004", "variant": "", "outcome": "PASS", "status": "PASS", "attempts": 1, "step": "", "ts": "10:16"}, {"sn": "542643052515", "tester": "HVT004", "variant": "", "outcome": "PASS", "status": "PASS", "attempts": 1, "step": "", "ts": "10:35"}, {"sn": "542643052690", "tester": "HVT004", "variant": "", "outcome": "PASS", "status": "PASS", "attempts": 1, "step": "", "ts": "12:38"}, {"sn": "542643052683", "tester": "HVT004", "variant": "", "outcome": "PASS", "status": "PASS", "attempts": 1, "step": "", "ts": "12:46"}], "testers": [{"station": "HVT004", "units": 12, "fails": 6, "fpy": 50.0, "first_ts": "04:08", "last_ts": "15:13", "pareto": [{"step": "areacheck", "n": 3}, {"step": "finish_test", "n": 3}], "hourly": [{"h": 4, "units": 2, "pass": 0, "fail": 2}, {"h": 10, "units": 7, "pass": 4, "fail": 3}, {"h": 12, "units": 2, "pass": 2, "fail": 0}, {"h": 15, "units": 1, "pass": 0, "fail": 1}]}], "hours_from": "DPR", "hours_units": 12, "hours_delta": 0, "hours_source": "full"}, {"product": "IQ10B", "units": 31, "fails": 7, "fpy": 77.42, "testers": [{"station": "FTE-005", "units": 31, "fails": 7, "fpy": 77.42, "pareto": [], "hourly": [], "first_ts": "", "last_ts": "", "source": "CMES", "combined": false, "retest_pass": 3, "retest_fail": 8}], "pareto": [{"step": "\u2014", "n": 7, "pct": 100.0, "cum": 100.0}], "serials": [{"sn": "542638063488", "tester": "EL08.FTE005", "station": "EL08.FTE005", "variant": "INT", "part": "800-00384", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "ts": "", "source": "CMES"}, {"sn": "542638063500", "tester": "EL08.FTE005", "station": "EL08.FTE005", "variant": "INT", "part": "800-00384", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "ts": "", "source": "CMES"}, {"sn": "542640029080", "tester": "EL08.FTE005", "station": "EL08.FTE005", "variant": "INT", "part": "800-00384", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "ts": "", "source": "CMES"}, {"sn": "542640032639", "tester": "EL08.FTE005", "station": "EL08.FTE005", "variant": "NA", "part": "800-00383", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "ts": "", "source": "CMES"}, {"sn": "542640032696", "tester": "EL08.FTE005", "station": "EL08.FTE005", "variant": "NA", "part": "800-00383", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "ts": "", "source": "CMES"}, {"sn": "542640032699", "tester": "EL08.FTE005", "station": "EL08.FTE005", "variant": "NA", "part": "800-00383", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "ts": "", "source": "CMES"}, {"sn": "542640032798", "tester": "EL08.FTE005", "station": "EL08.FTE005", "variant": "NA", "part": "800-00383", "status": "FAIL", "outcome": "FAIL", "attempts": 1, "step": "", "ts": "", "source": "CMES"}], "golden": null, "hours": [], "expected": ["FTE-005", "HT-93"], "day": "20261027", "source": "CMES", "cmes_rows": [{"product": "EP5000", "operation": "EL07.HT", "input": 9, "first_pass": 9, "first_fail": 0, "retest_pass": 0, "retest_fail": 0, "output": 9}, {"product": "EP5000", "operation": "EL07.FT", "input": 3, "first_pass": 0, "first_fail": 3, "retest_pass": 2, "retest_fail": 7, "output": 2}, {"product": "EP5001", "operation": "EL07.FT", "input": 19, "first_pass": 15, "first_fail": 4, "retest_pass": 1, "retest_fail": 1, "output": 16}], "golden_identified": 0, "golden_exact": false, "golden_caveat": "CMES reports pre-aggregated counts, so only golden units that appear by serial in the fail history can be removed. A golden that passed clean is not distinguishable and remains in the totals.", "final_pass": 27, "first_pass_only": 24, "hours_from": "DPR", "hours_units": 0, "hours_delta": -31, "hours_source": "none"}], "missing": [{"product": "SST", "station": "FTE-012"}, {"product": "SST", "station": "HVT003"}, {"product": "IQ10B", "station": "HT-93"}], "ramp_floor": 90.0, "hours_axis": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], "unresolved": null, "cmes_note": "Serials listed are units that failed or retested on FTE-005, HT93. CMES has no endpoint listing units that passed clean first time, so those are counted but not listed. Counts are attributable to FTE-005, HT93 alone.", "hpr_day": "20261027", "day_mismatch": false}, "history": {"SST": {"weeks": [{"week": "2026-W36", "att": 24, "fp": 15, "fails": 9, "days": 2, "first": "20260902", "last": "20260904", "fpy": 62.5}, {"week": "2026-W37", "att": 59, "fp": 37, "fails": 22, "days": 3, "first": "20260911", "last": "20260913", "fpy": 62.71}, {"week": "2026-W38", "att": 149, "fp": 92, "fails": 57, "days": 6, "first": "20260915", "last": "20260920", "fpy": 61.74}, {"week": "2026-W40", "att": 20, "fp": 12, "fails": 8, "days": 1, "first": "20261002", "last": "20261002", "fpy": 60.0}, {"week": "2026-W41", "att": 118, "fp": 99, "fails": 19, "days": 4, "first": "20261007", "last": "20261010", "fpy": 83.9}, {"week": "2026-W42", "att": 66, "fp": 60, "fails": 6, "days": 3, "first": "20261013", "last": "20261015", "fpy": 90.91}, {"week": "2026-W43", "att": 365, "fp": 260, "fails": 105, "days": 5, "first": "20261020", "last": "20261024", "fpy": 71.23}, {"week": "2026-W44", "att": 14, "fp": 7, "fails": 7, "days": 2, "first": "20261026", "last": "20261027", "fpy": 50.0}], "days": [{"day": "20260902", "att": 17, "fp": 9, "fails": 8, "fpy": 52.94, "symptoms": {"areacheck": 1, "finish_test": 5, "cal_kestrel": 2}}, {"day": "20260904", "att": 7, "fp": 6, "fails": 1, "fpy": 85.71, "symptoms": {"cal_kestrel": 1}}, {"day": "20260911", "att": 3, "fp": 0, "fails": 3, "fpy": 0.0, "symptoms": {"finish_test": 1, "check_deviations": 1, "cal_kestrel": 1}}, {"day": "20260912", "att": 26, "fp": 13, "fails": 13, "fpy": 50.0, "symptoms": {"cal_kestrel": 11, "finish_test": 2}}, {"day": "20260913", "att": 30, "fp": 24, "fails": 6, "fpy": 80.0, "symptoms": {"cal_kestrel": 3, "finish_test": 3}}, {"day": "20260915", "att": 44, "fp": 29, "fails": 15, "fpy": 65.91, "symptoms": {"bmcc_dc_power_up": 1, "areacheck": 1, "finish_test": 4, "cal_kestrel": 9}}, {"day": "20260916", "att": 61, "fp": 38, "fails": 23, "fpy": 62.3, "symptoms": {"dc_power_up_test": 1, "areacheck": 1, "ac_power_up_test": 1, "fet_driver_test": 1, "cal_kestrel": 13, "finish_test": 6}}, {"day": "20260917", "att": 16, "fp": 7, "fails": 9, "fpy": 43.75, "symptoms": {"cal_kestrel": 8, "finish_test": 1}}, {"day": "20260918", "att": 20, "fp": 14, "fails": 6, "fpy": 70.0, "symptoms": {"dc_power_up_test": 4, "cell_acc_verification_test": 1, "fet_driver_test": 1}}, {"day": "20260919", "att": 5, "fp": 2, "fails": 3, "fpy": 40.0, "symptoms": {"finish_test": 1, "dc_power_up_test": 1, "cal_kestrel": 1}}, {"day": "20260920", "att": 3, "fp": 2, "fails": 1, "fpy": 66.67, "symptoms": {"current_calibration_test": 1}}, {"day": "20261002", "att": 20, "fp": 12, "fails": 8, "fpy": 60.0, "symptoms": {"ac_power_up_test": 2, "cell_acc_verification_test": 1, "fet_driver_test": 1, "dc_power_up_test": 2, "finish_test": 1, "fet_driver_ctrl_ver_test": 1}}, {"day": "20261007", "att": 11, "fp": 7, "fails": 4, "fpy": 63.64, "symptoms": {"areacheck": 1, "dc_power_up_test": 2, "bmcc_ac_power_up": 1}}, {"day": "20261008", "att": 49, "fp": 39, "fails": 10, "fpy": 79.59, "symptoms": {"areacheck": 1, "dc_power_up_test": 7, "finish_test": 2}}, {"day": "20261009", "att": 27, "fp": 25, "fails": 2, "fpy": 92.59, "symptoms": {"cell_acc_verification_test": 1, "dc_power_up_test": 1}}, {"day": "20261010", "att": 31, "fp": 28, "fails": 3, "fpy": 90.32, "symptoms": {"dc_power_up_test": 2, "areacheck": 1}}, {"day": "20261013", "att": 20, "fp": 17, "fails": 3, "fpy": 85.0, "symptoms": {"cell_vltg_error_level_test": 1, "dc_power_up_test": 2}}, {"day": "20261014", "att": 38, "fp": 37, "fails": 1, "fpy": 97.37, "symptoms": {"areacheck": 1}}, {"day": "20261015", "att": 8, "fp": 6, "fails": 2, "fpy": 75.0, "symptoms": {"dc_power_up_test": 1, "areacheck": 1}}, {"day": "20261020", "att": 20, "fp": 11, "fails": 9, "fpy": 55.0, "symptoms": {"dc_power_up_test": 1, "ac_power_up_test": 1, "fet_driver_test": 2, "finish_test": 2, "cal_kestrel": 3}}, {"day": "20261021", "att": 16, "fp": 10, "fails": 6, "fpy": 62.5, "symptoms": {"dc_power_up_test": 3, "cal_kestrel": 3}}, {"day": "20261022", "att": 56, "fp": 47, "fails": 9, "fpy": 83.93, "symptoms": {"check_mv_local_dc": 2, "finish_test": 4, "check_lv_local_dc": 2, "areacheck": 1}}, {"day": "20261023", "att": 144, "fp": 96, "fails": 48, "fpy": 66.67, "symptoms": {"finish_test": 27, "check_lv_local_dc": 1, "check_mv_local_dc": 19, "areacheck": 1}}, {"day": "20261024", "att": 129, "fp": 96, "fails": 33, "fpy": 74.42, "symptoms": {"finish_test": 27, "check_mv_local_dc": 2, "check_lv_local_dc": 2, "areacheck": 2}}, {"day": "20261026", "att": 2, "fp": 1, "fails": 1, "fpy": 50.0, "symptoms": {"check_mv_local_dc": 1}}, {"day": "20261027", "att": 12, "fp": 6, "fails": 6, "fpy": 50.0, "symptoms": {"areacheck": 3, "finish_test": 3}}], "att": 815, "fp": 582, "fails": 233, "fpy": 71.41, "change": -12.5, "testers": {"HVT003|SST": {"station": "HVT003|SST", "att": 203, "fp": 121, "fails": 82, "days": 13, "fpy": 59.61}, "FTE-012|SST": {"station": "FTE-012|SST", "att": 481, "fp": 371, "fails": 110, "days": 20, "fpy": 77.13}, "HVT004|SST": {"station": "HVT004|SST", "att": 131, "fp": 90, "fails": 41, "days": 6, "fpy": 68.7}}, "source": "DPR"}, "IQ10B": {"weeks": [{"week": "2026-W39", "att": 43, "fp": 29, "fails": 14, "days": 3, "first": "20260923", "last": "20260925", "fpy": 67.44}, {"week": "2026-W40", "att": 7, "fp": 4, "fails": 3, "days": 4, "first": "20260928", "last": "20261002", "fpy": 57.14}, {"week": "2026-W41", "att": 64, "fp": 60, "fails": 4, "days": 5, "first": "20261005", "last": "20261009", "fpy": 93.75}, {"week": "2026-W42", "att": 38, "fp": 25, "fails": 13, "days": 3, "first": "20261014", "last": "20261016", "fpy": 65.79}, {"week": "2026-W43", "att": 51, "fp": 37, "fails": 14, "days": 6, "first": "20261019", "last": "20261024", "fpy": 72.55}, {"week": "2026-W44", "att": 49, "fp": 34, "fails": 15, "days": 2, "first": "20261026", "last": "20261027", "fpy": 69.39}], "days": [{"day": "20260923", "att": 21, "fp": 15, "fails": 6, "fpy": 71.43, "by_variant": {"NA": {"input": 18, "first_pass": 12, "first_fail": 6, "retest_pass": 9, "retest_fail": 4, "fpy": 66.67}, "INT": {"input": 3, "first_pass": 3, "first_fail": 0, "retest_pass": 4, "retest_fail": 4, "fpy": 100.0}}, "symptoms": {"\u2014": 6}}, {"day": "20260924", "att": 21, "fp": 14, "fails": 7, "fpy": 66.67, "by_variant": {"NA": {"input": 11, "first_pass": 6, "first_fail": 5, "retest_pass": 1, "retest_fail": 12, "fpy": 54.55}, "INT": {"input": 10, "first_pass": 8, "first_fail": 2, "retest_pass": 2, "retest_fail": 3, "fpy": 80.0}}, "symptoms": {"\u2014": 7}}, {"day": "20260925", "att": 1, "fp": 0, "fails": 1, "fpy": 0.0, "by_variant": {"NA": {"input": 1, "first_pass": 0, "first_fail": 1, "retest_pass": 6, "retest_fail": 14, "fpy": 0.0}, "INT": {"input": 0, "first_pass": 0, "first_fail": 0, "retest_pass": 1, "retest_fail": 0, "fpy": null}}, "symptoms": {"\u2014": 1}}, {"day": "20260928", "att": 1, "fp": 1, "fails": 0, "fpy": 100.0, "by_variant": {"NA": {"input": 0, "first_pass": 0, "first_fail": 0, "retest_pass": 9, "retest_fail": 17, "fpy": null}, "INT": {"input": 1, "first_pass": 1, "first_fail": 0, "retest_pass": 0, "retest_fail": 0, "fpy": 100.0}}, "symptoms": {}}, {"day": "20260929", "att": 2, "fp": 0, "fails": 2, "fpy": 0.0, "by_variant": {"NA": {"input": 1, "first_pass": 0, "first_fail": 1, "retest_pass": 13, "retest_fail": 3, "fpy": 0.0}, "INT": {"input": 1, "first_pass": 0, "first_fail": 1, "retest_pass": 1, "retest_fail": 0, "fpy": 0.0}}, "symptoms": {"\u2014": 2}}, {"day": "20260930", "att": 1, "fp": 0, "fails": 1, "fpy": 0.0, "by_variant": {"NA": {"input": 0, "first_pass": 0, "first_fail": 0, "retest_pass": 2, "retest_fail": 8, "fpy": null}, "INT": {"input": 1, "first_pass": 0, "first_fail": 1, "retest_pass": 1, "retest_fail": 0, "fpy": 0.0}}, "symptoms": {"\u2014": 1}}, {"day": "20261002", "att": 3, "fp": 3, "fails": 0, "fpy": 100.0, "by_variant": {"INT": {"input": 1, "first_pass": 1, "first_fail": 0, "retest_pass": 1, "retest_fail": 0, "fpy": 100.0}, "NA": {"input": 2, "first_pass": 2, "first_fail": 0, "retest_pass": 0, "retest_fail": 3, "fpy": 100.0}}, "symptoms": {}}, {"day": "20261005", "att": 18, "fp": 17, "fails": 1, "fpy": 94.44, "by_variant": {"NA": {"input": 12, "first_pass": 11, "first_fail": 1, "retest_pass": 6, "retest_fail": 4, "fpy": 91.67}, "INT": {"input": 6, "first_pass": 6, "first_fail": 0, "retest_pass": 2, "retest_fail": 0, "fpy": 100.0}}, "symptoms": {"\u2014": 1}}, {"day": "20261006", "att": 5, "fp": 5, "fails": 0, "fpy": 100.0, "by_variant": {"NA": {"input": 5, "first_pass": 5, "first_fail": 0, "retest_pass": 1, "retest_fail": 4, "fpy": 100.0}, "INT": {"input": 0, "first_pass": 0, "first_fail": 0, "retest_pass": 5, "retest_fail": 0, "fpy": null}}, "symptoms": {}}, {"day": "20261007", "att": 14, "fp": 13, "fails": 1, "fpy": 92.86, "by_variant": {"NA": {"input": 6, "first_pass": 6, "first_fail": 0, "retest_pass": 1, "retest_fail": 2, "fpy": 100.0}, "INT": {"input": 8, "first_pass": 7, "first_fail": 1, "retest_pass": 0, "retest_fail": 0, "fpy": 87.5}}, "symptoms": {"\u2014": 1}}, {"day": "20261008", "att": 26, "fp": 24, "fails": 2, "fpy": 92.31, "by_variant": {"NA": {"input": 10, "first_pass": 9, "first_fail": 1, "retest_pass": 1, "retest_fail": 4, "fpy": 90.0}, "INT": {"input": 16, "first_pass": 15, "first_fail": 1, "retest_pass": 0, "retest_fail": 1, "fpy": 93.75}}, "symptoms": {"\u2014": 2}}, {"day": "20261009", "att": 1, "fp": 1, "fails": 0, "fpy": 100.0, "by_variant": {"NA": {"input": 1, "first_pass": 1, "first_fail": 0, "retest_pass": 0, "retest_fail": 0, "fpy": 100.0}, "INT": {"input": 0, "first_pass": 0, "first_fail": 0, "retest_pass": 0, "retest_fail": 5, "fpy": null}}, "symptoms": {}}, {"day": "20261014", "att": 17, "fp": 10, "fails": 7, "fpy": 58.82, "by_variant": {"NA": {"input": 17, "first_pass": 10, "first_fail": 7, "retest_pass": 4, "retest_fail": 5, "fpy": 58.82}, "INT": {"input": 0, "first_pass": 0, "first_fail": 0, "retest_pass": 1, "retest_fail": 0, "fpy": null}}, "symptoms": {"\u2014": 7}}, {"day": "20261015", "att": 20, "fp": 14, "fails": 6, "fpy": 70.0, "by_variant": {"INT": {"input": 8, "first_pass": 7, "first_fail": 1, "retest_pass": 1, "retest_fail": 1, "fpy": 87.5}, "NA": {"input": 12, "first_pass": 7, "first_fail": 5, "retest_pass": 0, "retest_fail": 3, "fpy": 58.33}}, "symptoms": {"\u2014": 6}}, {"day": "20261016", "att": 1, "fp": 1, "fails": 0, "fpy": 100.0, "by_variant": {"NA": {"input": 0, "first_pass": 0, "first_fail": 0, "retest_pass": 0, "retest_fail": 2, "fpy": null}, "INT": {"input": 1, "first_pass": 1, "first_fail": 0, "retest_pass": 0, "retest_fail": 0, "fpy": 100.0}}, "symptoms": {}}, {"day": "20261019", "att": 21, "fp": 20, "fails": 1, "fpy": 95.24, "by_variant": {"NA": {"input": 19, "first_pass": 18, "first_fail": 1, "retest_pass": 1, "retest_fail": 0, "fpy": 94.74}, "INT": {"input": 2, "first_pass": 2, "first_fail": 0, "retest_pass": 0, "retest_fail": 0, "fpy": 100.0}}, "symptoms": {"\u2014": 1}}, {"day": "20261020", "att": 2, "fp": 0, "fails": 2, "fpy": 0.0, "by_variant": {"NA": {"input": 2, "first_pass": 0, "first_fail": 2, "retest_pass": 2, "retest_fail": 3, "fpy": 0.0}}, "symptoms": {"\u2014": 2}}, {"day": "20261021", "att": 16, "fp": 10, "fails": 6, "fpy": 62.5, "by_variant": {"NA": {"input": 13, "first_pass": 8, "first_fail": 5, "retest_pass": 3, "retest_fail": 1, "fpy": 61.54}, "INT": {"input": 3, "first_pass": 2, "first_fail": 1, "retest_pass": 1, "retest_fail": 0, "fpy": 66.67}}, "symptoms": {"\u2014": 6}}, {"day": "20261022", "att": 5, "fp": 2, "fails": 3, "fpy": 40.0, "by_variant": {"INT": {"input": 1, "first_pass": 1, "first_fail": 0, "retest_pass": 0, "retest_fail": 0, "fpy": 100.0}, "NA": {"input": 4, "first_pass": 1, "first_fail": 3, "retest_pass": 0, "retest_fail": 1, "fpy": 25.0}}, "symptoms": {"\u2014": 1}}, {"day": "20261023", "att": 1, "fp": 1, "fails": 0, "fpy": 100.0, "by_variant": {"NA": {"input": 1, "first_pass": 1, "first_fail": 0, "retest_pass": 0, "retest_fail": 0, "fpy": 100.0}}, "symptoms": {}}, {"day": "20261024", "att": 6, "fp": 4, "fails": 2, "fpy": 66.67, "by_variant": {"NA": {"input": 5, "first_pass": 4, "first_fail": 1, "retest_pass": 2, "retest_fail": 0, "fpy": 80.0}, "INT": {"input": 1, "first_pass": 0, "first_fail": 1, "retest_pass": 0, "retest_fail": 0, "fpy": 0.0}}, "symptoms": {"\u2014": 2}}, {"day": "20261026", "att": 18, "fp": 10, "fails": 8, "fpy": 55.56, "by_variant": {"NA": {"input": 13, "first_pass": 7, "first_fail": 6, "retest_pass": 11, "retest_fail": 19, "fpy": 53.85}, "INT": {"input": 5, "first_pass": 3, "first_fail": 2, "retest_pass": 0, "retest_fail": 2, "fpy": 60.0}}, "symptoms": {"\u2014": 8}}, {"day": "20261027", "att": 31, "fp": 24, "fails": 7, "fpy": 77.42, "by_variant": {"NA": {"input": 12, "first_pass": 9, "first_fail": 3, "retest_pass": 2, "retest_fail": 7, "fpy": 75.0}, "INT": {"input": 19, "first_pass": 15, "first_fail": 4, "retest_pass": 1, "retest_fail": 1, "fpy": 78.95}}, "symptoms": {"\u2014": 7}}], "att": 252, "fp": 189, "fails": 63, "fpy": 75.0, "change": 1.95, "testers": {}, "source": "CMES"}}, "by_variant": {"IQ10B": {"NA": {"input": 12, "first_pass": 9, "first_fail": 3, "retest_pass": 2, "retest_fail": 7, "fpy": 75.0}, "INT": {"input": 19, "first_pass": 15, "first_fail": 4, "retest_pass": 1, "retest_fail": 1, "fpy": 78.95}}}, "variant_order": ["NA", "INT"], "history_source": "DPR + CMES"};
+const T=D.today||{}, PRODS=(T.products||[]).filter(p=>!p.unresolved);
+const AX=T.hours_axis||[], HIST=D.history||{};
+const COL=p=>'var(--p'+((PRODS.findIndex(x=>x.product===p)%5)+1)+')';
+const FS={};                                  /* per-product serial filter */
+const hl=h=>String(h).padStart(2,'0')+':00';
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+/* On screen a serial shows its last 4 only. The DOWNLOAD keeps the full
+   serial -- a masked export cannot be traced back to a unit. */
+const mask=s=>{const t=String(s||'');return t.length>4?'•••• '+t.slice(-4):t;};
+function tgl(){const r=document.documentElement;
+ const d=getComputedStyle(r).getPropertyValue('--bg').trim().startsWith('#0e');
+ r.setAttribute('data-theme',d?'light':'dark');draw();}
 
-function tgl(){
-  const r=document.documentElement;
-  r.setAttribute('data-theme', r.getAttribute('data-theme')==='dark'?'light':'dark');
-  try{ localStorage.setItem('npi_theme', r.getAttribute('data-theme')); }catch(e){}
+const tw=document.getElementById('tipw'),tp=document.getElementById('tip');
+function tipOn(e,h){tp.innerHTML=h;tw.style.opacity=1;tipMove(e);}
+function tipMove(e){const pad=14;let x=e.clientX+pad,y=e.clientY+pad;
+ const r=tw.getBoundingClientRect();
+ if(x+r.width>innerWidth-8)x=e.clientX-r.width-pad;
+ if(y+r.height>innerHeight-8)y=e.clientY-r.height-pad;
+ tw.style.left=x+'px';tw.style.top=y+'px';}
+function tipOff(){tw.style.opacity=0;}
+const OPEN_H={};                 /* product -> the hour whose reasons are open */
+function pickHour(prod,h){
+ OPEN_H[prod]=(OPEN_H[prod]===h)?null:h;
+ const p=PRODS.find(x=>x.product===prod);
+ const box=document.querySelector('.ch[data-p="'+CSS.escape(prod)+'"]');
+ if(p&&box)drawProductHours(p,box);
+ renderHour(prod);
 }
-try{ document.documentElement.setAttribute('data-theme',
-     localStorage.getItem('npi_theme')||'light'); }catch(e){}
-
-function col(v,f){ return v==null?'var(--text-3)':(v>=97?'var(--good)':(v>=f?'var(--warn)':'var(--bad)')); }
-function pick(p){ SEL=p; render(); }
-function snf(f){ SNF=f; render(); }
-// Full serial numbers. This page is for the ramp team, who need to pull the
-// exact board off the rack — a masked serial is useless to them.
-function mask(sn){ return String(sn||''); }
-function variantOf(u){ return u.variant || ''; }
-
-function render(){
-  const floor=D.ramp_floor||90;
-  const today=D.today||{}, hist=D.history||{};
-  const cfg=D.configured||{};
-  const names=Object.keys(cfg);
-  if(!names.length){ document.getElementById('body').innerHTML=
-      '<div class="empty">No NPI products configured.</div>'; return; }
-  if(!SEL||names.indexOf(SEL)<0) SEL=names[0];
-
-  document.getElementById('sub').textContent =
-    'Dedicated NPI testers \u00b7 first attempt per serial \u00b7 golden samples excluded \u00b7 '
-    + (D.window_weeks||8) + '-week history \u00b7 generated ' + (D.generated||'');
-
-  document.getElementById('btns').innerHTML = names.map(function(n){
-    const t=(today.products||[]).filter(x=>x.product===n)[0];
-    const h=hist[n];
-    const s = (t&&t.retest_only) ? ('retest only \u00b7 '+(t.retest_pass||0)+'\u2713 '+(t.retest_fail||0)+'\u2717')
-              : t ? (t.units.toLocaleString()+' today \u00b7 '+(t.fpy==null?'\u2014':t.fpy.toFixed(1)+'%'))
-              : (h ? (h.att.toLocaleString()+' in window \u00b7 '+(h.fpy==null?'\u2014':h.fpy.toFixed(1)+'%'))
-                   : 'no data');
-    return '<div class="btn'+(n===SEL?' on':'')+'" onclick="pick(\''+n+'\')">'
-      +'<div class="btn-n">'+n+'</div><div class="btn-s">'+s+'</div></div>';
-  }).join('');
-
-  const P=(today.products||[]).filter(x=>x.product===SEL)[0];
-  const Hh=hist[SEL];
-  let out='';
-
-  // ---- today ----
-  if(P&&P.retest_only){
-    // No first-pass input today. Showing a yield here would be inventing one.
-    out+='<div class="lbl">Today \u00b7 '+(P.day||today.day||'')+' from '+(P.source||today.source||'CMES')+'</div>'
-      +'<div class="k">'
-      +'<div class="kc"><div class="kv" style="color:var(--text-3)">\u2014</div>'
-        +'<div class="kl">First pass</div></div>'
-      +'<div class="kc"><div class="kv" style="color:var(--good)">'+(P.retest_pass||0)
-        +'</div><div class="kl">Retest pass</div></div>'
-      +'<div class="kc"><div class="kv" style="color:var(--bad)">'+(P.retest_fail||0)
-        +'</div><div class="kl">Retest fail</div></div>'
-      +'<div class="kc"><div class="kv">'+(P.output||0)+'</div>'
-        +'<div class="kl">Output</div></div>'
-      +'</div>'
-      +'<div class="note"><b>Retest-only day.</b> CMES reports no first-pass input '
-      +'for '+SEL+' today \u2014 only units coming back for retest. A first-pass '
-      +'yield cannot be computed from that, so it is shown as \u2014 rather than '
-      +'as 100%.</div>';
-  } else if(P){
-    // Each product carries its own day and source. The DPR archive lags, so a
-    // CMES-sourced product stamped with the newest DPR date read as days old.
-    const pass=P.units-P.fails;
-    // retests summed across this product's testers
-    const RT=(P.testers||[]).reduce(function(a,t){
-      a.p+=(t.retest_pass||0); a.f+=(t.retest_fail||0); return a; },{p:0,f:0});
-    // FINAL pass/fail: what actually came out good, as opposed to first-pass.
-    const FN=(P.testers||[]).reduce(function(a,t){
-      a.p+=(t.final_pass||0); a.f+=(t.final_fail||0); return a; },{p:0,f:0});
-    // PASS is what came out good, not what passed first time. CMES calls it
-    // OUTPUT QTY and it equals FIRST PASS + RETEST PASS. Showing first-pass
-    // here read as 11 on a day CMES said 18.
-    const GOOD = FN.p || pass;
-    const BAD  = (P.first_pass_only!=null) ? (P.units - P.first_pass_only) : P.fails;
-    out+='<div class="lbl">Today \u00b7 '+(P.day||today.day||'')+' from '+(P.source||today.source||'DPR')+'</div>'
-      +'<div class="k">'
-      +'<div class="kc"><div class="kv">'+P.units.toLocaleString()+'</div>'
-        +'<div class="kl">Tested</div></div>'
-      +'<div class="kc"><div class="kv" style="color:var(--good)">'+GOOD.toLocaleString()+'</div>'
-        +'<div class="kl">Pass \u00b7 good out</div></div>'
-      +'<div class="kc"><div class="kv" style="color:var(--bad)">'+BAD.toLocaleString()+'</div>'
-        +'<div class="kl">Failed first time</div></div>'
-      +'</div>'
-      +'<div class="sub-line">First pass '
-        +(P.fpy==null?'\u2014':'<b style="color:'+col(P.fpy,floor)+'">'+P.fpy.toFixed(2)+'%</b>')
-        +'. '+(P.golden_identified
-          ? ('<b>'+P.golden_identified+'</b> golden unit(s) removed from these counts.')
-          : (P.golden_exact===false ? 'Golden removed where identifiable.'
-                                    : 'Golden samples excluded.'))
-        +((RT.p||RT.f)?(' <b>'+RT.p+'</b> passed on a later retest, <b>'+RT.f
-          +'</b> failed again.'):'')
-        +(FN.p?(' Pass = '+(P.first_pass_only!=null?P.first_pass_only:pass)+' first pass + '
-          +RT.p+' retest pass = <b>'+FN.p+'</b>.'):'')
-      +'</div>';
-
-    // The CMES rows verbatim, so the page can be checked against the screen.
-    if((P.cmes_rows||[]).length){
-      out+='<div class="lbl">CMES rows \u00b7 as reported</div><table>'
-        +'<colgroup><col style="width:104px"><col style="width:120px"><col style="width:74px">'
-        +'<col style="width:86px"><col style="width:82px"><col style="width:92px">'
-        +'<col style="width:88px"><col style="width:84px"></colgroup>'
-        +'<tr><th>Product</th><th>Operation</th><th class="n">Input</th>'
-        +'<th class="n">First pass</th><th class="n">First fail</th>'
-        +'<th class="n">Retest pass</th><th class="n">Retest fail</th>'
-        +'<th class="n">Output</th></tr>';
-      let ti=0,tf=0,tff=0,trp=0,trf=0,to=0;
-      P.cmes_rows.forEach(function(r){
-        ti+=r.input; tf+=r.first_pass; tff+=r.first_fail;
-        trp+=r.retest_pass; trf+=r.retest_fail; to+=r.output;
-        out+='<tr><td>'+r.product+'</td><td>'+r.operation+'</td>'
-          +'<td class="n">'+r.input+'</td><td class="n">'+r.first_pass+'</td>'
-          +'<td class="n">'+r.first_fail+'</td><td class="n">'+r.retest_pass+'</td>'
-          +'<td class="n">'+r.retest_fail+'</td>'
-          +'<td class="n" style="font-weight:800">'+r.output+'</td></tr>';
-      });
-      out+='<tr class="tot"><td>Total</td><td></td><td class="n">'+ti+'</td>'
-        +'<td class="n">'+tf+'</td><td class="n">'+tff+'</td><td class="n">'+trp+'</td>'
-        +'<td class="n">'+trf+'</td><td class="n">'+to+'</td></tr></table>'
-        +'<div style="font-size:10.5px;color:var(--text-3);margin-top:5px">'
-        +'FT and HT stages only \u2014 other stages (GLUE_HT and so on) are the '
-        +'same units counted again and are excluded. These are the CMES figures '
-        +'before golden removal; the cards above have golden taken out.</div>'
-        +(P.golden_caveat?('<div class="note">'+P.golden_caveat+'</div>'):'');
-    }
-
-    // NA vs INT. IQ10B ships in two variants (part 800-00383 = NA,
-    // 800-00384 = INT) and they are different builds — one averaged number
-    // hides which of the two is actually struggling.
-    const BV=(D.by_variant&&D.by_variant[SEL])||null;
-    if(BV){
-      const order=(D.variant_order||['NA','INT']);
-      out+='<div class="lbl">By type</div><div class="k">'
-        +order.filter(v=>BV[v]).map(function(v){
-          const b=BV[v], att=b.input||0, pass=b.first_pass||0;
-          const f=att?(pass/att*100):null;
-          return '<div class="kc"><div style="display:flex;align-items:baseline;gap:8px">'
-            +'<span class="vr vr-'+v+'">'+v+'</span>'
-            +'<span class="kv" style="color:'+col(f,floor)+'">'
-            +(att?(f.toFixed(1)+'%'):'<span style="font-size:15px;color:var(--text-3)">no units</span>')
-            +'</span></div>'
-            +'<div class="kl">'+(att?(pass+' of '+att+' first pass'):'nothing built today')+'</div></div>';
-        }).join('')+'</div>';
-    }
-
-    out+='<div class="lbl">Testers today</div><table>'
-      +'<colgroup><col><col style="width:92px"><col style="width:92px"><col style="width:92px">'
-      +'<col style="width:96px"><col style="width:34%"></colgroup>'
-      +'<tr><th>Tester</th><th class="n">Tested</th><th class="n">Pass</th>'
-      +'<th class="n">Fail</th><th class="n">FPY</th><th>Top failing step</th></tr>';
-    (P.testers||[]).forEach(function(t){
-      out+='<tr><td><b>'+t.station+'</b>'+(t.source==='CMES'?'<span class="src">CMES</span>':'')+'</td>'
-        +'<td class="n">'+t.units.toLocaleString()+'</td>'
-        +'<td class="n" style="color:var(--good)">'+(t.units-t.fails).toLocaleString()+'</td>'
-        +'<td class="n" style="color:var(--bad)">'+t.fails+'</td>'
-        +'<td class="n" style="color:'+col(t.fpy,floor)+';font-weight:700">'
-        +(t.fpy==null?'\u2014':t.fpy.toFixed(2)+'%')+'</td>'
-        +'<td>'+(((t.pareto||[])[0]||{}).step||'\u2014')+'</td></tr>';
-    });
-    ((today.missing)||[]).filter(m=>m.product===SEL).forEach(function(m){
-      out+='<tr><td style="color:var(--text-3)">'+m.station+'</td>'
-        +'<td colspan="5" style="color:var(--warn);font-size:11px">no units today</td></tr>';
-    });
-    out+='</table>';
-
-    if((P.pareto||[]).length){
-      out+='<div class="lbl">Failing steps today</div><table>'
-        +'<colgroup><col><col style="width:92px"><col style="width:92px"><col style="width:110px"></colgroup>'
-        +'<tr><th>Step</th><th class="n">Count</th><th class="n">Share</th><th class="n">Cumulative</th></tr>';
-      P.pareto.forEach(r=>{ out+='<tr><td>'+r.step+'</td><td class="n">'+r.n+'</td>'
-        +'<td class="n">'+r.pct+'%</td><td class="n" style="color:var(--warn)">'+r.cum+'%</td></tr>'; });
-      out+='</table>';
-    }
-
-    if(P.golden&&P.golden.units){
-      out+='<div class="lbl">Golden samples \u2014 not counted in yield</div>'
-        +'<div class="note'+(P.golden.fails?'':' ok')+'">'
-        +P.golden.units+' golden unit(s), '+P.golden.fails+' failed. '
-        +(P.golden.fails?'A failing golden means the tester is drifting, not the build.'
-                        :'All golden checks passed.')+'</div>';
-    }
-
-    // serials
-    const S=P.serials||[];
-    if(S.length){
-      const fp=S.filter(r=>r.outcome==='PASS'), rt=S.filter(r=>r.outcome==='RETEST'),
-            nv=S.filter(r=>r.outcome==='FAIL');
-      const show = SNF==='all'?S : SNF==='retest'?rt : SNF==='never'?nv : nv.concat(rt);
-      const chip=(k,l,n)=>'<span class="chip'+(SNF===k?' on':'')+'" onclick="snf(\''+k+'\')">'+l+' <b>'+n+'</b></span>';
-      out+='<div class="lbl">Serial numbers</div><div class="chips">'
-        +chip('notpass','Failed first time',nv.length+rt.length)
-        +chip('never','Never passed',nv.length)
-        +chip('retest','Passed on retest',rt.length)
-        +chip('pass','Passed first time',fp.length)
-        +chip('all','All',S.length)+'</div><table>'
-        +'<colgroup><col style="width:38px"><col style="width:160px"><col style="width:74px">'
-        +'<col style="width:178px"><col><col style="width:64px"></colgroup>'
-        +'<tr><th class="n">#</th><th>Serial number</th><th>Type</th><th>1st try</th>'
-        +'<th>Final outcome</th><th>First failing step</th><th class="n">Time</th></tr>';
-      const OUT={PASS:['PASS FIRST','var(--good)'],RETEST:['PASSED ON RETEST','var(--warn)'],
-                 FAIL:['NEVER PASSED','var(--bad)']};
-      show.forEach(function(r,i){
-        const o=OUT[r.outcome]||OUT.FAIL;
-        out+='<tr><td class="n" style="color:var(--text-3)">'+(i+1)+'</td>'
-          +'<td style="font-family:Consolas,monospace;letter-spacing:.3px">'+mask(r.sn)+'</td>'
-          +'<td>'+(r.variant?'<span class="vr vr-'+r.variant+'">'+r.variant+'</span>':'\u2014')+'</td>'
-          +'<td><span class="pill" style="background:'+(r.status==='FAIL'?'var(--bad)':'var(--good)')+'">'+r.status+'</span></td>'
-          +'<td><span style="color:'+o[1]+';font-weight:700;font-size:10.5px">'+o[0]+'</span>'
-          +(r.attempts>1?' <span style="color:var(--text-3);font-size:10px">'+r.attempts+' attempts</span>':'')+'</td>'
-          +'<td>'+(r.step||'\u2014')+'</td><td class="n" style="color:var(--text-3)">'+(r.ts||'')+'</td></tr>';
-      });
-      out+='</table>';
-    }
-    if(today.cmes_note) out+='<div class="note">'+today.cmes_note+'</div>';
-  } else {
-    out+='<div class="lbl">Today</div><div class="empty">No units from '+SEL
-      +' today. Configured testers: '+(cfg[SEL]||[]).join(', ')+'.</div>';
-  }
-
-  // ---- history ----
-  if(Hh&&(Hh.weeks||[]).length){
-    const W=Hh.weeks, mx=Math.max.apply(null,W.map(w=>w.att).concat([1]));
-    out+='<div class="lbl">'+W.length+' week(s) of history'
-      +(Hh.change!=null?' \u00b7 <span style="color:'+(Hh.change>=0?'var(--good)':'var(--bad)')
-        +'">'+(Hh.change>=0?'\u25b2':'\u25bc')+' '+Math.abs(Hh.change).toFixed(2)
-        +' pts first week to last</span>':'')+'</div>';
-    // Bar height is YIELD, not volume. A ramp page exists to show the climb,
-    // and heights driven by volume hid a 51-point improvement behind five
-    // equally red bars. Volume stays in the tooltip.
-    const lo=Math.min.apply(null,W.map(w=>w.fpy==null?100:w.fpy));
-    const base=Math.max(0,Math.floor((lo-6)/10)*10);
-    out+='<div class="wk">'+W.map(function(w){
-        const h=w.fpy==null?3:Math.max(4,Math.round((w.fpy-base)/(100-base)*100));
-        return '<div style="height:'+h+'%;background:'+col(w.fpy,floor)+'" title="'
-          +w.week+' \u2014 '+w.fp+'/'+w.att+' units ('
-          +(w.fpy==null?'-':w.fpy.toFixed(1)+'%')+')"></div>';
-      }).join('')+'</div>'
-      +'<div class="wkl">'+W.map(w=>'<div>'+w.week.slice(5)+'<br>'
-        +(w.fpy==null?'\u2014':w.fpy.toFixed(0)+'%')+'</div>').join('')+'</div>'
-      +'<div style="font-size:10px;color:var(--text-3);margin-top:3px">'
-      +'bar height = first-pass yield from '+base+'% \u00b7 hover for units</div>';
-
-    out+='<table style="margin-top:12px">'
-      +'<colgroup><col style="width:110px"><col style="width:92px"><col style="width:92px">'
-      +'<col style="width:92px"><col style="width:96px"><col></colgroup>'
-      +'<tr><th>Week</th><th class="n">Tested</th><th class="n">Pass</th>'
-      +'<th class="n">Fail</th><th class="n">FPY</th><th>Days</th></tr>';
-    W.forEach(function(w){
-      out+='<tr><td>'+w.week+'</td><td class="n">'+w.att.toLocaleString()+'</td>'
-        +'<td class="n" style="color:var(--good)">'+w.fp.toLocaleString()+'</td>'
-        +'<td class="n" style="color:var(--bad)">'+w.fails.toLocaleString()+'</td>'
-        +'<td class="n" style="color:'+col(w.fpy,floor)+';font-weight:700">'
-        +(w.fpy==null?'\u2014':w.fpy.toFixed(2)+'%')+'</td>'
-        +'<td style="color:var(--text-3)">'+w.days+' day(s) \u00b7 '+w.first.slice(4)+'\u2013'+w.last.slice(4)+'</td></tr>';
-    });
-    out+='<tr class="tot"><td>All '+W.length+' week(s)</td>'
-      +'<td class="n">'+Hh.att.toLocaleString()+'</td>'
-      +'<td class="n" style="color:var(--good)">'+Hh.fp.toLocaleString()+'</td>'
-      +'<td class="n" style="color:var(--bad)">'+Hh.fails.toLocaleString()+'</td>'
-      +'<td class="n">'+(Hh.fpy==null?'\u2014':Hh.fpy.toFixed(2)+'%')+'</td><td></td></tr></table>';
-
-    // Day-by-day. The week chart shows the arc; this is the row someone asks
-    // for when they want to know what happened on a specific date.
-    const DD=(Hh.days||[]);
-    if(DD.length){
-      out+='<div class="lbl">Day by day</div><table>'
-        +'<colgroup><col style="width:112px"><col style="width:88px"><col style="width:88px">'
-        +'<col style="width:88px"><col style="width:92px"><col></colgroup>'
-        +'<tr><th>Day</th><th class="n">Tested</th><th class="n">Pass</th>'
-        +'<th class="n">Fail</th><th class="n">FPY</th><th>By type / top failure</th></tr>';
-      DD.slice().reverse().forEach(function(r){
-        const d=String(r.day);
-        const lbl=d.length===8?(d.slice(4,6)+'/'+d.slice(6,8)+' '+d.slice(0,4)):d;
-        let extra='';
-        if(r.by_variant){
-          extra=Object.keys(r.by_variant).map(function(v){
-            const b=r.by_variant[v];
-            return '<span class="vr vr-'+v+'">'+v+'</span> '+b.first_pass+'/'+b.input;
-          }).join(' &nbsp; ');
-        }
-        if(!extra&&r.symptoms){
-          const k=Object.keys(r.symptoms)[0];
-          if(k) extra='<span style="color:var(--text-2)">'+k+' ('+r.symptoms[k]+')</span>';
-        }
-        out+='<tr><td>'+lbl+'</td><td class="n">'+r.att.toLocaleString()+'</td>'
-          +'<td class="n" style="color:var(--good)">'+r.fp.toLocaleString()+'</td>'
-          +'<td class="n" style="color:var(--bad)">'+r.fails.toLocaleString()+'</td>'
-          +'<td class="n" style="color:'+col(r.fpy,floor)+';font-weight:700">'
-          +(r.fpy==null?'\u2014':r.fpy.toFixed(2)+'%')+'</td>'
-          +'<td style="font-size:11px">'+extra+'</td></tr>';
-      });
-      out+='</table>';
-    }
-
-    const T=Object.values(Hh.testers||{});
-    if(T.length){
-      out+='<div class="lbl">By tester \u00b7 whole window</div><table>'
-        +'<colgroup><col><col style="width:92px"><col style="width:92px">'
-        +'<col style="width:92px"><col style="width:96px"><col style="width:92px"></colgroup>'
-        +'<tr><th>Tester</th><th class="n">Tested</th><th class="n">Pass</th>'
-        +'<th class="n">Fail</th><th class="n">FPY</th><th class="n">Active</th></tr>';
-      T.sort((a,b)=>b.att-a.att).forEach(function(t){
-        out+='<tr><td><b>'+t.station+'</b></td><td class="n">'+t.att.toLocaleString()+'</td>'
-          +'<td class="n" style="color:var(--good)">'+t.fp.toLocaleString()+'</td>'
-          +'<td class="n" style="color:var(--bad)">'+t.fails.toLocaleString()+'</td>'
-          +'<td class="n" style="color:'+col(t.fpy,floor)+';font-weight:700">'
-          +(t.fpy==null?'\u2014':t.fpy.toFixed(2)+'%')+'</td>'
-          +'<td class="n" style="color:var(--text-3)">'+t.days+' day(s)</td></tr>';
-      });
-      out+='</table>';
-    }
-  } else {
-    out+='<div class="lbl">History</div><div class="empty">No history yet for '+SEL
-      +'. It builds from the daily DPR exports as they arrive.</div>';
-  }
-
-  document.getElementById('body').innerHTML=out;
-  document.getElementById('foot').innerHTML=
-    'Judge an NPI build on DIRECTION, not level \u2014 low yield early in a ramp is '
-    +'expected, a flat or falling trend is not. First attempt per serial; golden '
-    +'samples excluded from every count. Week history comes from the daily DPR '
-    +'exports'+(D.history_source?' ('+D.history_source+')':'')+'. Full serials are shown '
-    +'so a board can be pulled off the rack. NA = part 800-00383, INT = 800-00384. '
-    +'Same data and the same rules as the NPI tab in the hourly dashboard.';
+function renderHour(prod){
+ const p=PRODS.find(x=>x.product===prod); if(!p) return;
+ const panel=document.getElementById('hr_'+prod); if(!panel) return;
+ const h=OPEN_H[prod];
+ if(h==null){panel.innerHTML='';return;}
+ const row=(p.hours||[]).find(x=>x.h===h);
+ if(!row){panel.innerHTML='';return;}
+ const steps=row.steps||[], tot=steps.reduce((a,x)=>a+x.n,0);
+ const nd=row.no_detail||0, ndf=row.no_detail_fail||0;
+ const co=(row.testers||[]).filter(t=>t.counts_only).map(t=>t.station);
+ let reasons;
+ if(!steps.length){
+  reasons='<div class="empty" style="padding:12px">'
+   +(row.fail? (ndf>=row.fail
+      ? 'All '+row.fail+' failure(s) this hour are on '+esc(co.join(', ')||'a counts-only tester')
+        +', which reports totals only \u2014 no failing step is recorded.'
+      : 'No failing step was recorded for this hour.')
+    : 'Nothing failed first time in this hour.')+'</div>';
+ }else{
+  let cum=0;
+  reasons='<table><thead><tr><th>Reason</th><th class="num">Fails</th><th class="num">%</th>'
+   +'<th class="num">Cum</th></tr></thead><tbody>'
+   +steps.map(x=>{const before=cum;cum+=x.n;
+     return '<tr class="'+((before/(tot||1)*100)<80?'vit':'')+'"><td>'+esc(x.step)+'</td>'
+      +'<td class="num">'+x.n+'</td><td class="num">'+(x.n/(tot||1)*100).toFixed(1)+'%</td>'
+      +'<td class="num" style="color:var(--warn)">'+(cum/(tot||1)*100).toFixed(1)+'%</td></tr>';}).join('')
+   +'</tbody></table>';
+ }
+ const sl=(row.serials||[]);
+ const sTbl=sl.length
+  ?'<div class="tbl-w" style="max-height:260px"><table><thead><tr><th>Serial \u00b7 last 4</th>'
+   +'<th>Tester</th><th>Time</th><th>First try</th><th>Outcome</th><th>Reason</th></tr></thead><tbody>'
+   +sl.slice(0,300).map(x=>'<tr><td>'+esc(mask(x.sn))+'</td><td>'+esc(x.tester)+'</td>'
+     +'<td>'+esc(x.ts||'')+'</td>'
+     +'<td>'+(x.first==='FAIL'?'<span class="pill no">FAIL</span>':'<span class="pill ok">PASS</span>')+'</td>'
+     +'<td>'+(x.outcome==='PASS'?'<span class="pill ok">PASS</span>'
+        :x.outcome==='RETEST'?'<span class="pill rt">RETEST</span>':'<span class="pill no">NEVER PASSED</span>')+'</td>'
+     +'<td style="color:var(--text-2)">'+esc(x.step||'\u2014')+'</td></tr>').join('')
+   +'</tbody></table></div>'
+  :'<div class="empty" style="padding:12px">No serial-level detail for this hour.</div>';
+ const ndNote=nd?'<div class="colh" style="margin-top:7px;color:var(--warn)">'
+   +nd+' of '+row.units+' unit(s) came from '+esc(co.join(', ')||'a counts-only tester')
+   +', which reports IN / PASS / FAIL only \u2014 no serial, no reason'
+   +(ndf?' ('+ndf+' of them failed)':'')+'</div>':'';
+ panel.innerHTML='<div class="hrp"><div class="hrh"><span class="hrt">'+esc(prod)+' \u00b7 '+hl(h)
+  +'</span><span class="card-s">'+row.units+' in \u00b7 '+row.pass+' pass \u00b7 '+row.fail
+  +' fail \u00b7 '+(row.fpy==null?'\u2014':row.fpy.toFixed(1)+'%')+'</span>'
+  +'<button class="dl" style="margin-left:auto" onclick="pickHour(\''+esc(prod)+'\','+h+')">close</button></div>'
+  +'<div class="g2"><div><div class="colh">Why it failed</div>'+reasons+ndNote+'</div>'
+  +'<div><div class="colh">Serial numbers this hour</div>'+sTbl+'</div></div></div>';
 }
-render();
+function yCol(v,floor){return v==null?'var(--text-3)':(v<floor?'var(--bad)':(v<97?'var(--warn)':'var(--good)'));}
+function drawProductHours(p,box){
+ if(p.hours_source==='none'){
+  box.innerHTML='<div class="empty">'+p.units.toLocaleString()+' unit(s) today, but no hourly detail.'
+   +'<br>Hourly comes from the <b>HPR</b> exports \u2014 one file per hour. None of them carry this '
+   +'product\u2019s testers for this day.<br>Check the Daily_HPR folder, or set <code>HPR_INPUT_DIR</code>.</div>';
+  return;
+ }
+ const d=p.hours_delta||0;
+ const note=d?'<div class="colh" style="margin-top:6px;color:var(--warn)">hourly totals '
+   +Math.abs(d).toLocaleString()+' unit(s) '+(d>0?'more':'fewer')+' than the day figure \u2014 '
+   +'hourly is the HPR, the day is the '+esc(p.source||'DPR')+'; separate exports</div>':'';
+ const floor=D.ramp_floor||90;
+ const last=(p.hours||[]).length?p.hours[p.hours.length-1].h:null;
+ const cards=(p.hours||[]).map(r=>{
+  const on=(OPEN_H[p.product]===r.h);
+  return '<div class="hc'+(on?' on':'')+'" data-h="'+r.h+'">'
+   +'<div class="hc-h">'+String(r.h).padStart(2,'0')+'h</div>'
+   +(r.h===last?'<div class="hc-live">LIVE</div>':'')
+   +'<div class="hc-y" style="color:'+yCol(r.fpy,floor)+'">'
+   +(r.fpy==null?'\u2014':r.fpy.toFixed(1)+'%')+'</div>'
+   +'<div class="hc-r"><span>IN</span><b>'+r.units+'</b></div>'
+   +'<div class="hc-r"><span>PASS</span><b>'+r.pass+'</b></div>'
+   +'<div class="hc-r f"><span>FAIL</span><b>'+r.fail+'</b></div>'
+   +(r.no_detail?'<div class="hc-nd">'+r.no_detail+' counts-only</div>':'')
+   +'</div>';}).join('');
+ box.innerHTML='<div class="hstrip">'+cards+'</div>'
+  +'<div class="colh" style="margin-top:2px">click an hour for its serials and failure reasons '
+  +'\u00b7 source '+esc(p.hours_from||'HPR')+'</div>'+note;
+ box.querySelectorAll('.hc').forEach(el=>{
+  el.addEventListener('click',()=>pickHour(p.product,parseInt(el.dataset.h,10)));});
+}
+function wireOn(root){root.querySelectorAll('.bar').forEach(el=>{
+ el.addEventListener('mouseenter',e=>tipOn(e,decodeURIComponent(el.dataset.tip)));
+ el.addEventListener('mousemove',tipMove);el.addEventListener('mouseleave',tipOff);});}
+function wire(sel){document.querySelectorAll(sel).forEach(el=>{
+ el.addEventListener('mouseenter',e=>tipOn(e,decodeURIComponent(el.dataset.tip)));
+ el.addEventListener('mousemove',tipMove);el.addEventListener('mouseleave',tipOff);});}
+
+/* ---------- bar chart: units per hour, failures stacked on top ---------- */
+function hourChart(rows,colour,label,W,H,clickKey){
+ const by={};AX.forEach(h=>by[h]={units:0,pass:0,fail:0});
+ (rows||[]).forEach(r=>{if(by[r.h]){by[r.h].units+=r.units;by[r.h].pass+=r.pass;by[r.h].fail+=r.fail;}});
+ const max=Math.max(1,...AX.map(h=>by[h].units));
+ const ML=42,MR=12,MT=26,MB=34,pw=W-ML-MR,ph=H-MT-MB;
+ const slot=pw/Math.max(1,AX.length),bw=Math.min(44,slot*0.62),y=v=>MT+ph-(v/max)*ph;
+ let g='';
+ for(let k=0;k<=4;k++){const v=max*k/4,yy=y(v);
+  g+='<line x1="'+ML+'" y1="'+yy+'" x2="'+(W-MR)+'" y2="'+yy+'" stroke="var(--border)"/>'
+   +'<text x="'+(ML-7)+'" y="'+(yy+3.5)+'" text-anchor="end" font-size="9" fill="var(--text-3)" font-family="var(--mono)">'+Math.round(v)+'</text>';}
+ AX.forEach((h,i)=>{
+  const d=by[h],cx=ML+slot*i+slot/2;
+  const every=AX.length>12?2:1;
+  if(i%every===0)g+='<text x="'+cx+'" y="'+(MT+ph+14)+'" text-anchor="middle" font-size="9" fill="var(--text-3)" font-family="var(--mono)">'+hl(h)+'</text>';
+  if(!d.units)return;
+  const fpy=100*d.pass/d.units;
+  const yTop=y(d.units),yPass=y(d.pass),hPass=MT+ph-yPass,hFail=yPass-yTop;
+  const tip=encodeURIComponent('<b>'+label+' &middot; '+hl(h)+'</b><br>'+d.units+' tested<br>'
+   +'<span style="color:var(--good)">&#9632;</span> '+d.pass+' passed first time<br>'
+   +'<span style="color:var(--bad)">&#9632;</span> '+d.fail+' failed first time<br>first pass '+fpy.toFixed(1)+'%');
+  const sel=(clickKey&&OPEN_H[clickKey]===h);
+  g+='<g class="bar" data-tip="'+tip+'" data-h="'+h+'"'
+   +(clickKey?' data-click="1" style="cursor:pointer"':'')+'>'
+   +'<rect x="'+(cx-bw/2)+'" y="'+yPass+'" width="'+bw+'" height="'+Math.max(0,hPass)+'" fill="'+colour+'" opacity=".88"/>'
+   +(d.fail?'<rect x="'+(cx-bw/2)+'" y="'+yTop+'" width="'+bw+'" height="'+Math.max(1,hFail-2)+'" rx="4" fill="var(--bad)" opacity=".92"/>':'')
+   +(sel?'<rect x="'+(cx-bw/2-2)+'" y="'+(yTop-2)+'" width="'+(bw+4)+'" height="'+(MT+ph-yTop+4)+'" rx="5" fill="none" stroke="var(--text-1)" stroke-width="1.8"/>':'')
+   +'<rect x="'+(cx-bw/2)+'" y="'+MT+'" width="'+bw+'" height="'+ph+'" fill="transparent"/></g>'
+   +'<text x="'+cx+'" y="'+(yTop-6)+'" text-anchor="middle" font-size="9" font-weight="700" font-family="var(--mono)" fill="'
+   +(fpy<(D.ramp_floor||90)?'var(--bad)':'var(--text-2)')+'">'+fpy.toFixed(0)+'%</text>';});
+ return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto">'+g+'</svg>';
+}
+
+function tiles(){
+ let u=0,f=0;PRODS.forEach(p=>{u+=p.units;f+=p.fails;});
+ const un=T.unresolved;
+ if(un){u+=un.units;}
+ const by={};AX.forEach(h=>by[h]=0);
+ PRODS.forEach(p=>(p.hours||[]).forEach(r=>{if(by[r.h]!=null)by[r.h]+=r.units;}));
+ const busiest=AX.slice().sort((a,b)=>by[b]-by[a])[0];
+ const fpy=u?100*(u-f)/u:null;
+ const dd=s=>String(s||'').replace(/^(\d{4})(\d{2})(\d{2})$/,'$1-$2-$3');
+ document.getElementById('sub').innerHTML=
+  (T.day_mismatch
+    ? 'hourly <b>'+esc(dd(T.hpr_day))+'</b> (HPR) &middot; daily <b>'+esc(dd(T.day))+'</b> ('+esc(T.source||'DPR')+')'
+    : esc(dd(T.day))+' &middot; source '+esc(T.source||'DPR'))
+  +' &middot; <b>'+u.toLocaleString()+'</b> units across <b>'+PRODS.length+'</b> product'
+  +(PRODS.length===1?'':'s')+' &middot; generated '+esc(D.generated||'');
+ const el=[['Tested today',u.toLocaleString(),AX.length+' hours · '+PRODS.length+' products',''],
+  ['Passed first time',(u-f).toLocaleString(),(fpy==null?'—':fpy.toFixed(2)+'% first pass'),'var(--good)'],
+  ['Failed first time',f.toLocaleString(),'across every NPI tester','var(--bad)'],
+  ['Busiest hour',busiest==null?'—':hl(busiest),(busiest==null?'':by[busiest]+' units'),'']];
+ document.getElementById('tiles').innerHTML=el.map(a=>
+  '<div class="tile"><div class="tile-l">'+a[0]+'</div><div class="tile-v"'
+  +(a[3]?' style="color:'+a[3]+'"':'')+'>'+a[1]+'</div><div class="tile-s">'+a[2]+'</div></div>').join('');
+ document.getElementById('jump').innerHTML=PRODS.map(p=>
+  '<a href="#p_'+encodeURIComponent(p.product)+'"><i style="background:'+COL(p.product)+'"></i>'
+  +esc(p.product)+' '+p.units.toLocaleString()+'</a>').join('');
+ document.getElementById('foot').textContent=
+  'build '+(D.build||'')+' · first attempt per serial · golden samples excluded';
+}
+
+function dayNote(){
+ const el=document.getElementById('daynote'); if(!el) return;
+ if(!T.day_mismatch){el.style.display='none';return;}
+ const dd=s=>String(s||'').replace(/^(\d{4})(\d{2})(\d{2})$/,'$1-$2-$3');
+ el.style.display='';
+ el.innerHTML='<div><b>The two halves of this page are different days.</b><br>'
+  +'The hourly cards are <b>'+esc(dd(T.hpr_day))+'</b>, the newest production day in the HPR exports '
+  +'(one file per hour, so this is the shift in progress). The tiles and the day totals are <b>'
+  +esc(dd(T.day))+'</b>, the newest '+esc(T.source||'DPR')+' export \u2014 that one lands once the day '
+  +'is over. This is normal mid-shift; it closes once today\u2019s '+esc(T.source||'DPR')+' arrives.</div>';
+}
+function unres(){
+ const u=T.unresolved,el=document.getElementById('unres');
+ if(!u||!u.units){el.style.display='none';return;}
+ el.style.display='';
+ el.innerHTML='<div><b>'+u.units+' unit(s) on '+esc(u.testers.join(', '))
+  +' are not attributed to a product.</b><br>That tester runs '+esc(u.products.join(' and '))
+  +', so the Model Number decides which &mdash; and no rule is set yet. These units are counted in the '
+  +'totals above and left out of the product sections below. Run <code>python npi_dashboard.py --models</code>'
+  +' and fill in <code>SHARED_TESTER_MODEL</code> in npi_core.py; this banner then disappears.</div>';
+}
+
+/* ---------- one full section per product ---------- */
+function sections(){
+ if(!PRODS.length){document.getElementById('sections').innerHTML=
+   '<div class="card"><div class="empty">No NPI tester produced units today.<br>'
+   +'Run <code>python npi_dashboard.py --diag</code> to see what the exports contain.</div></div>';return;}
+ document.getElementById('sections').innerHTML=PRODS.map(p=>{
+  const c=COL(p.product),fl=D.ramp_floor||90;
+  const h=HIST[p.product];
+  const k=[['Tested',p.units.toLocaleString(),''],
+   ['First pass',(p.fpy==null?'—':p.fpy.toFixed(2)+'%'),(p.fpy!=null&&p.fpy<fl?'var(--bad)':'var(--good)')],
+   ['Failed first time',String(p.fails),(p.fails?'var(--bad)':'')],
+   ['Testers',String((p.testers||[]).length),''],
+   ['In window',h?h.att.toLocaleString():'—','']];
+  const tes=(p.testers||[]).map(t=>'<tr><td>'+esc(t.station)+'</td><td class="num">'+t.units
+   +'</td><td class="num" style="color:'+(t.fails?'var(--bad)':'var(--text-3)')+'">'+t.fails
+   +'</td><td class="num"><b>'+(t.fpy==null?'—':t.fpy.toFixed(1)+'%')+'</b></td>'
+   +'<td>'+esc(t.first_ts||'')+(t.last_ts?' – '+esc(t.last_ts):'')+'</td></tr>').join('');
+  const par=(p.pareto||[]).length?(p.pareto||[]).slice(0,10).map(s=>
+    '<tr><td>'+esc(s.step||'—')+'</td><td class="num">'+s.n+'</td><td class="num">'+s.pct
+    +'%</td><td class="num" style="color:var(--warn)">'+s.cum+'%</td></tr>').join('')
+   :'<tr><td colspan="4" style="color:var(--text-3)">Nothing failed first time.</td></tr>';
+  return '<div class="psec" id="p_'+encodeURIComponent(p.product)+'">'
+   +'<div class="pbar" style="background:'+c+'"></div><div class="pin">'
+   +'<div class="phd"><span class="pdot" style="background:'+c+'"></span>'
+   +'<span class="pnm">'+esc(p.product)+'</span>'
+   +'<span class="ptest">'+esc((p.expected||[]).join(' · '))+'</span></div>'
+   +'<div class="pk">'+k.map(a=>'<div class="pkc"><div class="pkv"'
+     +(a[2]?' style="color:'+a[2]+'"':'')+'>'+a[1]+'</div><div class="pkl">'+a[0]+'</div></div>').join('')+'</div>'
+   +'<div class="colh">Hour by hour</div><div class="ch" data-p="'+esc(p.product)+'"></div>'
+   +'<div id="hr_'+esc(p.product)+'"></div>'
+   +'<div class="g2" style="margin-top:14px">'
+     +'<div><div class="colh">Testers</div><div class="tbl-w"><table><thead><tr><th>Tester</th>'
+       +'<th class="num">Units</th><th class="num">Fails</th><th class="num">FPY</th><th>Window</th></tr></thead>'
+       +'<tbody>'+tes+'</tbody></table></div></div>'
+     +'<div><div class="colh">Failing steps</div><div class="tbl-w"><table><thead><tr><th>Step</th>'
+       +'<th class="num">n</th><th class="num">%</th><th class="num">Cum</th></tr></thead><tbody>'+par+'</tbody></table></div></div>'
+   +'</div>'
+   +'<div class="card-h" style="margin-top:16px"><span class="colh" style="margin:0">Serial numbers</span>'
+     +'<span class="card-s" id="ss_'+esc(p.product)+'"></span>'
+     +'<span class="acts"><button class="dl" onclick="dl(\''+esc(p.product)+'\')">&#8681; CSV</button>'
+     +'<button class="dl solid" onclick="dl(\'ALL\')">&#8681; All products</button></span></div>'
+   +'<div class="chips" id="sf_'+esc(p.product)+'"></div>'
+   +'<div class="tbl-w"><table id="st_'+esc(p.product)+'"></table></div>'
+   +'</div></div>';
+ }).join('');
+ PRODS.forEach(p=>{
+  const box=document.querySelector('.ch[data-p="'+CSS.escape(p.product)+'"]');
+  if(box){drawProductHours(p,box);renderHour(p.product);}
+  snChips(p.product);snTable(p.product);});
+ wire('.bar');
+}
+
+/* ---------- serials ---------- */
+function snRows(prod){
+ const p=PRODS.find(x=>x.product===prod);if(!p)return [];
+ const f=FS[prod]||'all';
+ return (p.serials||[]).filter(s=>f==='all'
+   ||(f==='fail'&&s.status==='FAIL')||(f==='retest'&&s.outcome==='RETEST')
+   ||(f==='scrap'&&s.outcome==='FAIL')||(f==='pass'&&s.outcome==='PASS'));
+}
+function snChips(prod){
+ const p=PRODS.find(x=>x.product===prod);if(!p)return;
+ const S=p.serials||[],n=k=>S.filter(k).length,f=FS[prod]||'all';
+ const defs=[['all','All',S.length],['fail','Failed first time',n(s=>s.status==='FAIL')],
+  ['retest','Passed on retest',n(s=>s.outcome==='RETEST')],
+  ['scrap','Never passed',n(s=>s.outcome==='FAIL')],
+  ['pass','Passed first time',n(s=>s.outcome==='PASS')]];
+ document.getElementById('sf_'+prod).innerHTML=defs.map(d=>
+  '<button class="chip '+(f===d[0]?'on':'')+'" onclick="setF(\''+prod+'\',\''+d[0]+'\')">'
+  +d[1]+' <b>'+d[2]+'</b></button>').join('');
+}
+function setF(prod,k){FS[prod]=k;snChips(prod);snTable(prod);}
+function snTable(prod){
+ const rows=snRows(prod),p=PRODS.find(x=>x.product===prod);
+ document.getElementById('ss_'+prod).textContent=
+  rows.length.toLocaleString()+' of '+((p.serials||[]).length).toLocaleString()
+  +' shown · last 4 digits only · the CSV carries the full serial';
+ const body=rows.slice(0,500).map((s,i)=>{
+  const pill=s.outcome==='PASS'?'<span class="pill ok">PASS</span>'
+   :s.outcome==='RETEST'?'<span class="pill rt">RETEST</span>':'<span class="pill no">NEVER PASSED</span>';
+  return '<tr><td class="num" style="color:var(--text-3)">'+(i+1)+'</td><td>'+esc(mask(s.sn))+'</td>'
+   +'<td>'+esc(s.tester||'')+'</td><td>'+esc(s.ts||'')+'</td>'
+   +'<td>'+(s.status==='FAIL'?'<span class="pill no">FAIL</span>':'<span class="pill ok">PASS</span>')+'</td>'
+   +'<td>'+pill+'</td><td class="num">'+(s.attempts||1)+'</td>'
+   +'<td style="color:var(--text-2)">'+esc(s.step||'—')+'</td></tr>';}).join('');
+ document.getElementById('st_'+prod).innerHTML=
+  '<thead><tr><th></th><th>Serial &middot; last 4</th><th>Tester</th><th>Time</th>'
+  +'<th>First try</th><th>Outcome</th><th class="num">Tries</th><th>First failing step</th></tr></thead>'
+  +'<tbody>'+body+'</tbody>';
+}
+let SAVER=null;
+if(window.claude&&claude.use)claude.use('downloads').then(d=>{SAVER=d;}).catch(()=>{});
+async function dl(which){
+ const head=['Serial Number','Product','Tester','Time','First Try','Outcome','Attempts','First Failing Step'];
+ let out=[],name='';
+ if(which==='ALL'){
+  PRODS.forEach(p=>(p.serials||[]).forEach(s=>out.push([s.sn,p.product,s.tester,s.ts,s.status,s.outcome,s.attempts,s.step])));
+  const u=T.unresolved;
+  if(u){const up=(T.products||[]).find(x=>x.product===u.label);
+   (up&&up.serials||[]).forEach(s=>out.push([s.sn,u.label,s.tester,s.ts,s.status,s.outcome,s.attempts,s.step]));}
+  name='npi_serials_'+(T.day||'')+'_all';
+ }else{
+  const p=PRODS.find(x=>x.product===which);
+  snRows(which).forEach(s=>out.push([s.sn,which,s.tester,s.ts,s.status,s.outcome,s.attempts,s.step]));
+  name='npi_serials_'+(T.day||'')+'_'+which+((FS[which]&&FS[which]!=='all')?'_'+FS[which]:'');
+ }
+ const csv=[head].concat(out).map(r=>r.map(v=>{const t=String(v==null?'':v);
+   return /[",\n]/.test(t)?'"'+t.replace(/"/g,'""')+'"':t;}).join(',')).join('\r\n');
+ const file=name.replace(/[^\w.-]+/g,'_')+'.csv';
+ if(SAVER){try{await SAVER.save({filename:file,data:'﻿'+csv});return;}
+   catch(e){if(e&&e.code==='rejected')return;}}
+ const b=new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'}),u2=URL.createObjectURL(b);
+ const a=document.createElement('a');a.href=u2;a.download=file;document.body.appendChild(a);
+ a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u2),1500);
+}
+
+function draw(){
+ tiles();unres();dayNote();
+ const noH=PRODS.filter(p=>p.hours_source==='none');
+ const all=[];AX.forEach(h=>{let u=0,pa=0,fa=0;
+  PRODS.forEach(p=>(p.hours||[]).forEach(r=>{if(r.h===h){u+=r.units;pa+=r.pass;fa+=r.fail;}}));
+  all.push({h:h,units:u,pass:pa,fail:fa});});
+ document.getElementById('ch1').innerHTML=
+  (AX.length?hourChart(all,'var(--good)','All products',1180,280)
+   :'<div class="empty">No hourly data for today \u2014 no NPI tester appeared in the DPR export.</div>')
+  +(noH.length?'<div class="colh" style="margin-top:7px;color:var(--warn)">not in these bars: '
+    +noH.map(p=>esc(p.product)+' ('+p.units.toLocaleString()+' units, CMES \u2014 no timestamps)').join(', ')
+    +'</div>':'');
+ sections();wire('#ch1 .bar');
+}
+draw();
+addEventListener('resize',draw);
 </script>
 <!-- back to the report index. Injected at publish time, because index.html
      only exists on the published site -- a local build in TRY has no home
