@@ -1,0 +1,128 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Packing</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
+<style>
+:root{--bg:#f4f2ea;--gridc:#e9e6da;--card:#fff;--bd:#dcd8c8;--fg:#1f2329;--fg2:#6b6f76;--fg3:#9a9c9f;
+ --good:#15803d;--warn:#c2620a;--bad:#c42b1c;--acc:#2563eb;--heat:37,99,235;
+ --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;--sans:"IBM Plex Sans",system-ui,sans-serif}
+[data-theme="dark"]{--bg:#0e141c;--gridc:#141c27;--card:#16202c;--bd:#263446;--fg:#e6edf6;--fg2:#9fb0c6;--fg3:#6b7d93;
+ --good:#3fbf78;--warn:#e8a03a;--bad:#ef6363;--acc:#5b9cf0;--heat:91,156,240;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--mono);font-size:13px;
+ background-image:linear-gradient(var(--gridc) 1px,transparent 1px),linear-gradient(90deg,var(--gridc) 1px,transparent 1px);background-size:24px 24px}
+.wrap{max-width:1300px;margin:0 auto;padding:18px max(16px,env(safe-area-inset-left,0px)) 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.eyebrow{font-size:10.5px;letter-spacing:.18em;color:var(--acc);text-transform:uppercase}
+h1{font-family:var(--sans);font-size:26px;margin:4px 0 2px}
+.sub{font-family:var(--sans);color:var(--fg2);font-size:13px;margin:0 0 6px}
+.sub b{color:var(--fg)}
+.warn{font-family:var(--sans);font-size:12.5px;border-left:3px solid var(--bad);background:var(--card);padding:8px 12px;margin:8px 0}
+.thm{font:600 12px var(--mono);background:var(--card);border:1px solid var(--bd);border-radius:6px;padding:6px 10px;color:var(--fg2);cursor:pointer}
+.sec{font-weight:700;font-size:11.5px;letter-spacing:.06em;color:var(--fg2);text-transform:uppercase;margin:20px 0 8px}
+.sec span{font-weight:400;color:var(--fg3);text-transform:none;letter-spacing:0}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.c{background:var(--card);border:1px solid var(--bd);border-radius:7px;padding:11px 13px;min-width:0}
+.c.tot{border:1.5px solid var(--acc)}
+.c .ln{font-weight:700}.c .pr{font-size:10.5px;color:var(--fg3);margin-left:4px}
+.c .v{font-size:26px;font-weight:700;margin:5px 0 1px;font-variant-numeric:tabular-nums}
+.c.tot .v{color:var(--acc)}
+.c .k{font-size:9.5px;letter-spacing:.14em;color:var(--fg3);text-transform:uppercase}
+.c .s{font-size:11px;color:var(--fg2);margin-top:6px;font-variant-numeric:tabular-nums}
+.tw{overflow-x:auto;background:var(--card);border:1px solid var(--bd);border-radius:7px}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:7px 9px;border-bottom:1px solid var(--gridc);text-align:right;white-space:nowrap}
+th{font-size:10px;letter-spacing:.08em;color:var(--fg3);font-weight:500;position:sticky;top:0;background:var(--card)}
+th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--card);z-index:1}
+td:first-child b{display:block}td:first-child small{color:var(--fg3);font-size:10.5px}
+td .o{font-size:15px;font-weight:700;display:block}
+td .m{font-size:10px;color:var(--fg3)} td .m .f{color:var(--bad)}
+td.now{outline:1.5px dashed var(--acc);outline-offset:-3px}
+td.z{color:var(--fg3)}
+td.tot,th.tot{border-left:1px solid var(--bd)}
+tr.fl td{font-weight:700;border-top:2px solid var(--bd)}
+.note{font-family:var(--sans);font-size:12px;color:var(--fg2);margin-top:12px;line-height:1.55}
+.note code{font-family:var(--mono)}
+</style></head><body><div class="wrap">
+<div class="top"><div><div class="eyebrow">CMES only &middot; Pack2Box</div><h1>Packing</h1>
+<p class="sub" id="sub"></p></div><button class="thm" onclick="tgl()">light / dark</button></div>
+<div id="warn"></div>
+<div class="sec">Grand total per line <span>&middot; boxed, production day so far</span></div>
+<div class="cards" id="cards"></div>
+<div class="sec">Hour by hour <span>&middot; big number = boxed (OUT) &middot; in / pass / fail underneath</span></div>
+<div class="tw"><table id="grid"></table></div>
+<div class="sec">Last 8 days <span>&middot; boxed per line</span></div>
+<div class="tw"><table id="hist"></table></div>
+<p class="note" id="note"></p>
+</div><script>
+const D={"day": "20261117", "generated": "2026-11-17T14:46:33", "status": {"attempt": "2026-11-17T14:46:33", "ok": true, "error": ""}, "hours": [6, 7, 8, 9, 10, 11, 12, 13, 14], "lines": ["Line 1", "Line 2", "Line 3", "Line 4", "Line 5", "Line 6", "Line 6.5", "Line 7", "Line 8"], "labels": {"Line 4": "R3", "Line 6": "IQ9 Residential", "Line 6.5": "IQ10B", "Line 7": "IQ9 Commercial", "Line 8": "SST"}, "grid": {"Line 1": {"6": {"in": 162, "pass": 162, "fail": 0, "out": 162}, "7": {"in": 126, "pass": 126, "fail": 0, "out": 126}, "8": {"in": 306, "pass": 306, "fail": 0, "out": 306}, "9": {"in": 180, "pass": 180, "fail": 0, "out": 180}, "10": {"in": 198, "pass": 198, "fail": 0, "out": 198}, "11": {"in": 252, "pass": 252, "fail": 0, "out": 252}, "12": {"in": 108, "pass": 108, "fail": 0, "out": 108}, "13": {"in": 252, "pass": 252, "fail": 0, "out": 252}, "14": {"in": 144, "pass": 144, "fail": 0, "out": 144}}, "Line 2": {"6": {"in": 72, "pass": 72, "fail": 0, "out": 72}, "7": {"in": 378, "pass": 378, "fail": 0, "out": 378}, "8": {"in": 324, "pass": 324, "fail": 0, "out": 324}, "9": {"in": 234, "pass": 234, "fail": 0, "out": 234}, "10": {"in": 234, "pass": 234, "fail": 0, "out": 234}, "11": {"in": 360, "pass": 360, "fail": 0, "out": 360}, "12": {"in": 288, "pass": 288, "fail": 0, "out": 288}, "13": {"in": 198, "pass": 198, "fail": 0, "out": 198}, "14": {"in": 18, "pass": 18, "fail": 0, "out": 18}}, "Line 3": {"6": {"in": 120, "pass": 120, "fail": 0, "out": 120}, "7": {"in": 204, "pass": 204, "fail": 0, "out": 204}, "8": null, "9": {"in": 180, "pass": 180, "fail": 0, "out": 180}, "10": {"in": 276, "pass": 276, "fail": 0, "out": 276}, "11": {"in": 20, "pass": 20, "fail": 0, "out": 20}, "12": {"in": 196, "pass": 196, "fail": 0, "out": 196}, "13": {"in": 288, "pass": 288, "fail": 0, "out": 288}, "14": {"in": 94, "pass": 94, "fail": 0, "out": 94}}, "Line 4": {"6": {"in": 4, "pass": 4, "fail": 0, "out": 4}, "7": {"in": 6, "pass": 6, "fail": 0, "out": 6}, "8": {"in": 5, "pass": 5, "fail": 0, "out": 5}, "9": {"in": 1, "pass": 1, "fail": 0, "out": 1}, "10": {"in": 5, "pass": 5, "fail": 0, "out": 5}, "11": {"in": 2, "pass": 2, "fail": 0, "out": 2}, "12": null, "13": {"in": 1, "pass": 1, "fail": 0, "out": 1}, "14": {"in": 7, "pass": 7, "fail": 0, "out": 7}}, "Line 5": {"6": {"in": 14, "pass": 14, "fail": 0, "out": 14}, "7": {"in": 12, "pass": 12, "fail": 0, "out": 12}, "8": {"in": 12, "pass": 12, "fail": 0, "out": 12}, "9": {"in": 2, "pass": 2, "fail": 0, "out": 2}, "10": {"in": 6, "pass": 6, "fail": 0, "out": 6}, "11": null, "12": {"in": 4, "pass": 4, "fail": 0, "out": 4}, "13": {"in": 6, "pass": 6, "fail": 0, "out": 6}, "14": {"in": 1, "pass": 1, "fail": 0, "out": 1}}, "Line 6": {"6": null, "7": null, "8": null, "9": null, "10": null, "11": null, "12": {"in": 0, "pass": 0, "fail": 0, "out": 1}, "13": null, "14": null}, "Line 6.5": {"6": null, "7": null, "8": null, "9": null, "10": null, "11": null, "12": null, "13": null, "14": null}, "Line 7": {"6": null, "7": {"in": 1, "pass": 1, "fail": 0, "out": 1}, "8": {"in": 16, "pass": 16, "fail": 0, "out": 16}, "9": {"in": 1, "pass": 1, "fail": 0, "out": 1}, "10": {"in": 14, "pass": 14, "fail": 0, "out": 15}, "11": {"in": 11, "pass": 11, "fail": 0, "out": 11}, "12": {"in": 9, "pass": 9, "fail": 0, "out": 9}, "13": {"in": 3, "pass": 3, "fail": 0, "out": 3}, "14": null}, "Line 8": {"6": null, "7": null, "8": null, "9": null, "10": null, "11": null, "12": null, "13": null, "14": null}}, "ops": {"Line 1": {"EL.P2B": 144}, "Line 2": {"EL.P2B": 18}, "Line 3": {"EL.P2B": 94}, "Line 4": {"EL05.CELL_PACK_LINKING": 7}, "Line 5": {"EL05.PACKING_ASSEMBLY": 1, "ELBAT.P2B": 3}, "Line 7": {"EL.P2B": 3}, "Line 6": {"EL.P2B": 1}}, "patterns": ["P2B", "PACK", "BOX"], "history": [{"day": "20261117", "lines": {"Line 1": 1728, "Line 2": 2106, "Line 3": 1378, "Line 4": 31, "Line 5": 57, "Line 7": 56, "Line 6": 1}}], "now_hour": 15};
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const dd=s=>String(s||'').replace(/^(\d{4})(\d{2})(\d{2})$/,'$1-$2-$3');
+const pad=h=>String(h).padStart(2,'0')+':00';
+function tgl(){const r=document.documentElement;r.setAttribute('data-theme',r.getAttribute('data-theme')==='dark'?'light':'dark');}
+function draw(){
+ const H=D.hours||[],L=(D.lines||[]),G=D.grid||{},LB=D.labels||{};
+ const age=D.generated?Math.round((Date.now()-new Date(D.generated).getTime())/60000):null;
+ document.getElementById('sub').innerHTML='Production day <b>'+dd(D.day)+'</b> &middot; 06:00 &rarr; now &middot; CMES pulled <b>'
+  +esc(String(D.generated||'').replace('T',' ').slice(0,16))+'</b>'+(age!=null?' ('+age+' min ago)':'');
+ const st=D.status||{};
+ if(st.ok===false) document.getElementById('warn').innerHTML='<div class="warn">Latest CMES pull failed at '
+  +esc(String(st.attempt||'').replace('T',' ').slice(0,16))+': '+esc(st.error||'')+' &mdash; showing the last good pull.</div>';
+ const tot={},tin={},tf={},tp={};let floor=0;
+ L.forEach(l=>{tot[l]=0;tin[l]=0;tf[l]=0;tp[l]=0;H.forEach(h=>{const c=(G[l]||{})[String(h)];if(c){tot[l]+=c.out;tin[l]+=c.in;tf[l]+=c.fail;tp[l]+=c.pass;}});floor+=tot[l];});
+ const done=H.filter(h=>h!==D.now_hour);
+ let cards='<div class="c tot"><span class="ln">Floor total</span><div class="v">'+floor.toLocaleString()+'</div><div class="k">boxed today</div><div class="s">'+L.length+' lines</div></div>';
+ L.forEach(l=>{const last=done.length?((G[l]||{})[String(done[done.length-1])]||{}).out||0:0;
+  cards+='<div class="c"><span class="ln">'+esc(l)+'</span><span class="pr">'+esc(LB[l]||'')+'</span><div class="v">'
+   +tot[l].toLocaleString()+'</div><div class="k">boxed today</div><div class="s">in '+tin[l].toLocaleString()
+   +' &middot; fail '+tf[l]+' &middot; last hour '+last+'</div></div>';});
+ document.getElementById('cards').innerHTML=cards;
+ const mx=Math.max(1,...L.flatMap(l=>H.map(h=>((G[l]||{})[String(h)]||{}).out||0)));
+ let g='<thead><tr><th>Line</th>'+H.map(h=>'<th>'+pad(h)+'</th>').join('')+'<th class="tot">Total</th></tr></thead><tbody>';
+ L.forEach(l=>{g+='<tr><td><b>'+esc(l)+'</b><small>'+esc(LB[l]||'')+'</small></td>'+H.map(h=>{const c=(G[l]||{})[String(h)];
+   const now=h===D.now_hour?' now':'';
+   if(!c||!(c.out||c.in)) return '<td class="z'+now+'">&middot;</td>';
+   return '<td class="'+now.trim()+'" style="background:rgba(var(--heat),'+(0.05+0.3*c.out/mx).toFixed(3)+')" title="'
+    +esc(l)+' '+pad(h)+': in '+c.in+', pass '+c.pass+', fail '+c.fail+', boxed '+c.out+'"><span class="o">'+c.out+'</span>'
+    +'<span class="m">'+c.in+' / '+c.pass+' / <span class="f">'+c.fail+'</span></span></td>';}).join('')
+   +'<td class="tot"><span class="o">'+tot[l].toLocaleString()+'</span><span class="m">'+tin[l]+' / '+tp[l]+' / <span class="f">'+tf[l]+'</span></span></td></tr>';});
+ const col=H.map(h=>L.reduce((s,l)=>s+(((G[l]||{})[String(h)]||{}).out||0),0));
+ g+='<tr class="fl"><td>Floor</td>'+col.map((v,i)=>'<td class="'+(H[i]===D.now_hour?'now':'')+'"><span class="o">'+v.toLocaleString()+'</span></td>').join('')
+  +'<td class="tot"><span class="o">'+floor.toLocaleString()+'</span></td></tr></tbody>';
+ document.getElementById('grid').innerHTML=H.length?g:'<tbody><tr><td>No Pack2Box data yet today.</td></tr></tbody>';
+ const HI=D.history||[];
+ let t='<thead><tr><th>Line</th>'+HI.map(x=>'<th>'+dd(x.day).slice(5)+'</th>').join('')+'</tr></thead><tbody>';
+ L.forEach(l=>{t+='<tr><td><b>'+esc(l)+'</b></td>'+HI.map(x=>'<td>'+((x.lines||{})[l]||0).toLocaleString()+'</td>').join('')+'</tr>';});
+ document.getElementById('hist').innerHTML=t+'</tbody>';
+ const ops=[...new Set(Object.values(D.ops||{}).flatMap(o=>Object.keys(o)))].sort();
+ document.getElementById('note').innerHTML='Cells: <b>boxed</b> on top, then <code>in / pass / fail</code>. Dashed cell = hour still filling. '
+  +'Operations counted as Pack2Box: <code>'+(ops.length?esc(ops.join(', ')):'none found yet')+'</code>. '
+  +'Line 6.5 is IQ10B (EP5000 / EP5001) moved from whichever CMES line it is booked on.';
+}
+draw();
+</script>
+<!-- back to the report index. Injected at publish time, because index.html
+     only exists on the published site -- a local build in TRY has no home
+     page to go back to, and a dead link is worse than none. -->
+<a href="index.html" id="scHome" aria-label="Back to all reports">
+  <span aria-hidden="true">&#8592;</span> All reports
+</a>
+<style>
+#scHome{position:fixed;left:16px;bottom:16px;z-index:9999;
+  display:inline-flex;align-items:center;gap:7px;
+  padding:9px 15px;border-radius:999px;text-decoration:none;
+  font:600 13px/1 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  letter-spacing:.01em;
+  /* its own colours, not the page's tokens: these six dashboards do not
+     share a variable set, and two of them flip between light and dark. */
+  color:#f4f6f0;background:rgba(22,26,20,.92);
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 6px 22px rgba(0,0,0,.34);
+  backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);
+  transition:transform .12s ease,background .12s ease}
+#scHome:hover{background:rgba(22,26,20,1);transform:translateY(-1px)}
+#scHome:focus-visible{outline:2px solid #9eff3d;outline-offset:2px}
+@media print{#scHome{display:none}}
+@media(max-width:520px){#scHome{left:10px;bottom:10px;padding:8px 13px;font-size:12px}}
+</style>
+</body></html>
